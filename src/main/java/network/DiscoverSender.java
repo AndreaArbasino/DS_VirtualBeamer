@@ -4,53 +4,128 @@ import Utilities.StaticUtilities;
 import messages.DiscoverMessage;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.MulticastSocket;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Scanner;
 
-import static Utilities.StaticUtilities.DEFAULT_DISCOVER_PORT;
+public class DiscoverSender implements Runnable {
 
-public class DiscoverSender {
+    private MulticastSocket multicastSocket;
+    private DiscoverMessage discoverMessage;
+    private String ip;
+    private int port;
+    private boolean connected; //connected to a globalLan
+    private boolean pairing; //boolean used to say if the Node is trying to pair with someone, i.e. sending Discover requests
 
-    MulticastSocket multicastSocket;
-    DiscoverMessage discoverMessage;
-    InetAddress globalLan;
-
-    //COME IP IL CHIAMANTE DEVE PASSARE IL DEFAULT_IP
-    public DiscoverSender(String ip) throws IOException {
-        this.globalLan = InetAddress.getByName(ip);
-        InetSocketAddress group = new InetSocketAddress(globalLan, DEFAULT_DISCOVER_PORT);
-        this.multicastSocket = new MulticastSocket(DEFAULT_DISCOVER_PORT);
+    //PASS DEFAULT IP AND PORT OF DISCOVER METHOD (WRITTEN IN THIS WAY TO REUSE THIS IF POSSIBLE)
+    public DiscoverSender(String ip, int port) {
+        this.ip = ip;
+        this.port = port;
         this.discoverMessage = new DiscoverMessage();
+        this.connected = false;
+        this.pairing = true;
+    }
+
+    public void run() {
+        String msg = "Hello";
+        InetAddress globalLan;
+        try {
+            globalLan = InetAddress.getByName(ip);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+        InetSocketAddress group = new InetSocketAddress(globalLan, port);
+        NetworkInterface networkInterface = StaticUtilities.getLocalNetworkInterface();
+        try {
+            multicastSocket = new MulticastSocket(port);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            //A port number of zero will let the system pick up an ephemeral port in a bind operation.
+            multicastSocket.joinGroup(new InetSocketAddress(globalLan,0), networkInterface);
+            connected = true; //The globalLan group is joined, from now it is possible to send broadcast messages to send discoverMessages
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
+        //Prepare a packet that will be sent to the globalLanGroup
+        DatagramPacket hi = new DatagramPacket(msgBytes, msgBytes.length, group);
+
+        try {
+            listenDatagrams();
+            System.out.println("I am listening for messages...");
+
+            //TODO: MODIFICARE, OVVIAMENTE SCRITTO COSì PER MOTIVI DI TESTING, BISOGNA MODIFICARLO PER ADATTARSI CORRETTAMENTE A UNA FASE DI PAIRING
+            System.out.println("Type ok to send 3 messages");
+            Scanner scanner = new Scanner(System.in);
+            String s = scanner.nextLine();
+            System.out.println("You entered " + s);
+            if (s.equals("ok")) {
+                int i = 0;
+                while (i < 3){
+                    sendDatagram(hi);
+                    i++;
+                }
+            }
+        } catch (SocketException e){
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
-    public void run() throws IOException {
-        multicastSocket.joinGroup(multicastSocket.getRemoteSocketAddress(), StaticUtilities.getLocalNetworkInterface());
-
+    /**
+     * Send a Datagram to nodes connected to the multicast group associated to the multicastSocket
+     * @param packet packet to be sent
+     * @throws IOException can be raised by the "send" method
+     */
+    public void sendDatagram (DatagramPacket packet) throws IOException {
+        multicastSocket.send(packet);
+        System.out.print("I sent message of length ");
+        System.out.print(packet.getLength());
+        System.out.print(" And payload ");
+        System.out.println(Arrays.toString(packet.getData()));
     }
 
-    /*join a Multicast group and send the group salutations
-  ...
-    String msg = "Hello";
-    InetAddress mcastaddr = InetAddress.getByName("228.5.6.7");
-    InetSocketAddress group = new InetSocketAddress(mcastaddr, port);
-    NetworkInterface netIf = NetworkInterface.getByName("bge0");
-    MulticastSocket s = new MulticastSocket(6789);
+    /**
+     * Create a thread to listen for incoming datagrams and allow at the same time to send datagrams from the same node
+     * @throws IOException  can be raised by the "receiveDatagram" method
+     */
+    public void listenDatagrams() throws IOException {
+        Thread t = new Thread(() ->{
+            while (connected){
+                try {
+                    receiveDatagram();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        t.start();
+    }
 
-  s.joinGroup(group, netIf);
-    byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
-    DatagramPacket hi = new DatagramPacket(msgBytes, msgBytes.length,
-            group, 6789);
-  s.send(hi);
-    // get their responses!
-    byte[] buf = new byte[1000];
-    DatagramPacket recv = new DatagramPacket(buf, buf.length);
-  s.receive(recv);
-  ...
-          // OK, I'm done talking - leave the group...
-          s.leaveGroup(group, netIf);
-    */
+    /**
+     * Receive a datagram sent to the broadcast group associated to the multicast socket
+     * @throws IOException can e raised by the "receive" method
+     */
+    public void receiveDatagram() throws IOException {
+        //TODO: VEDERE SE MANTENERE 1000 o modificarlo, togliere print di debug successivamente
+        byte[] buf = new byte[10];
+        DatagramPacket receivedPacket = new DatagramPacket(buf, buf.length);
+        multicastSocket.receive(receivedPacket);
 
+        //TODO: AGGIUNGERE UN CONTROLLO PER I MESSAGGI RICEVUTI CHE SONO STATI MANDATI DA ME STESSO
+        System.out.print("I received message of length ");
+        System.out.print(receivedPacket.getLength());
+        System.out.print(" And payload ");
+        System.out.println(Arrays.toString(receivedPacket.getData()));
+    }
 
+    public void setPairing(boolean pairing) {
+        this.pairing = pairing;
+    }
 }
