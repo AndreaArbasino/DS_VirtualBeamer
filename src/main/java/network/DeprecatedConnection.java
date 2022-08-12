@@ -1,63 +1,43 @@
 package network;
 
-import Utilities.StaticUtilities;
-import messages.DiscoverMessage;
-
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class DiscoverSender implements Runnable {
-
-    private MulticastSocket multicastSocket;
-    private DiscoverMessage discoverMessage;
-    private String ip;
+public class DeprecatedConnection implements Runnable{
+    private InetAddress ipAddress;
     private int port;
-    private boolean connected; //connected to a globalLan
-    private boolean pairing; //boolean used to say if the Node is trying to pair with someone, i.e. sending Discover requests
+    private MulticastSocket multicastSocket;
+    private Boolean connected;
 
-    //PASS DEFAULT IP AND PORT OF DISCOVER METHOD (WRITTEN IN THIS WAY TO REUSE THIS IF POSSIBLE)
-    public DiscoverSender(String ip, int port) {
-        this.ip = ip;
+    public DeprecatedConnection(String ip, int port) throws UnknownHostException {
+        this.ipAddress = InetAddress.getByName(ip);
         this.port = port;
-        this.discoverMessage = new DiscoverMessage();
         this.connected = false;
-        this.pairing = true;
     }
 
-    public void run() {
-        String msg = "Hello";
-        InetAddress globalLan;
-        try {
-            globalLan = InetAddress.getByName(ip);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-        //InetSocketAddress group = new InetSocketAddress(globalLan, port);
-        //NetworkInterface networkInterface = StaticUtilities.getLocalNetworkInterface();
+    public void run(){
+        String msg = "hello";
         try {
             multicastSocket = new MulticastSocket(port);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            multicastSocket.joinGroup(ipAddress);
+            connected = true;
+        } catch (IOException e){
+            e.printStackTrace();
         }
 
-        try {
-            //A port number of zero will let the system pick up an ephemeral port in a bind operation.
-            //multicastSocket.joinGroup(new InetSocketAddress(globalLan,0), networkInterface);
-            multicastSocket.joinGroup(globalLan);
-            connected = true; //The globalLan group is joined, from now it is possible to send broadcast messages to send discoverMessages
-            System.out.println(multicastSocket.getInetAddress());
-            System.out.println(multicastSocket.getLocalAddress().isAnyLocalAddress());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
-        //Prepare a packet that will be sent to the globalLanGroup
-        DatagramPacket hi = new DatagramPacket(msgBytes, msgBytes.length, globalLan, port);
 
-        try {
+        System.out.println(multicastSocket.getInetAddress());
+        System.out.println(multicastSocket.getLocalAddress().isAnyLocalAddress());
+
+
+
+
+        DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(), ipAddress, port);
+        try{
             listenDatagrams();
             System.out.println("I am listening for messages...");
 
@@ -78,14 +58,8 @@ public class DiscoverSender implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
-    /**
-     * Send a Datagram to nodes connected to the multicast group associated to the multicastSocket
-     * @param packet packet to be sent
-     * @throws IOException can be raised by the "send" method
-     */
     public void sendDatagram (DatagramPacket packet) throws IOException {
         multicastSocket.send(packet);
         System.out.print("I sent message of length ");
@@ -94,10 +68,6 @@ public class DiscoverSender implements Runnable {
         System.out.println(Arrays.toString(packet.getData()));
     }
 
-    /**
-     * Create a thread to listen for incoming datagrams and allow at the same time to send datagrams from the same node
-     * @throws IOException  can be raised by the "receiveDatagram" method
-     */
     public void listenDatagrams() throws IOException {
         Thread t = new Thread(() ->{
             while (connected){
@@ -130,9 +100,5 @@ public class DiscoverSender implements Runnable {
         System.out.println(receivedPacket.getLength());
         System.out.print(" And payload ");
         System.out.println(Arrays.toString(receivedPacket.getData()));
-    }
-
-    public void setPairing(boolean pairing) {
-        this.pairing = pairing;
     }
 }

@@ -29,7 +29,7 @@ public class StaticUtilities {
                 InetAddress address = addresses.nextElement();
                 if (address.isLoopbackAddress()) continue;
                 if (address.getHostAddress().contains(":")) continue;
-                if (address.isSiteLocalAddress()) return networkInterface;
+                return networkInterface;
             }
         }
         throw new RuntimeException("NetworkInterface not found");
