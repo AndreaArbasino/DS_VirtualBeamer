@@ -2,18 +2,18 @@ package ElementsOfNetwork;
 
 public class Member {
     private String username;
-    int ID;
+    private String ipAddress;
 
-    public Member(String ipAddress, int ID) {
-        this.username = ipAddress;
-        this.ID = ID;
+    public Member(String username, String ipAddress) {
+        this.username = username;
+        this.ipAddress = ipAddress;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public int getID() {
-        return ID;
+    public String getIpAddress() {
+        return ipAddress;
     }
 }
