@@ -118,9 +118,13 @@ public class DiscoverSender implements Runnable {
         DatagramPacket receivedPacket = new DatagramPacket(buf, buf.length);
         multicastSocket.receive(receivedPacket);
 
+        if (receivedPacket.getAddress().equals(multicastSocket.getLocalAddress())){
+            return;
+        }
+
         //TODO: AGGIUNGERE UN CONTROLLO PER I MESSAGGI RICEVUTI CHE SONO STATI MANDATI DA ME STESSO
         System.out.print("I received message of length ");
-        System.out.print(receivedPacket.getLength());
+        System.out.println(receivedPacket.getLength());
         System.out.print(" And payload ");
         System.out.println(Arrays.toString(receivedPacket.getData()));
     }

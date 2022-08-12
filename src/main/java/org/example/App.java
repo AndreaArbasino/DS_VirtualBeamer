@@ -12,7 +12,6 @@ import static Utilities.StaticUtilities.DEFAULT_IP;
 public class App 
 {
     public static void main( String[] args ) {
-
         DiscoverSender discoverSender1 = new DiscoverSender(DEFAULT_IP, DEFAULT_DISCOVER_PORT);
         Thread thread1 = new Thread(discoverSender1);
         thread1.start();
