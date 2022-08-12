@@ -3,6 +3,7 @@ package ElementsOfNetwork;
 import java.util.HashMap;
 
 public class BeamGroup {
+
     private HashMap<Integer, Member> participants;
     private int leaderId;
     private int creatorId;
