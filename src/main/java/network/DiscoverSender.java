@@ -45,7 +45,11 @@ public class DiscoverSender implements Runnable {
 
         try {
             //A port number of zero will let the system pick up an ephemeral port in a bind operation.
-            multicastSocket.joinGroup(new InetSocketAddress(globalLan,0), networkInterface);
+            DatagramSocket datagramSocket = new DatagramSocket();
+            datagramSocket.connect(InetAddress.getByName(ip), port);
+            //multicastSocket.joinGroup(new InetSocketAddress(globalLan,0), networkInterface);
+            multicastSocket.joinGroup(datagramSocket.getRemoteSocketAddress(), networkInterface);
+
             connected = true; //The globalLan group is joined, from now it is possible to send broadcast messages to send discoverMessages
         } catch (IOException e) {
             throw new RuntimeException(e);
