@@ -21,6 +21,7 @@ public class MulticastSender implements Runnable{
      * @param port port of the multicast channel
      */
     public MulticastSender(String ip, int port) {
+        System.setProperty("java.net.preferIPv4Stack", "true");
         this.ip = ip;
         this.port = port;
         try {

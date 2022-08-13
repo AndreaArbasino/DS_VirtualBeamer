@@ -24,6 +24,8 @@ public class MulticastReceiver implements Runnable{
      * @param sizeToReceive size of bytes to receive
      */
     public MulticastReceiver(String ip, int port, int sizeToReceive) {
+        System.setProperty("java.net.preferIPv4Stack", "true");
+
         this.ip = ip;
         this.port = port;
         this.sizeToReceive = sizeToReceive;
