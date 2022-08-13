@@ -1,6 +1,5 @@
 package org.example;
 
-import ElementsOfNetwork.Member;
 import network.NodeNetworkInterface;
 
 import java.net.UnknownHostException;
@@ -12,8 +11,7 @@ public class App
 {
     public static void main( String[] args ) throws UnknownHostException {
 
-        Member member = new Member("pippo", "pluto"); //ovviamente da cambiare
-        NodeNetworkInterface nodeNetworkInterface = new NodeNetworkInterface(member);
+        NodeNetworkInterface nodeNetworkInterface = new NodeNetworkInterface();
         nodeNetworkInterface.run();
     }
 
