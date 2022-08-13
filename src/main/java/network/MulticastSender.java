@@ -84,4 +84,8 @@ public class MulticastSender implements Runnable{
         socket.close();
     }
 
+    public int getSocketPort(){
+        return socket.getLocalPort();
+    }
+
 }

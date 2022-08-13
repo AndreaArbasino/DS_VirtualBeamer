@@ -12,6 +12,8 @@ public class MulticastReceiver implements Runnable{
 
     private String ip;
     private int port;
+
+    private int localSenderSocketPort;
     private int sizeToReceive;
     private InetAddress group;
     private MulticastSocket socket;
@@ -45,13 +47,21 @@ public class MulticastReceiver implements Runnable{
                 byte[] buffer = new byte[sizeToReceive];
                 DatagramPacket receivedPacket = new DatagramPacket(buffer, buffer.length);
                 socket.receive(receivedPacket);
-                System.out.println("Received IP: " + receivedPacket.getAddress() + " Port: " + receivedPacket.getPort() + " ,SocketAddress: " + receivedPacket.getSocketAddress());
-                String receivedData = new String(receivedPacket.getData());
-                System.out.println("Received data: " + receivedData);
+                if(receivedPacket.getPort() != localSenderSocketPort){ //I received a message from someone else
+                    printPacket(receivedPacket);
+                } else{
+                    System.out.println("I received a message from someone else, I am not going to display it");
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void printPacket(DatagramPacket receivedPacket){
+        System.out.println("Received IP: " + receivedPacket.getAddress() + " Port: " + receivedPacket.getPort() + " ,SocketAddress: " + receivedPacket.getSocketAddress());
+        String receivedData = new String(receivedPacket.getData());
+        System.out.println("Received data: " + receivedData);
     }
 
     /**
@@ -67,5 +77,9 @@ public class MulticastReceiver implements Runnable{
      */
     public void setRunning(Boolean running) {
         isRunning = running;
+    }
+
+    public void setLocalSenderSocketPort(int localSenderSocketPort) {
+        this.localSenderSocketPort = localSenderSocketPort;
     }
 }

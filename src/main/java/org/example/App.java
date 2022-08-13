@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 public class App 
 {
     public static void main( String[] args ) throws UnknownHostException {
+        System.setProperty("java.net.preferIPv4Stack", "true");
 
         NodeNetworkInterface nodeNetworkInterface = new NodeNetworkInterface();
         nodeNetworkInterface.run();

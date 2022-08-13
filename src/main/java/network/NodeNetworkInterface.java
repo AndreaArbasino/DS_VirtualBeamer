@@ -9,8 +9,9 @@ public class NodeNetworkInterface implements Runnable    {
     public NodeNetworkInterface() {
         System.setProperty("java.net.preferIPv4Stack", "true");
 
-        multicastReceiver = new MulticastReceiver(DEFAULT_IP, DEFAULT_DISCOVER_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES);
         multicastSender = new MulticastSender(DEFAULT_IP, DEFAULT_DISCOVER_PORT);
+        multicastReceiver = new MulticastReceiver(DEFAULT_IP, DEFAULT_DISCOVER_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES);
+        multicastReceiver.setLocalSenderSocketPort(multicastSender.getSocketPort());
     }
 
     public void run(){
