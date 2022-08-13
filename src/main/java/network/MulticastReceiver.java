@@ -1,6 +1,12 @@
 package network;
 
+import messages.DiscoverMessage;
+import messages.Message;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
@@ -40,7 +46,7 @@ public class MulticastReceiver implements Runnable{
         }
     }
 
-    public void run(){
+    /*public void run(){
         isRunning = true;
         while (isRunning){
             try {
@@ -50,11 +56,18 @@ public class MulticastReceiver implements Runnable{
                 if(receivedPacket.getPort() != localSenderSocketPort){ //I received a message from someone else
                     printPacket(receivedPacket);
                 } else{
-                    System.out.println("I received a message from someone else, I am not going to display it");
+                    System.out.println("I received a message from myself, I am not going to display it");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }*/
+
+    public void run(){
+        isRunning = true;
+        while (isRunning){
+            receiveMessage();
         }
     }
 
@@ -62,6 +75,38 @@ public class MulticastReceiver implements Runnable{
         System.out.println("Received IP: " + receivedPacket.getAddress() + " Port: " + receivedPacket.getPort() + " ,SocketAddress: " + receivedPacket.getSocketAddress());
         String receivedData = new String(receivedPacket.getData());
         System.out.println("Received data: " + receivedData);
+    }
+
+    public void receiveMessage(){
+        byte[] buf = new byte[1000];
+        DatagramPacket receivedPacket = new DatagramPacket(buf, buf.length);
+        ByteArrayInputStream byteArrayInputStream;
+        ObjectInputStream objectInputStream;
+        try {
+            socket.receive(receivedPacket);
+
+            Message messageReceived;
+            byteArrayInputStream = new ByteArrayInputStream(buf);
+            objectInputStream = new ObjectInputStream(new BufferedInputStream(byteArrayInputStream));
+
+            messageReceived = (Message) objectInputStream.readObject();
+
+            if (messageReceived instanceof DiscoverMessage){
+                handleDiscoverMessage(receivedPacket, (DiscoverMessage) messageReceived);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void handleDiscoverMessage(DatagramPacket receivedPacket, DiscoverMessage discoverMessage){
+        if(receivedPacket.getPort() != localSenderSocketPort){ //I received a message from someone else
+            System.out.println("Message received is of type discover of length: " + receivedPacket.getLength());
+            System.out.println("Content: " + discoverMessage.getString() + " Port: " + discoverMessage.getPort() );
+            printPacket(receivedPacket);
+        } else{
+            System.out.println("I received a message from myself, I am not going to display it");
+        }
     }
 
     /**

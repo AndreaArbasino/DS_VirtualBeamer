@@ -1,12 +1,15 @@
 package network;
 
+import messages.DiscoverMessage;
+import messages.Message;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.Scanner;
-
-import static Utilities.StaticUtilities.DISCOVER_CONTENT;
 
 public class MulticastSender implements Runnable{
 
@@ -43,7 +46,8 @@ public class MulticastSender implements Runnable{
             String s = scanner.nextLine();
             System.out.println("You entered " + s);
             if (s.equals("ok")) {
-                send(DISCOVER_CONTENT);
+                sendMessage(new DiscoverMessage());
+                //send(DISCOVER_CONTENT);
             }
         }
     }
@@ -68,6 +72,20 @@ public class MulticastSender implements Runnable{
     public void send(DatagramPacket packet){
         try {
             socket.send(packet);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendMessage(Message message){
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+
+            objectOutputStream.writeObject(message);
+            byte[] buf = byteArrayOutputStream.toByteArray();
+            DatagramPacket messageToSend = new DatagramPacket(buf, buf.length, group, port);
+            socket.send(messageToSend);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

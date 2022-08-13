@@ -11,7 +11,7 @@ public class NodeNetworkInterface implements Runnable    {
 
         multicastSender = new MulticastSender(DEFAULT_IP, DEFAULT_DISCOVER_PORT);
         multicastReceiver = new MulticastReceiver(DEFAULT_IP, DEFAULT_DISCOVER_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES);
-        multicastReceiver.setLocalSenderSocketPort(multicastSender.getSocketPort());
+        multicastReceiver.setLocalSenderSocketPort(multicastSender.getSocketPort()) ;
     }
 
     public void run(){
