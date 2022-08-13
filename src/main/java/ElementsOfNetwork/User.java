@@ -1,13 +1,13 @@
 package ElementsOfNetwork;
 
-public class Member {
+public class User {
     private String username;
     private String ipAddress;
 
     //ID that will be sent once entered in a group
     private int id;
 
-    public Member(String username, String ipAddress) {
+    public User(String username, String ipAddress) {
         this.username = username;
         this.ipAddress = ipAddress;
     }
@@ -21,7 +21,7 @@ public class Member {
     }
 
     /**
-     * Set the id of a Member once they join a group
+     * Set the id of a User once they join a group
      * @param id id of the member inside the group
      */
     public void setId(int id) {

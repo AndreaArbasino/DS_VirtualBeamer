@@ -1,24 +1,25 @@
 package ElementsOfNetwork;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class BeamGroup {
+public class BeamGroup implements Serializable {
 
-    private HashMap<Integer, Member> participants;
+    private HashMap participants;
     private int leaderId;
     private int creatorId;
     private Boolean creatorStillIn;
 
-    public BeamGroup(Member creator) {
-        this.participants = new HashMap();
+    public BeamGroup(User creator) {
+        this.participants = new HashMap<Integer, User>();
         this.participants.put(0, creator);
         this.leaderId = 0;
         this.creatorId = 0;
         this. creatorStillIn = true;
     }
 
-    public HashMap<Integer, Member> getParticipants() {
-        return new HashMap<Integer, Member>(participants);
+    public HashMap<Integer, User> getParticipants() {
+        return new HashMap<Integer, User>(participants);
     }
 
     public int getLeaderId() {
@@ -41,7 +42,7 @@ public class BeamGroup {
         this.creatorStillIn = false;
     }
 
-    public void addParticipant (int participantId, Member participant){
+    public void addParticipant (int participantId, User participant){
         participants.put(participantId, participant);
     }
 
@@ -49,12 +50,12 @@ public class BeamGroup {
         participants.remove(participantId);
     }
 
-    public HashMap <Integer, Member> participantsWithLowerId (int id) throws IllegalArgumentException{
+    public HashMap <Integer, User> participantsWithLowerId (int id) throws IllegalArgumentException{
         if (id < 0){
             throw new IllegalArgumentException();
         }
 
-        HashMap<Integer, Member> toBeReturned = new HashMap<Integer, Member>();
+        HashMap<Integer, User> toBeReturned = new HashMap<Integer, User>();
 
         for (int i = id; i>=0; i--){
             if (participants.containsKey(i)){
