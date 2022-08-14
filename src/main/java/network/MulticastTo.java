@@ -11,10 +11,12 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.Scanner;
 
-public class MulticastSender implements Runnable{
+public class MulticastTo implements Runnable{
 
-    private String ip;
-    private int port;
+    private final String ip;
+    private final int port;
+    private final NetworkController networkController;
+
     private InetAddress group;
     private MulticastSocket socket;
     private Boolean isRunning;
@@ -23,8 +25,10 @@ public class MulticastSender implements Runnable{
      * @param ip ip of the multicast channel
      * @param port port of the multicast channel
      */
-    public MulticastSender(String ip, int port) {
+    public MulticastTo(String ip, int port, NetworkController networkController) {
         System.setProperty("java.net.preferIPv4Stack", "true");
+
+        this.networkController = networkController;
         this.ip = ip;
         this.port = port;
         try {

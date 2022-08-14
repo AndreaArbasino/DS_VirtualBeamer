@@ -5,17 +5,30 @@ import java.util.HashMap;
 
 public class BeamGroup implements Serializable {
 
+    private final int creatorId;
+    private final String groupAddress;
+    private final String name;
     private HashMap participants;
     private int leaderId;
-    private int creatorId;
     private Boolean creatorStillIn;
 
-    public BeamGroup(User creator) {
+    public BeamGroup(User creator, String groupName, String groupAddress) {
+        this.creatorId = 0;
+        this.groupAddress = groupAddress;
+        this.name = groupName;
         this.participants = new HashMap<Integer, User>();
         this.participants.put(0, creator);
         this.leaderId = 0;
-        this.creatorId = 0;
         this. creatorStillIn = true;
+    }
+
+    public BeamGroup(BeamGroup originalGroup) {
+        this.name = originalGroup.getName();
+        this.groupAddress = originalGroup.getGroupAddress();
+        this.creatorStillIn = originalGroup.creatorStillIn;
+        this.creatorId = originalGroup.getCreatorId();
+        this.leaderId = originalGroup.getLeaderId();
+        this.participants = new HashMap<>(originalGroup.getParticipants());
     }
 
     public HashMap<Integer, User> getParticipants() {
@@ -32,6 +45,14 @@ public class BeamGroup implements Serializable {
 
     public Boolean getCreatorStillIn() {
         return creatorStillIn;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getGroupAddress() {
+        return groupAddress;
     }
 
     public void setLeaderId(int leaderId) {

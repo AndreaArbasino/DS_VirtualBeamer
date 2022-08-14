@@ -14,13 +14,14 @@ import java.net.MulticastSocket;
 /**
  * This class implements a multicast receiver. On creation ip address, port and size to receive must be specified
  */
-public class MulticastReceiver implements Runnable{
+public class MulticastFrom implements Runnable{
 
-    private String ip;
-    private int port;
+    private final String ip;
+    private final int port;
+    private final int sizeToReceive;
+    private final NetworkController networkController;
 
     private int localSenderSocketPort;
-    private int sizeToReceive;
     private InetAddress group;
     private MulticastSocket socket;
     private Boolean isRunning;
@@ -31,9 +32,10 @@ public class MulticastReceiver implements Runnable{
      * @param port port of the multicast communication
      * @param sizeToReceive size of bytes to receive
      */
-    public MulticastReceiver(String ip, int port, int sizeToReceive) {
+    public MulticastFrom(String ip, int port, int sizeToReceive, NetworkController networkController) {
         System.setProperty("java.net.preferIPv4Stack", "true");
 
+        this.networkController = networkController;
         this.ip = ip;
         this.port = port;
         this.sizeToReceive = sizeToReceive;
@@ -45,24 +47,6 @@ public class MulticastReceiver implements Runnable{
             throw new RuntimeException(e);
         }
     }
-
-    /*public void run(){
-        isRunning = true;
-        while (isRunning){
-            try {
-                byte[] buffer = new byte[sizeToReceive];
-                DatagramPacket receivedPacket = new DatagramPacket(buffer, buffer.length);
-                socket.receive(receivedPacket);
-                if(receivedPacket.getPort() != localSenderSocketPort){ //I received a message from someone else
-                    printPacket(receivedPacket);
-                } else{
-                    System.out.println("I received a message from myself, I am not going to display it");
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }*/
 
     public void run(){
         isRunning = true;
