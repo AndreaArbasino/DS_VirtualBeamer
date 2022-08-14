@@ -1,5 +1,6 @@
 package network;
 
+import elementsOfNetwork.Lobby;
 import messages.DiscoverMessage;
 import messages.Message;
 import model.LocalController;
@@ -77,4 +78,7 @@ public class NetworkController {
 
     }
 
+    public void sendInfoMessage (String recipientAddress, Lobby lobby){
+        //crea messaggio UDP e lo manda
+    }
 }

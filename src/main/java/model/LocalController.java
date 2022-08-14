@@ -114,6 +114,9 @@ public class LocalController {
 
     public void manageDiscoverMessage(DiscoverMessage message){
         System.out.println("I received a discover message");
+        if (localModel.getId() == currentGroup.getLeaderId()){
+            //invia InfoGroupMessage
+        }
     }
 
 }
