@@ -77,6 +77,7 @@ public class MulticastFrom implements Runnable{
                 objectInputStream = new ObjectInputStream(new BufferedInputStream(byteArrayInputStream));
                 messageReceived = (Message) objectInputStream.readObject();
 
+                messageReceived.setSenderIp(receivedPacket.getAddress().getHostAddress());
                 networkController.processMessage(messageReceived);
             }
         } catch (IOException | ClassNotFoundException e) {
