@@ -1,6 +1,5 @@
 package network;
 
-import messages.DiscoverMessage;
 import messages.Message;
 
 import java.io.BufferedInputStream;
@@ -72,27 +71,16 @@ public class MulticastFrom implements Runnable{
         try {
             socket.receive(receivedPacket);
 
-            Message messageReceived;
-            byteArrayInputStream = new ByteArrayInputStream(buf);
-            objectInputStream = new ObjectInputStream(new BufferedInputStream(byteArrayInputStream));
+            if(receivedPacket.getPort() != localSenderSocketPort){ // I did not receive a multicast message from myself --> need to process it
+                Message messageReceived;
+                byteArrayInputStream = new ByteArrayInputStream(buf);
+                objectInputStream = new ObjectInputStream(new BufferedInputStream(byteArrayInputStream));
+                messageReceived = (Message) objectInputStream.readObject();
 
-            messageReceived = (Message) objectInputStream.readObject();
-
-            if (messageReceived instanceof DiscoverMessage){
-                handleDiscoverMessage(receivedPacket, (DiscoverMessage) messageReceived);
+                networkController.processMessage(messageReceived);
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private void handleDiscoverMessage(DatagramPacket receivedPacket, DiscoverMessage discoverMessage){
-        if(receivedPacket.getPort() != localSenderSocketPort){ //I received a message from someone else
-            System.out.println("Message received is of type discover of length: " + receivedPacket.getLength());
-            System.out.println("Content: " + discoverMessage.getString() + " Port: " + discoverMessage.getPort() );
-            printPacket(receivedPacket);
-        } else{
-            System.out.println("I received a message from myself, I am not going to display it");
         }
     }
 

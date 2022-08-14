@@ -2,6 +2,8 @@ package model;
 
 import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.Lobby;
+import elementsOfNetwork.User;
+import messages.DiscoverMessage;
 import messages.InfoGroupMessage;
 import network.NetworkController;
 
@@ -11,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static utilities.StaticUtilities.DEFAULT_DISCOVER_IP;
+import static utilities.StaticUtilities.DEFAULT_PRESENTATION_PORT;
 
 public class LocalController {
     /*Multicast receiver se devi joinare è sul multicast hello una volta dentro ad una lobby sei su multicast lobby
-            sender su hello multicsat se dentro e leader allora multicast presentazione
+            sender su hello multicast se dentro e leader allora multicast presentazione
 
     election
             ti rendi conto che leader crash:
@@ -42,7 +45,7 @@ public class LocalController {
     //serve sia per elezione che per far scegliere da chi scaricaare
 
     /**
-     * Called when the client joins a group. The BeamGroup is sent by the leader and it is used to discover all the partecipants
+     * Called when the client joins a group. The BeamGroup is sent by the leader and it is used to discover all the participants
      * of the group. This list is used for the election of a leader and/or to choose from who download the slides
      * @param group BeamGroup joined
      */
@@ -60,13 +63,16 @@ public class LocalController {
 
 
     public void createBeamGroup(String groupName){
-        //cercare indirizzo ip locale per creare nuovo BeamGroup
+        //find a local ip address in order to create the new BeamGroup
         InetAddress localIp =  findLocalIp();
         System.out.println(localIp.getHostAddress()); // DA CANCELLARE, TENUTO QUI PER TESTING
-        String newPresentationAddress = createAddressForPresentation();
-        //cercare indirizzo multicast che sia diverso da quelli usati nelle lobby conosciute
+        //find a multicast address different from the ones that already exist
+        String newPresentationAddress = findAddressForPresentation();
+
         //creare un nuovo multicastTo (visto che questo utente è ora leader) --> multicast beamgroup trovato sopra
+        networkController.changeMulticastTo(newPresentationAddress, DEFAULT_PRESENTATION_PORT);
         //this.currentGroup = new BeamGroup(new User(this.localModel.getUsername(), ipAddress), groupName, groupAddress);
+        this.currentGroup = new BeamGroup(new User(this.localModel.getUsername(), localIp.getHostAddress()), groupName, newPresentationAddress );
     }
 
     public InetAddress findLocalIp(){
@@ -79,8 +85,8 @@ public class LocalController {
         return host;
     }
 
-    public String createAddressForPresentation(){
-        String ip = null;
+    public String findAddressForPresentation(){
+        String ip;
         List<String> usedIPs = new ArrayList<>();
         usedIPs.add(DEFAULT_DISCOVER_IP);
         for (Lobby lobby : lobbies){
@@ -106,6 +112,8 @@ public class LocalController {
         lobbies.add( new Lobby(message.getIpOfLeader(), message.getIpOfMulticast(), message.getNameOfLobby()));
     }
 
-
+    public void manageDiscoverMessage(DiscoverMessage message){
+        System.out.println("I received a discover message");
+    }
 
 }

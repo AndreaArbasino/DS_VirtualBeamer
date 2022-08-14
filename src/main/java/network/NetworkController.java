@@ -1,5 +1,6 @@
 package network;
 
+import messages.DiscoverMessage;
 import messages.Message;
 import model.LocalController;
 
@@ -33,7 +34,7 @@ public class NetworkController {
      * @param port new port of the multicast group
      * @param bytesToReceive maximum size of each message that can be received
      */
-    private void changeMulticastFrom(String ipAddress, int port, int bytesToReceive){
+    public void changeMulticastFrom(String ipAddress, int port, int bytesToReceive){
         multicastFrom.close();
         multicastFrom = new MulticastFrom(ipAddress, port, bytesToReceive, this);
         multicastFromThread = new Thread(multicastFrom);
@@ -45,7 +46,7 @@ public class NetworkController {
      * @param ipAddress new address of the multicast group
      * @param port new port of the multicast group
      */
-    private void changeMulticastTo(String ipAddress, int port){
+    public void changeMulticastTo(String ipAddress, int port){
         multicastTo.close();
         multicastTo = new MulticastTo(ipAddress, port, this);
         multicastToThread = new Thread(multicastTo);
@@ -67,9 +68,13 @@ public class NetworkController {
         //qui non viene modificato nè letto lo stato in cui si trova il nodo localmente,
         // viene solo chiamato un metodo di conseguenza sul Local Controller che si occuperà eventualmente di fare modifiche allo stato locale
 
-
         // istanceof
         //switch
         //chiami metodo su local controller per quella operazione passando il messaggio
+        if (message instanceof DiscoverMessage){
+            localController.manageDiscoverMessage ((DiscoverMessage) message);
+        }
+
     }
+
 }

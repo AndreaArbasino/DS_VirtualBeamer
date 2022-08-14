@@ -5,7 +5,7 @@ package model;
  */
 public class LocalModel {
     //TODO: vedere se unire con lo user
-    //scegliere bene il nome dei posibili stati ed eventualmente utilizzarli --> penso servano per la GUI
+    //scegliere bene il nome dei possibili stati ed eventualmente utilizzarli --> penso servano per la GUI
     private final String username;
     private InternalState internalState; // FSM state that defines the current situation of the node
     private int id;
@@ -44,5 +44,9 @@ public class LocalModel {
     public void enterGroup(int id){
         this.id = id;
         inGroup = true;
+    }
+
+    public void setInternalState(InternalState internalState) {
+        this.internalState = internalState;
     }
 }
