@@ -11,6 +11,9 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.Scanner;
 
+/**
+ * Multicast to a group
+ */
 public class MulticastTo implements Runnable{
 
     private final String ip;
@@ -81,6 +84,10 @@ public class MulticastTo implements Runnable{
         }
     }
 
+    /**
+     * Send a message in the multicast group giving in input an object of type Message
+     * @param message message to be sent
+     */
     public void sendMessage(Message message){
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -95,6 +102,11 @@ public class MulticastTo implements Runnable{
         }
     }
 
+    /**
+     * Set if the thread is running. If running is set to false, it stops sending messages
+     * @param running true if it is possible to send messages, false otherwise.
+     *                If set to false a new MulticastTo thread needs to be created
+     */
     public void setRunning(Boolean running) {
         isRunning = running;
     }

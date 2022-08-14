@@ -1,12 +1,20 @@
-package Model;
+package model;
 
+/**
+ *
+ */
 public class LocalModel {
+    //TODO: vedere se unire con lo user
     //scegliere bene il nome dei posibili stati ed eventualmente utilizzarli --> penso servano per la GUI
     private final String username;
-    private InternalState internalState;
+    private InternalState internalState; // FSM state that defines the current situation of the node
     private int id;
     private Boolean inGroup;
 
+    /**
+     * Create the local model of a node upon creation of the node.
+     * @param username username of the node
+     */
     public LocalModel(String username) {
         this.username = username;
         this.internalState = InternalState.STARTED;
@@ -29,6 +37,10 @@ public class LocalModel {
         return inGroup;
     }
 
+    /**
+     * Enter a presentation group
+     * @param id id of the node inside the group
+     */
     public void enterGroup(int id){
         this.id = id;
         inGroup = true;

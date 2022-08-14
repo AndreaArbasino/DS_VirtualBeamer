@@ -1,4 +1,4 @@
-package Utilities;
+package utilities;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -8,7 +8,7 @@ import java.util.Enumeration;
 public class StaticUtilities {
 
     //Multicast "available" addresses are 224.0.0.1 - 239.255.255.255
-    public static final String DEFAULT_IP = "230.0.0.0";
+    public static final String DEFAULT_DISCOVER_IP = "230.0.0.0";
     public static final String DISCOVER_CONTENT = "hello";
     public static final int DEFAULT_DISCOVER_PORT = 42000;
     public static final int DEFAULT_PRESENTATION_PORT = 42001;

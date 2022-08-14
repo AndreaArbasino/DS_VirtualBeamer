@@ -2,8 +2,8 @@ package messages;
 
 import java.io.Serial;
 
-import static Utilities.StaticUtilities.DEFAULT_DISCOVER_PORT;
-import static Utilities.StaticUtilities.DISCOVER_CONTENT;
+import static utilities.StaticUtilities.DEFAULT_DISCOVER_PORT;
+import static utilities.StaticUtilities.DISCOVER_CONTENT;
 
 public class DiscoverMessage extends Message{
 

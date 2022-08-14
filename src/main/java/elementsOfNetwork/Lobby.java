@@ -1,4 +1,4 @@
-package ElementsOfNetwork;
+package elementsOfNetwork;
 
 public class Lobby {
     private final String ipOfLeader;

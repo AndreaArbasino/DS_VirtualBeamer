@@ -1,7 +1,5 @@
 package messages;
 
-import ElementsOfNetwork.BeamGroup;
-
 import java.io.Serial;
 
 public class InfoGroupMessage extends Message {

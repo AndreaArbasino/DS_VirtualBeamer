@@ -1,4 +1,4 @@
-package ElementsOfNetwork;
+package elementsOfNetwork;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -71,6 +71,9 @@ public class BeamGroup implements Serializable {
         participants.remove(participantId);
     }
 
+    /**
+     * Retrieve the Users with an ID lower than the one passed as argument
+     */
     public HashMap <Integer, User> participantsWithLowerId (int id) throws IllegalArgumentException{
         if (id < 0){
             throw new IllegalArgumentException();

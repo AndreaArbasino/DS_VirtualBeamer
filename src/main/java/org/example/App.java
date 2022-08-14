@@ -1,6 +1,7 @@
 package org.example;
 
-import Model.LocalController;
+import model.LocalController;
+
 import java.net.UnknownHostException;
 import java.util.Scanner;
 

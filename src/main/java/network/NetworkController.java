@@ -1,10 +1,13 @@
 package network;
 
-import Model.LocalController;
 import messages.Message;
+import model.LocalController;
 
-import static Utilities.StaticUtilities.*;
+import static utilities.StaticUtilities.*;
 
+/**
+ * Controller of the network inside a node of the network
+ */
 public class NetworkController {
     LocalController localController;
 
@@ -15,8 +18,8 @@ public class NetworkController {
 
     public NetworkController (LocalController localController){
         this.localController = localController;
-        multicastFrom = new MulticastFrom(DEFAULT_IP, DEFAULT_DISCOVER_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES, this);
-        multicastTo = new MulticastTo(DEFAULT_IP, DEFAULT_DISCOVER_PORT, this);
+        multicastFrom = new MulticastFrom(DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES, this);
+        multicastTo = new MulticastTo(DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT, this);
         multicastFrom.setLocalSenderSocketPort(multicastTo.getSocketPort());
         multicastFromThread = new Thread(multicastFrom);
         multicastToThread = new Thread(multicastTo);
@@ -24,6 +27,12 @@ public class NetworkController {
         multicastToThread.start();
     }
 
+    /**
+     * Change the multicast message listener
+     * @param ipAddress new address of the multicast group
+     * @param port new port of the multicast group
+     * @param bytesToReceive maximum size of each message that can be received
+     */
     private void changeMulticastFrom(String ipAddress, int port, int bytesToReceive){
         multicastFrom.close();
         multicastFrom = new MulticastFrom(ipAddress, port, bytesToReceive, this);
@@ -31,6 +40,11 @@ public class NetworkController {
         multicastFromThread.start();
     }
 
+    /**
+     * Change the multicast message sender
+     * @param ipAddress new address of the multicast group
+     * @param port new port of the multicast group
+     */
     private void changeMulticastTo(String ipAddress, int port){
         multicastTo.close();
         multicastTo = new MulticastTo(ipAddress, port, this);
@@ -38,11 +52,17 @@ public class NetworkController {
         multicastToThread.start();
     }
 
+    /**
+     * Kill the multicastTo
+     */
     private void dropMulticastTo(){
-        multicastTo.close();
-        //killare thread
+        multicastTo.setRunning(false);
     }
 
+    /**
+     * Process the messages received and passed from the MulticastFrom
+     * @param message message to process
+     */
     public void processMessage(Message message){
         //qui non viene modificato nè letto lo stato in cui si trova il nodo localmente,
         // viene solo chiamato un metodo di conseguenza sul Local Controller che si occuperà eventualmente di fare modifiche allo stato locale

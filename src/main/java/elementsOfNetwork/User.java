@@ -1,4 +1,4 @@
-package ElementsOfNetwork;
+package elementsOfNetwork;
 
 public class User {
     private String username;

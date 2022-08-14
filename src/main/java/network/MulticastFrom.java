@@ -12,7 +12,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 /**
- * This class implements a multicast receiver. On creation ip address, port and size to receive must be specified
+ * This class implements a multicast receiver. Upon creation, ip address, port and size to receive must be specified
  */
 public class MulticastFrom implements Runnable{
 
@@ -61,8 +61,11 @@ public class MulticastFrom implements Runnable{
         System.out.println("Received data: " + receivedData);
     }
 
+    /**
+     * Receive messages from the multicast group
+     */
     public void receiveMessage(){
-        byte[] buf = new byte[1000];
+        byte[] buf = new byte[sizeToReceive];
         DatagramPacket receivedPacket = new DatagramPacket(buf, buf.length);
         ByteArrayInputStream byteArrayInputStream;
         ObjectInputStream objectInputStream;
