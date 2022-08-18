@@ -6,19 +6,19 @@ import java.util.HashMap;
 public class BeamGroup implements Serializable {
 
     private final int creatorId;
+    private int leaderId;
     private final String groupAddress;
     private final String name;
-    private HashMap participants;
-    private int leaderId;
+    private HashMap<Integer, User> participants;
     private Boolean creatorStillIn;
 
     public BeamGroup(User creator, String groupName, String groupAddress) {
-        this.creatorId = 0;
-        this.groupAddress = groupAddress;
         this.name = groupName;
-        this.participants = new HashMap<Integer, User>();
+        this.groupAddress = groupAddress;
+        this.participants = new HashMap<>();
         this.participants.put(0, creator);
-        this.leaderId = 0;
+        this.creatorId = 0;
+        this.leaderId = 0;          // At group creation, the leader coincides with the creator
         this. creatorStillIn = true;
     }
 
@@ -32,7 +32,7 @@ public class BeamGroup implements Serializable {
     }
 
     public HashMap<Integer, User> getParticipants() {
-        return new HashMap<Integer, User>(participants);
+        return new HashMap<>(participants);
     }
 
     public int getLeaderId() {
@@ -41,6 +41,14 @@ public class BeamGroup implements Serializable {
 
     public int getCreatorId() {
         return creatorId;
+    }
+
+    public String getLeaderIp() {
+        return participants.get(leaderId).getIpAddress();
+    }
+
+    public String getCreatorIp() {
+        return participants.get(creatorId).getIpAddress();
     }
 
     public Boolean getCreatorStillIn() {

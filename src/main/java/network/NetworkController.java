@@ -2,6 +2,7 @@ package network;
 
 import elementsOfNetwork.Lobby;
 import messages.DiscoverMessage;
+import messages.InfoGroupMessage;
 import messages.Message;
 import model.LocalController;
 
@@ -11,15 +12,20 @@ import static utilities.StaticUtilities.*;
  * Controller of the network inside a node of the network
  */
 public class NetworkController {
-    LocalController localController;
+    private LocalController localController;
 
-    MulticastFrom multicastFrom;
-    MulticastTo multicastTo;
-    Thread multicastFromThread;
-    Thread multicastToThread;
+    private MulticastFrom multicastFrom;
+    private MulticastTo multicastTo;
+    private UDPUnicastTo udpUnicastTo;
+    private UDPUnicastFrom udpDiscoverUnicastFrom;
+    private Thread multicastFromThread;
+    private Thread multicastToThread;
+    private Thread udpUnicastToThread;
+    private Thread udpDiscoverUnicastFromThread;
 
     public NetworkController (LocalController localController){
         this.localController = localController;
+
         multicastFrom = new MulticastFrom(DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES, this);
         multicastTo = new MulticastTo(DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT, this);
         multicastFrom.setLocalSenderSocketPort(multicastTo.getSocketPort());
@@ -27,6 +33,11 @@ public class NetworkController {
         multicastToThread = new Thread(multicastTo);
         multicastFromThread.start();
         multicastToThread.start();
+
+        udpUnicastTo = new UDPUnicastTo();
+        udpDiscoverUnicastFrom = new UDPUnicastFrom(DEFAULT_INFO_MESSAGE_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES ,this);
+        udpUnicastToThread = new Thread(udpUnicastTo);
+        udpDiscoverUnicastFromThread = new Thread(udpDiscoverUnicastFrom);
     }
 
     /**
@@ -69,16 +80,20 @@ public class NetworkController {
         //qui non viene modificato nè letto lo stato in cui si trova il nodo localmente,
         // viene solo chiamato un metodo di conseguenza sul Local Controller che si occuperà eventualmente di fare modifiche allo stato locale
 
-        // istanceof
         //switch
         //chiami metodo su local controller per quella operazione passando il messaggio
         if (message instanceof DiscoverMessage){
             localController.manageDiscoverMessage ((DiscoverMessage) message);
+        } else if (message instanceof InfoGroupMessage) {
+            localController.manageInfoGroupMessage((InfoGroupMessage) message);
         }
 
     }
 
     public void sendInfoMessage (String recipientAddress, Lobby lobby){
         //crea messaggio UDP e lo manda
+        udpUnicastTo.sendMessage(   new InfoGroupMessage(lobby.getIpOfLeader(), lobby.getIpOfMulticast(), lobby.getNameOfLobby()),
+                                    recipientAddress,
+                                    DEFAULT_INFO_MESSAGE_PORT);
     }
 }
