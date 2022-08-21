@@ -92,6 +92,11 @@ public class LocalModel {
         this.currentGroup = new BeamGroup(group);
     }
 
+    public void createBeamGroup(BeamGroup group){
+        this.currentGroup = new BeamGroup(group);
+        isLeader = true;
+    }
+
     public String findAddressForPresentation(){
         String ip;
         List<String> usedIPs = new ArrayList<>();

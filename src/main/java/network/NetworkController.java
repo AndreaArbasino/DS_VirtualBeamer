@@ -23,7 +23,7 @@ public class NetworkController {
     public NetworkController (LocalController localController){
         this.localController = localController;
 
-        unicastListener = new UnicastListener(DEFAULT_DISCOVER_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES, this);
+        unicastListener = new UnicastListener(DEFAULT_DISCOVER_RECEIVED_BYTES, this);
         datagramSender = new DatagramSender(unicastListener.getSocket());
         multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES, this);
         multicastListener.setLocalSenderSocketPort(datagramSender.getSocketPort());
@@ -34,13 +34,23 @@ public class NetworkController {
         multicastListenerThread.start();
         unicastListenerThread.start();
 
+
+        //TODO: DA RIMUOVERE IN FUTURO, QUI PER MOTIVI DI TESTING
         Scanner scanner = new Scanner(System.in);
         String input;
-        while (true){
-            System.out.println("Press ok to send a discover message");
+        System.out.println("Type create to create a beamGroup");
+        input = scanner.nextLine();
+        if (input.equals("create")){
+            System.out.println("Insert name of the group");
             input = scanner.nextLine();
-            if (input.equals("ok")){
-                datagramSender.sendMessage((new DiscoverMessage()), DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT);
+            localController.createBeamGroup(input);
+        } else {
+            while (true){
+                System.out.println("Press ok to send a discover message");
+                input = scanner.nextLine();
+                if (input.equals("ok")){
+                    datagramSender.sendMessage((new DiscoverMessage()), DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT);
+                }
             }
         }
 
@@ -74,11 +84,10 @@ public class NetworkController {
         Message message = messageToProcess.getMessage();
 
         if (message instanceof DiscoverMessage){
-            localController.manageDiscoverMessage ((DiscoverMessage) message, messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
-            System.out.println("Sending message alive");
-            datagramSender.sendMessage((new AliveMessage()), messageToProcess.getSenderIp(), messageToProcess.getSenderPort()); //TODO: MODIFICARE; DEBUG
+            localController.manageDiscoverMessage (messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
         } else if (message instanceof InfoGroupMessage) {
             localController.manageInfoGroupMessage((InfoGroupMessage) message);
+            System.out.println("I received an info group message");
         } else if (message instanceof  AliveMessage){
             System.out.println("I RECEIVED AN ALIVE MESSAGE");
         }
@@ -91,4 +100,5 @@ public class NetworkController {
                                     recipientAddress,
                                     senderPort);
     }
+
 }

@@ -18,7 +18,7 @@ public class UnicastListener implements Runnable {
     private int sizeToReceive;
     private NetworkController networkController;
 
-    public UnicastListener(int port, int sizeToReceive, NetworkController networkController) {
+    public UnicastListener(int sizeToReceive, NetworkController networkController) {
         try {
             socket = new DatagramSocket(); //This is because once the bind is performed, the setReuseAddress will be useless
             //TODO VEDERE SE SERVE socket.setReuseAddress(true); Sembrerebbe di no.

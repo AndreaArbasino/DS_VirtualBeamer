@@ -2,7 +2,6 @@ package model;
 
 import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.User;
-import messages.DiscoverMessage;
 import messages.InfoGroupMessage;
 import network.NetworkController;
 
@@ -55,14 +54,12 @@ public class LocalController {
     public void createBeamGroup(String groupName){
         //find a local ip address in order to create the new BeamGroup
         InetAddress localIp =  findLocalIp();
-        System.out.println(localIp.getHostAddress()); // DA CANCELLARE, TENUTO QUI PER TESTING
+        System.out.println(localIp.getHostAddress() + " is the local ip "); // DA CANCELLARE, TENUTO QUI PER TESTING
         //find a multicast address different from the ones that already exist
         String newPresentationAddress = localModel.findAddressForPresentation();
 
-        //creare un nuovo multicastTo (visto che questo utente è ora leader) --> multicast beamgroup trovato sopra
-        //networkController.changeMulticastTo(newPresentationAddress, DEFAULT_PRESENTATION_PORT);
-        //this.currentGroup = new BeamGroup(new User(this.localModel.getUsername(), ipAddress), groupName, groupAddress);
-        localModel.addBeamGroup(new BeamGroup(new User(localModel.getUsername(), localIp.getHostAddress()), groupName, newPresentationAddress));
+        localModel.createBeamGroup(new BeamGroup(new User(localModel.getUsername(), localIp.getHostAddress()), groupName, newPresentationAddress));
+
     }
 
     /**
@@ -75,6 +72,7 @@ public class LocalController {
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
+        System.out.println("host " + host);
         return host;
     }
 
@@ -90,9 +88,10 @@ public class LocalController {
     /**
      * Once a DiscoverMessage is received, if the recipient is the leader of the group, he replies to the sender of the
      * message providing him information about the group of which the recipient is the leader
-     * @param message received DiscoverMessage
+     * @param senderIp ip of the user that sent the DiscoverMessage
+     * @param senderPort port of the user that sent the DiscoverMessage
      */
-    public void manageDiscoverMessage(DiscoverMessage message, String senderIp, int senderPort){
+    public void manageDiscoverMessage( String senderIp, int senderPort){
         System.out.println("I received a discover message");
         //TODO: AGGIUSTARE, DA SEGFAULT (GIUSTAMENTE!)
         if (localModel.isLeader()){
