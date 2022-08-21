@@ -1,11 +1,6 @@
 package messages;
 
-import java.io.Serial;
-
 public class InfoGroupMessage extends Message {
-
-    @Serial
-    private static final long serialVersionUID = 7736046906032042064L;
 
     private final String ipOfLeader;
     private final String ipOfMulticast;

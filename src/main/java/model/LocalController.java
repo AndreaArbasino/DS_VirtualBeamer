@@ -9,8 +9,6 @@ import network.NetworkController;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static utilities.StaticUtilities.DEFAULT_PRESENTATION_PORT;
-
 public class LocalController {
     /*Multicast receiver se devi joinare è sul multicast hello una volta dentro ad una lobby sei su multicast lobby
             sender su hello multicast se dentro e leader allora multicast presentazione
@@ -25,8 +23,8 @@ public class LocalController {
     private final LocalModel localModel;
 
     public LocalController (String username){
-        networkController = new NetworkController(this);
         localModel = new LocalModel(username);
+        networkController = new NetworkController(this);
     }
 
     // chiamato quando client joina un gruppo, il beam group gli viene mandato dal leader, viene usato per conoscere tutti i partecipanti del gruppo
@@ -62,7 +60,7 @@ public class LocalController {
         String newPresentationAddress = localModel.findAddressForPresentation();
 
         //creare un nuovo multicastTo (visto che questo utente è ora leader) --> multicast beamgroup trovato sopra
-        networkController.changeMulticastTo(newPresentationAddress, DEFAULT_PRESENTATION_PORT);
+        //networkController.changeMulticastTo(newPresentationAddress, DEFAULT_PRESENTATION_PORT);
         //this.currentGroup = new BeamGroup(new User(this.localModel.getUsername(), ipAddress), groupName, groupAddress);
         localModel.addBeamGroup(new BeamGroup(new User(localModel.getUsername(), localIp.getHostAddress()), groupName, newPresentationAddress));
     }
@@ -94,11 +92,12 @@ public class LocalController {
      * message providing him information about the group of which the recipient is the leader
      * @param message received DiscoverMessage
      */
-    public void manageDiscoverMessage(DiscoverMessage message){
+    public void manageDiscoverMessage(DiscoverMessage message, String senderIp, int senderPort){
         System.out.println("I received a discover message");
         //TODO: AGGIUSTARE, DA SEGFAULT (GIUSTAMENTE!)
         if (localModel.isLeader()){
-            networkController.sendInfoMessage(message.getSenderIp(), localModel.getLobbyFromCurrentBeamGroup());
+            System.out.println("I am leader, sending back info of the group");
+            networkController.sendInfoMessage(senderIp, senderPort, localModel.getLobbyFromCurrentBeamGroup());
         }
     }
 

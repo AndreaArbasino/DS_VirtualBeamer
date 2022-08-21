@@ -8,39 +8,13 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.util.Scanner;
 
-public class UDPUnicastTo implements Runnable{
+public class DatagramSender {
 
     private DatagramSocket socket;
-    private Boolean isRunning;
 
-    //TODO: MAYBE REMOVE THE IP INSIDE THE FIELD? + address to is in practice never used
-    // VALUTARE COSA FARE, TEORICAMENTE è MEGLIO AVERE UN SOLO DATAGRAM SOCKET E
-    // CAMBIARE IP E SOCKET OGNI VOLTA IN BASE AL MESSAGGIO --> INUTILE CREARE UN SOCKET
-    // DIVERSO PER OGNI TIPO DI MESSAGGIO??
-    public UDPUnicastTo() {
-        try {
-            socket = new DatagramSocket();
-        } catch (SocketException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void run(){
-        isRunning = true;
-        Scanner scanner = new Scanner(System.in);
-
-        while (isRunning){
-            System.out.println("Type 'ok' to send a messages");
-            String s = scanner.nextLine();
-            System.out.println("You entered " + s);
-            if (s.equals("ok")) {
-                //sendMessage(new DiscoverMessage());
-                //send(DISCOVER_CONTENT);
-            }
-        }
+    public DatagramSender(DatagramSocket socket) {
+        this.socket = socket;
     }
 
     /**
@@ -61,5 +35,13 @@ public class UDPUnicastTo implements Runnable{
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * @return address of the socket port, useful to understand if a multicast message received was sent by myself
+     */
+    public int getSocketPort(){
+        return socket.getLocalPort();
+    }
+
 
 }
