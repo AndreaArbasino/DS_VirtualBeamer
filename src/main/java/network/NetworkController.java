@@ -24,7 +24,6 @@ public class NetworkController {
         unicastListener = new UnicastListener(DEFAULT_DISCOVER_RECEIVED_BYTES, DEFAULT_UNICAST_PORT, this);
         datagramSender = new DatagramSender(unicastListener.getSocket());
         multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES, this);
-        multicastListener.setLocalSenderSocketPort(datagramSender.getSocketPort());
 
         multicastListenerThread = new Thread(multicastListener);
         unicastListenerThread = new Thread(unicastListener);

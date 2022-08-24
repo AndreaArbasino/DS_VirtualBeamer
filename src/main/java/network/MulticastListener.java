@@ -21,7 +21,6 @@ public class MulticastListener implements Runnable{
     private final int sizeToReceive;
     private final NetworkController networkController;
 
-    private int localSenderSocketPort;
     private InetAddress group;
     private MulticastSocket socket;
     private Boolean isRunning;
@@ -75,7 +74,7 @@ public class MulticastListener implements Runnable{
         try {
             socket.receive(receivedPacket);
 
-            if(receivedPacket.getPort() != localSenderSocketPort){ // I did not receive a multicast message from myself --> need to process it
+            if(receivedPacket.getAddress() != InetAddress.getLocalHost()){ // I did not receive a multicast message from myself --> need to process it
                 printPacket(receivedPacket);
                 Message messageReceived;
                 byteArrayInputStream = new ByteArrayInputStream(buf);
@@ -106,10 +105,6 @@ public class MulticastListener implements Runnable{
      */
     public void setRunning(Boolean running) {
         isRunning = running;
-    }
-
-    public void setLocalSenderSocketPort(int localSenderSocketPort) {
-        this.localSenderSocketPort = localSenderSocketPort;
     }
 
 }
