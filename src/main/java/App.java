@@ -1,5 +1,3 @@
-package org.example;
-
 import model.LocalController;
 
 import java.net.UnknownHostException;
