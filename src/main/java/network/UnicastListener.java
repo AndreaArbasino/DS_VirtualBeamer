@@ -22,10 +22,6 @@ public class UnicastListener implements Runnable {
             System.out.println(InetAddress.getLocalHost().getHostAddress());
             System.out.println("UNICAST LISTENER, port " + port + " local address " + InetAddress.getLocalHost().getHostAddress() );
             socket = new DatagramSocket(port, InetAddress.getLocalHost()); //This is because once the bind is performed, the setReuseAddress will be useless
-            System.out.println(socket.getLocalAddress());
-            System.out.println(socket.getLocalSocketAddress());
-            System.out.println(socket.getRemoteSocketAddress());
-            System.out.println(socket.getInetAddress());
             //TODO VEDERE SE SERVE socket.setReuseAddress(true); Sembrerebbe di no.
             //socket.bind(new InetSocketAddress(port));
             this.sizeToReceive = sizeToReceive;
