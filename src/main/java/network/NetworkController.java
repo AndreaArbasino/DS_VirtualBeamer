@@ -30,28 +30,6 @@ public class NetworkController {
 
         multicastListenerThread.start();
         unicastListenerThread.start();
-
-
-        //TODO: DA RIMUOVERE IN FUTURO, QUI PER MOTIVI DI TESTING
-
-        /*Scanner scanner = new Scanner(System.in);
-        String input;
-        System.out.println("Type create to create a beamGroup");
-        input = scanner.nextLine();
-        if (input.equals("create")){
-            System.out.println("Insert name of the group");
-            input = scanner.nextLine();
-            localController.createBeamGroup(input);
-        }/* else {
-            while (true){
-                System.out.println("Press ok to send a discover message");
-                input = scanner.nextLine();
-                if (input.equals("ok")){
-                    sendDiscover();
-                }
-            }
-        }*/
-
     }
 
     public void sendDiscover(){
@@ -78,11 +56,7 @@ public class NetworkController {
      * @param messageToProcess message to process
      */
     public void processMessage(MessageToProcess messageToProcess){
-        //qui non viene modificato nè letto lo stato in cui si trova il nodo localmente,
-        // viene solo chiamato un metodo di conseguenza sul Local Controller che si occuperà eventualmente di fare modifiche allo stato locale
 
-        //switch
-        //chiami metodo su local controller per quella operazione passando il messaggio
         Message message = messageToProcess.getMessage();
 
         if (message instanceof DiscoverMessage){

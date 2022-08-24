@@ -7,9 +7,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.SocketException;
+import java.net.*;
 
 public class UnicastListener implements Runnable {
 
@@ -20,13 +18,14 @@ public class UnicastListener implements Runnable {
 
     public UnicastListener(int sizeToReceive, int port, NetworkController networkController) {
         try {
-            socket = new DatagramSocket(port); //This is because once the bind is performed, the setReuseAddress will be useless
+            System.out.println("UNICAST LISTENER, port " + port + " local address " + InetAddress.getLocalHost() );
+            socket = new DatagramSocket(port, InetAddress.getLocalHost()); //This is because once the bind is performed, the setReuseAddress will be useless
             //TODO VEDERE SE SERVE socket.setReuseAddress(true); Sembrerebbe di no.
             //socket.bind(new InetSocketAddress(port));
             this.sizeToReceive = sizeToReceive;
             this.networkController = networkController;
         } catch (
-                SocketException e) {
+                SocketException | UnknownHostException e) {
             throw new RuntimeException(e);
         }
     }
