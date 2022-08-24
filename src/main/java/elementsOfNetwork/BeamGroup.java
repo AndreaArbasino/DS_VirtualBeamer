@@ -1,7 +1,9 @@
 package elementsOfNetwork;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class BeamGroup implements Serializable {
 
@@ -98,4 +100,13 @@ public class BeamGroup implements Serializable {
 
         return toBeReturned;
     }
+
+    public List<User> getUsers(){
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < participants.size(); i++){
+            users.add(participants.get(i));
+        }
+        return users;
+    }
+
 }
