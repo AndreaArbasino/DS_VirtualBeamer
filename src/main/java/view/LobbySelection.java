@@ -81,9 +81,9 @@ public class LobbySelection {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            InsertString insertString = new InsertString(frame);
-            String beamGruopName = insertString.askInputString("INSERT GROUP NAME", "Group name choice");
-            localController.createBeamGroup(beamGruopName);
+            InsertString insertString = new InsertString(new JFrame());
+            String beamGroupName = insertString.askInputString("INSERT GROUP NAME", "Group name choice");
+            localController.createBeamGroup(beamGroupName);
 
 
         }

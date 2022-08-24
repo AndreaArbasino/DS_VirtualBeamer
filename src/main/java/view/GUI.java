@@ -48,11 +48,6 @@ public class GUI {
 
         lobbySelection = new LobbySelection(localController);
         lobbySelection.start();
-
-
-
-        //must be set to be performed after the decision of starting anew presentation is taken
-        chooseImages();
     }
 
     /**
