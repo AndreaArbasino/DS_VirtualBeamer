@@ -48,6 +48,8 @@ public class GUI {
       }
       List<Lobby> lobbies = localModel.getLobbies();
 
+      chooseImages();
+
       ListDialog.showDialog(frame,
               existingGroupsFrame,
               "LABEL TEXT",
