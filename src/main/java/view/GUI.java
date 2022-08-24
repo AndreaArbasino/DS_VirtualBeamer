@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -23,44 +24,36 @@ public class GUI {
     private JFrame frame;
     private JFrame existingGroupsFrame;
     private JPanel sessionPanel;
-    ListDialog listDialog;
+    private LobbySelection lobbySelection;
 
 
     public GUI() {
         frame = new JFrame();
     }
-    private String[] options = {"CREATE", "JOIN"};
 
-  public void start(){
+    public void start(){
+        InsertString insertString = new InsertString(frame);
+        userName = insertString.askInputString("INSERT YOUR USERNAME", "Username choice");
 
-      InsertString insertString = new InsertString(frame);
-      userName = insertString.askInputString("INSERT YOUR USERNAME", "Username choice");
+        localController = new LocalController(userName);
+        localModel = localController.getLocalModel();
 
-      localController = new LocalController(userName);
-      localModel = localController.getLocalModel();
+        /* INITIAL DISCOVER */
+        localController.sendDiscoverGroup();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-      /* INITIAL DISCOVER */
-      localController.sendDiscoverGroup();
-      try {
-          TimeUnit.SECONDS.sleep(1);
-      } catch (InterruptedException e) {
-          throw new RuntimeException(e);
-      }
-      List<Lobby> lobbies = localModel.getLobbies();
-
-      chooseImages();
-
-      ListDialog.showDialog(frame,
-              existingGroupsFrame,
-              "LABEL TEXT",
-              "TITLE",
-              options, //TODO: MODIFICARE E AL POSTO DI OPTION METTERE LE LOBBY
-              "INITIAL VALUE",
-              "LONG VALUE");
+        lobbySelection = new LobbySelection(localController);
+        lobbySelection.start();
 
 
 
-  }
+        //must be set to be performed after the decision of starting anew presentation is taken
+        chooseImages();
+    }
 
     /**
      * Opens a system window that allows to select the slides (jpg images) and adds them to the model

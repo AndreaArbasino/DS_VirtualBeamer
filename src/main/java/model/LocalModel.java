@@ -137,4 +137,7 @@ public class LocalModel {
         return new Lobby(currentGroup.getLeaderIp(), currentGroup.getGroupAddress(), currentGroup.getName());
     }
 
+    public void resetLobbies(){
+        this.lobbies = new ArrayList<>();
+    }
 }

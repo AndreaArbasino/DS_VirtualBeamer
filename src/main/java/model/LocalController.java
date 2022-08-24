@@ -101,6 +101,7 @@ public class LocalController {
     }
 
     public void sendDiscoverGroup(){
+        this.localModel.resetLobbies();
         networkController.sendDiscover();
     }
 
