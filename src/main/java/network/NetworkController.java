@@ -4,8 +4,6 @@ import elementsOfNetwork.Lobby;
 import messages.*;
 import model.LocalController;
 
-import java.util.Scanner;
-
 import static utilities.StaticUtilities.*;
 
 /**
@@ -13,7 +11,6 @@ import static utilities.StaticUtilities.*;
  */
 public class NetworkController {
     private LocalController localController;
-
     private MulticastListener multicastListener;
     private UnicastListener unicastListener;
     private DatagramSender datagramSender;
@@ -36,7 +33,8 @@ public class NetworkController {
 
 
         //TODO: DA RIMUOVERE IN FUTURO, QUI PER MOTIVI DI TESTING
-        Scanner scanner = new Scanner(System.in);
+
+        /*Scanner scanner = new Scanner(System.in);
         String input;
         System.out.println("Type create to create a beamGroup");
         input = scanner.nextLine();
@@ -44,16 +42,20 @@ public class NetworkController {
             System.out.println("Insert name of the group");
             input = scanner.nextLine();
             localController.createBeamGroup(input);
-        } else {
+        }/* else {
             while (true){
                 System.out.println("Press ok to send a discover message");
                 input = scanner.nextLine();
                 if (input.equals("ok")){
-                    datagramSender.sendMessage((new DiscoverMessage()), DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT);
+                    sendDiscover();
                 }
             }
-        }
+        }*/
 
+    }
+
+    public void sendDiscover(){
+        datagramSender.sendMessage((new DiscoverMessage()), DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT);
     }
 
     /**

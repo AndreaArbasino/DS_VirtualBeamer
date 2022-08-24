@@ -3,6 +3,7 @@ package model;
 import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.Lobby;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class LocalModel {
     private InternalState internalState; // FSM state that defines the current situation of the node
 
     private List<Lobby> lobbies; //list of the lobbies that already exist
+    private List<BufferedImage> slides;
     private Boolean isLeader;
     private Boolean isCreator;
     private Boolean inGroup;
@@ -37,6 +39,7 @@ public class LocalModel {
         this.isLeader = false;
         this.isCreator = false;
         lobbies = new ArrayList<>();
+        slides = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -49,6 +52,10 @@ public class LocalModel {
 
     public int getId() {
         return id;
+    }
+
+    public List<Lobby> getLobbies() {
+        return lobbies;
     }
 
     public Boolean isInGroup() {
@@ -81,6 +88,10 @@ public class LocalModel {
      */
     public void addLobby(String leaderIp, String multicastIp, String lobbyName){
         lobbies.add( new Lobby(leaderIp, multicastIp, lobbyName));
+    }
+
+    public void addSlide(BufferedImage image){
+        slides.add(image);
     }
 
     /**

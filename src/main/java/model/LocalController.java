@@ -100,4 +100,11 @@ public class LocalController {
         }
     }
 
+    public void sendDiscoverGroup(){
+        networkController.sendDiscover();
+    }
+
+    public LocalModel getLocalModel() {
+        return localModel;
+    }
 }
