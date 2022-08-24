@@ -2,6 +2,7 @@ package model;
 
 import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.Lobby;
+import elementsOfNetwork.User;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -56,6 +57,10 @@ public class LocalModel {
 
     public List<Lobby> getLobbies() {
         return lobbies;
+    }
+
+    public BeamGroup getCurrentGroup() {
+        return currentGroup;
     }
 
     public Boolean isInGroup() {
@@ -139,5 +144,9 @@ public class LocalModel {
 
     public void resetLobbies(){
         this.lobbies = new ArrayList<>();
+    }
+
+    public int addUserToBeamGroup(User user){
+        return currentGroup.addParticipant(user);
     }
 }

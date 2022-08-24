@@ -1,5 +1,6 @@
 package network;
 
+import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.Lobby;
 import messages.*;
 import model.LocalController;
@@ -20,9 +21,9 @@ public class NetworkController {
     public NetworkController (LocalController localController){
         this.localController = localController;
 
-        unicastListener = new UnicastListener(DEFAULT_DISCOVER_RECEIVED_BYTES, this);
+        unicastListener = new UnicastListener(DEFAULT_DISCOVER_RECEIVED_BYTES, DEFAULT_UNICAST_PORT, this);
         datagramSender = new DatagramSender(unicastListener.getSocket());
-        multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES, this);
+        multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES, this);
         multicastListener.setLocalSenderSocketPort(datagramSender.getSocketPort());
 
         multicastListenerThread = new Thread(multicastListener);
@@ -55,7 +56,7 @@ public class NetworkController {
     }
 
     public void sendDiscover(){
-        datagramSender.sendMessage((new DiscoverMessage()), DEFAULT_DISCOVER_IP, DEFAULT_DISCOVER_PORT);
+        datagramSender.sendMessage((new DiscoverMessage()), DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT);
     }
 
     /**
@@ -92,6 +93,10 @@ public class NetworkController {
             System.out.println("I received an info group message");
         } else if (message instanceof  AliveMessage){
             System.out.println("I RECEIVED AN ALIVE MESSAGE");
+        } else if (message instanceof JoinMessage){
+            localController.addToBeamGroup(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
+        } else if (message instanceof ShareBeamGroupMessage){
+            localController.addBeamGroup(((ShareBeamGroupMessage) message).getBeamGroup(), ((ShareBeamGroupMessage) message).getId());
         }
 
     }
@@ -101,6 +106,15 @@ public class NetworkController {
         datagramSender.sendMessage(new InfoGroupMessage(lobby.getIpOfLeader(), lobby.getIpOfMulticast(), lobby.getNameOfLobby()),
                                     recipientAddress,
                                     senderPort);
+    }
+
+    public void sendShareBeamGroupMessage(int id, BeamGroup beamGroup, String recipientAddress, int port){
+        datagramSender.sendMessage(new ShareBeamGroupMessage(beamGroup, id), recipientAddress, port);
+    }
+
+    //TODO: sistemare porta
+    public void sendJoinMessage(Lobby lobby, String username){
+        datagramSender.sendMessage(new JoinMessage(username), lobby.getIpOfLeader(), DEFAULT_UNICAST_PORT);
     }
 
 }

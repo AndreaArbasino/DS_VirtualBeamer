@@ -1,6 +1,5 @@
 package view;
 
-import elementsOfNetwork.Lobby;
 import model.LocalController;
 import model.LocalModel;
 
@@ -10,8 +9,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class GUI {
@@ -25,6 +22,7 @@ public class GUI {
     private JFrame existingGroupsFrame;
     private JPanel sessionPanel;
     private LobbySelection lobbySelection;
+    private Presentation presentation;
 
 
     public GUI() {
@@ -79,7 +77,11 @@ public class GUI {
           } catch (IOException e) {
               e.printStackTrace();
           }
+
       }
+      presentation = new Presentation(localController);
+      presentation.startLeaderFrame();
+
   }
 
 }

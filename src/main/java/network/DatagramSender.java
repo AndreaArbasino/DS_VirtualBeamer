@@ -1,5 +1,6 @@
 package network;
 
+import messages.JoinMessage;
 import messages.Message;
 
 import java.io.ByteArrayOutputStream;
@@ -44,4 +45,6 @@ public class DatagramSender {
     }
 
 
+    public void sendMessage(JoinMessage joinMessage) {
+    }
 }

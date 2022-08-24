@@ -56,10 +56,11 @@ public class LobbySelection {
     }
 
     private class LobbyButtonListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
-            //localController.enter that lobby
+            LobbyButton button = (LobbyButton) e.getSource();
+            localController.sendJoinMessage(button.getLobby());
+            frame.dispose();
         }
     }
 
@@ -72,8 +73,8 @@ public class LobbySelection {
             } catch (InterruptedException err) {
                 throw new RuntimeException(err);
             }
-            displayLobbyButtons();
-            //TODO: controllare che effettivamente si aggiorni senza fare nulla
+            frame.dispose();
+            new LobbySelection(localController).start();
         }
     }
 
@@ -81,11 +82,10 @@ public class LobbySelection {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            frame.dispose();
             InsertString insertString = new InsertString(new JFrame());
             String beamGroupName = insertString.askInputString("INSERT GROUP NAME", "Group name choice");
             localController.createBeamGroup(beamGroupName);
-
-
         }
     }
 

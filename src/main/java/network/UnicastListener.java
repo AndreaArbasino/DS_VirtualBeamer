@@ -18,9 +18,9 @@ public class UnicastListener implements Runnable {
     private int sizeToReceive;
     private NetworkController networkController;
 
-    public UnicastListener(int sizeToReceive, NetworkController networkController) {
+    public UnicastListener(int sizeToReceive, int port, NetworkController networkController) {
         try {
-            socket = new DatagramSocket(); //This is because once the bind is performed, the setReuseAddress will be useless
+            socket = new DatagramSocket(port); //This is because once the bind is performed, the setReuseAddress will be useless
             //TODO VEDERE SE SERVE socket.setReuseAddress(true); Sembrerebbe di no.
             //socket.bind(new InetSocketAddress(port));
             this.sizeToReceive = sizeToReceive;

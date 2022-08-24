@@ -1,6 +1,7 @@
 package model;
 
 import elementsOfNetwork.BeamGroup;
+import elementsOfNetwork.Lobby;
 import elementsOfNetwork.User;
 import messages.InfoGroupMessage;
 import network.NetworkController;
@@ -33,12 +34,24 @@ public class LocalController {
     //serve sia per elezione che per far scegliere da chi scaricaare
 
     /**
-     * Called when the client joins a group. The BeamGroup is sent by the leader, and it is used to discover all the participants
+     * Called when the client is added in a group. The BeamGroup is sent by the leader, and it is used to discover all the participants
      * of the group. This list is used for the election of a leader and/or to choose from who download the slides
      * @param group BeamGroup joined
      */
-    public void addBeamGroup(BeamGroup group){
+    public void addBeamGroup(BeamGroup group, int id){
         localModel.addBeamGroup(group);
+        localModel.enterGroup(id);
+    }
+
+    /**
+     * Called when I add someone
+     * @param user
+     * @param ip
+     * @param port
+     */
+    public void addToBeamGroup(User user, String ip, int port){
+        int id = localModel.addUserToBeamGroup(user);
+        networkController.sendShareBeamGroupMessage(id,(localModel.getCurrentGroup()), ip, port);
     }
 
     //aggiungere metodo per aggiungere partecipanti al beamGroup corrente: metodo che prende un messaggio come parametro
@@ -109,5 +122,9 @@ public class LocalController {
 
     public LocalModel getLocalModel() {
         return localModel;
+    }
+
+    public void sendJoinMessage(Lobby lobby){
+        networkController.sendJoinMessage(lobby, localModel.getUsername());
     }
 }
