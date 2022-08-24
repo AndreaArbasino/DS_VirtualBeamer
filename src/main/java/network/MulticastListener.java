@@ -74,7 +74,7 @@ public class MulticastListener implements Runnable{
         try {
             socket.receive(receivedPacket);
 
-            if(receivedPacket.getAddress() != InetAddress.getLocalHost()){ // I did not receive a multicast message from myself --> need to process it
+            if(!receivedPacket.getAddress().equals(InetAddress.getLocalHost())){ // I did not receive a multicast message from myself --> need to process it
                 printPacket(receivedPacket);
                 Message messageReceived;
                 byteArrayInputStream = new ByteArrayInputStream(buf);
