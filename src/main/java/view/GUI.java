@@ -35,7 +35,7 @@ public class GUI {
         InsertString insertString = new InsertString(frame);
         userName = insertString.askInputString("INSERT YOUR USERNAME", "Username choice");
 
-        localController = new LocalController(userName);
+        localController = new LocalController(userName, this);
         localModel = localController.getLocalModel();
 
         /* INITIAL DISCOVER */

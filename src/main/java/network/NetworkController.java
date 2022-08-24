@@ -86,7 +86,7 @@ public class NetworkController {
         Message message = messageToProcess.getMessage();
 
         if (message instanceof DiscoverMessage){
-            localController.manageDiscoverMessage (messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
+            localController.manageDiscoverMessage(messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
         } else if (message instanceof InfoGroupMessage) {
             localController.manageInfoGroupMessage((InfoGroupMessage) message);
             System.out.println("I received an info group message");

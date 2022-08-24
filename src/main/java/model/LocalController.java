@@ -4,6 +4,7 @@ import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.User;
 import messages.InfoGroupMessage;
 import network.NetworkController;
+import view.GUI;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -20,10 +21,12 @@ public class LocalController {
             altrimenti (scadere timer) se non ci sono risposte, mandi multicast su presentazione con messaggio coord*/
     private final NetworkController networkController;
     private final LocalModel localModel;
+    private final GUI gui;
 
-    public LocalController (String username){
+    public LocalController (String username, GUI gui){
         localModel = new LocalModel(username);
         networkController = new NetworkController(this);
+        this.gui = gui;
     }
 
     // chiamato quando client joina un gruppo, il beam group gli viene mandato dal leader, viene usato per conoscere tutti i partecipanti del gruppo
@@ -59,7 +62,7 @@ public class LocalController {
         String newPresentationAddress = localModel.findAddressForPresentation();
 
         localModel.createBeamGroup(new BeamGroup(new User(localModel.getUsername(), localIp.getHostAddress()), groupName, newPresentationAddress));
-
+        gui.chooseImages();
     }
 
     /**
@@ -93,7 +96,6 @@ public class LocalController {
      */
     public void manageDiscoverMessage( String senderIp, int senderPort){
         System.out.println("I received a discover message");
-        //TODO: AGGIUSTARE, DA SEGFAULT (GIUSTAMENTE!)
         if (localModel.isLeader()){
             System.out.println("I am leader, sending back info of the group");
             networkController.sendInfoMessage(senderIp, senderPort, localModel.getLobbyFromCurrentBeamGroup());

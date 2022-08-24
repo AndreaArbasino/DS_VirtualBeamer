@@ -40,10 +40,10 @@ public class LobbySelection {
 
         frame.add(topPanel);
         refreshButton = new JButton("refresh");
-        refreshButton.addActionListener(new RefreshListener());
+        refreshButton.addActionListener(new RefreshButtonListener());
 
         createButton = new JButton("Create presentation");
-        createButton.addActionListener(new CreateListener());
+        createButton.addActionListener(new CreateButtonListener());
 
         bottomPanel.add(refreshButton);
         bottomPanel.add(createButton);
@@ -63,7 +63,7 @@ public class LobbySelection {
         }
     }
 
-    private class RefreshListener implements ActionListener {
+    private class RefreshButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             localController.sendDiscoverGroup();
@@ -77,11 +77,15 @@ public class LobbySelection {
         }
     }
 
-    private class CreateListener implements ActionListener {
+    private class CreateButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            //in this case a new presentation, and so a lobby... is created
+            InsertString insertString = new InsertString(frame);
+            String beamGruopName = insertString.askInputString("INSERT GROUP NAME", "Group name choice");
+            localController.createBeamGroup(beamGruopName);
+
+
         }
     }
 
@@ -92,7 +96,7 @@ public class LobbySelection {
 
         lobbies.add(new Lobby("adad","adada","Nome_lobby1"));
         lobbies.add(new Lobby("adad","adada","Nome_lobby_molto_Lungo"));
-        lobbies.add(new Lobby("adad","adada","vaffanculoJPK"));
+        lobbies.add(new Lobby("adad","adada","NomeLobbyCaso"));
 
 
         for (Lobby lobby : lobbies){

@@ -78,11 +78,6 @@ public class Presentation {
         leaderFrame.pack();
     }
 
-    public static void main(String[] args) {
-        Presentation presentation = new Presentation(new LocalController("Pippo"));
-        presentation.startLeaderFrame();
-    }
-
     private class StartButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
