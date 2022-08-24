@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.StandardSocketOptions;
 
 /**
  * This class implements a multicast receiver. Upon creation, ip address, port and size to receive must be specified
@@ -42,8 +43,7 @@ public class MulticastListener implements Runnable{
             this.group = InetAddress.getByName(ip);
             this.socket = new MulticastSocket(port);
             socket.joinGroup(group);
-            //socket.setLoopbackMode(true);
-            //socket.setOption(StandardSocketOptions.IP_MULTICAST_LOOP, false );
+            socket.setOption(StandardSocketOptions.IP_MULTICAST_LOOP, false );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,6 +1,5 @@
 package network;
 
-import messages.JoinMessage;
 import messages.Message;
 
 import java.io.ByteArrayOutputStream;
@@ -40,11 +39,9 @@ public class DatagramSender {
     /**
      * @return address of the socket port, useful to understand if a multicast message received was sent by myself
      */
-    public int getSocketPort(){
-        return socket.getLocalPort();
+    public InetAddress getSocketAddress(){
+        return socket.getLocalAddress();
     }
 
 
-    public void sendMessage(JoinMessage joinMessage) {
-    }
 }
