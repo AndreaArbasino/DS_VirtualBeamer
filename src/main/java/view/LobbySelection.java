@@ -91,6 +91,16 @@ public class LobbySelection {
             frame.dispose();
             InsertString insertString = new InsertString(new JFrame());
             String beamGroupName = insertString.askInputString("INSERT GROUP NAME", "Group name choice");
+
+            if (beamGroupName == null){
+                System.out.println("no name inserted");
+                System.exit(0);
+            } else if (beamGroupName.length() == 0){
+                System.out.println("empty name inserted");
+                ErrorMessageDisplay errorMessageDisplay = new ErrorMessageDisplay(new JFrame());
+                errorMessageDisplay.displayErrorMessage("The name of the group must contain at least one character!");
+                System.exit(0);
+            }
             localController.createBeamGroup(beamGroupName);
         }
     }

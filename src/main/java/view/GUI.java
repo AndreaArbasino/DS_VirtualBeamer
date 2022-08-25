@@ -3,6 +3,7 @@ package view;
 import model.LocalController;
 import model.LocalModel;
 
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -80,13 +81,23 @@ public class GUI {
           try {
               BufferedImage im = ImageIO.read(file);
 
-              Image convertedImage = im.getScaledInstance(540, -1, BufferedImage.TYPE_INT_RGB);
-              im = new BufferedImage(convertedImage.getWidth(null), convertedImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
-              im.getGraphics().drawImage(convertedImage, 0, 0, null);
+              try{
+                  Image convertedImage = im.getScaledInstance(540, -1, BufferedImage.TYPE_INT_RGB);
+                  im = new BufferedImage(convertedImage.getWidth(null), convertedImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                  im.getGraphics().drawImage(convertedImage, 0, 0, null);
+              } catch (NullPointerException e){
+                  System.out.println("wrong type of file selected");
+                  ErrorMessageDisplay errorMessageDisplay = new ErrorMessageDisplay(new JFrame());
+                  errorMessageDisplay.displayErrorMessage("You have selected a file of the wrong type!");
+                  System.exit(0);
+              }
 
               localModel.addSlide(im);
-          } catch (IOException e) {
-              e.printStackTrace();
+          } catch (IOException e1) {
+              e1.printStackTrace();
+              ErrorMessageDisplay errorMessageDisplay = new ErrorMessageDisplay(new JFrame());
+              errorMessageDisplay.displayErrorMessage("We are sorry but an error occurred!");
+              System.exit(0);
           }
 
       }

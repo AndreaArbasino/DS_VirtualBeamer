@@ -60,7 +60,7 @@ public class Presentation {
         ArrayList<User> userList = new ArrayList<>();
         userList.add(new User("pippo", "127.0.0.1"));
         userList.add(new User("pluto", "127.0.0.1"));
-        userList.add(new User("paperino", "127.0.0.1"));
+        userList.add(new User("nome_molto_molto_lungo", "127.0.0.1"));
 
         ClientButtonListener userButtonListener = new ClientButtonListener();
         for (User user : userList){
