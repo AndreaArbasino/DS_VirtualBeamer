@@ -12,15 +12,12 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class LobbySelection {
-    private JFrame frame;
-    private JPanel topPanel;
-    private JPanel bottomPanel;
-    private JSplitPane splitPane;
-    private JButton refreshButton;
-    private JButton createButton;
-    private LobbyButton lobbyButton;
-    private LocalController localController;
-    private LocalModel localModel;
+    private final JFrame frame;
+    private final JPanel topPanel;
+    private final JPanel bottomPanel;
+    private final JSplitPane splitPane;
+    private final LocalController localController;
+    private final LocalModel localModel;
 
     public LobbySelection(LocalController localController) {
         this.localController = localController;
@@ -29,20 +26,21 @@ public class LobbySelection {
         topPanel = new JPanel();
         bottomPanel = new JPanel();
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        addElementsForGraphTest(false);
     }
 
     public void start(){
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        topPanel.setPreferredSize(new Dimension(500,500));
+        topPanel.setPreferredSize(new Dimension(300,300));
 
         displayLobbyButtons();
 
         frame.add(topPanel);
-        refreshButton = new JButton("refresh");
+        JButton refreshButton = new JButton("refresh");
         refreshButton.addActionListener(new RefreshButtonListener());
 
-        createButton = new JButton("Create presentation");
+        JButton createButton = new JButton("Create presentation");
         createButton.addActionListener(new CreateButtonListener());
 
         bottomPanel.add(refreshButton);
@@ -52,6 +50,15 @@ public class LobbySelection {
         splitPane.setBottomComponent(bottomPanel);
         frame.add(splitPane);
         frame.setVisible(true);
+        frame.pack();
+    }
+
+    public void restart(){
+        addElementsForGraphTest(true);
+        topPanel.removeAll();
+        topPanel.revalidate();
+        topPanel.repaint();
+        displayLobbyButtons();
         frame.pack();
     }
 
@@ -73,8 +80,7 @@ public class LobbySelection {
             } catch (InterruptedException err) {
                 throw new RuntimeException(err);
             }
-            frame.dispose();
-            start();
+            restart();
         }
     }
 
@@ -93,17 +99,22 @@ public class LobbySelection {
         ArrayList<Lobby> lobbies = new ArrayList<>(localModel.getLobbies());
         LobbyButtonListener lobbyButtonListener = new LobbyButtonListener();
 
-
-        lobbies.add(new Lobby("adad","adada","Nome_lobby1"));
-        lobbies.add(new Lobby("adad","adada","Nome_lobby_molto_Lungo"));
-        lobbies.add(new Lobby("adad","adada","NomeLobbyCaso"));
-
-
         for (Lobby lobby : lobbies){
-            lobbyButton = new LobbyButton(lobby);
+            LobbyButton lobbyButton = new LobbyButton(lobby);
             lobbyButton.setText(lobby.getNameOfLobby());
             lobbyButton.addActionListener(lobbyButtonListener);
             topPanel.add(lobbyButton);
+        }
+    }
+
+    private void addElementsForGraphTest(boolean isForRefresh){
+        if (isForRefresh){
+            localModel.addLobby("adad","adada","Refresh_lobby1");
+            localModel.addLobby("adad","adada","Refresh_Nome_lobby_molto_Lungo");
+        } else {
+            localModel.addLobby("adad","adada","Nome_lobby1");
+            localModel.addLobby("adad","adada","Nome_lobby_molto_Lungo");
+            localModel.addLobby("adad","adada","NomeLobbyCaso");
         }
     }
 }

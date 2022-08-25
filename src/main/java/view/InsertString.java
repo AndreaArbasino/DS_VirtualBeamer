@@ -11,7 +11,6 @@ public class InsertString {
     }
 
     public String askInputString(String message, String title){
-
         return (String) JOptionPane.showInputDialog(
                                 frame,
                                 message,
@@ -20,7 +19,5 @@ public class InsertString {
                                 null,
                                 null,
                                 "");
-
     }
-
 }

@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.concurrent.TimeUnit;
 
 public class GUI {
@@ -32,6 +33,16 @@ public class GUI {
     public void start(){
         InsertString insertString = new InsertString(frame);
         userName = insertString.askInputString("INSERT YOUR USERNAME", "Username choice");
+
+        if (userName == null){
+            System.out.println("no name inserted");
+            System.exit(0);
+        } else if (userName.length() == 0){
+            System.out.println("empty name inserted");
+            ErrorMessageDisplay errorMessageDisplay = new ErrorMessageDisplay(new JFrame());
+            errorMessageDisplay.displayErrorMessage("The username must contain at least one character!");
+            System.exit(0);
+        }
 
         localController = new LocalController(userName, this);
         localModel = localController.getLocalModel();
