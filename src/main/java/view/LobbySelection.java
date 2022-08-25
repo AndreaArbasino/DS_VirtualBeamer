@@ -74,7 +74,7 @@ public class LobbySelection {
                 throw new RuntimeException(err);
             }
             frame.dispose();
-            new LobbySelection(localController).start();
+            start();
         }
     }
 
