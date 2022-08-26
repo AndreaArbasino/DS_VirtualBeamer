@@ -57,14 +57,10 @@ public class Presentation {
         clientsPanel = new JPanel();
         clientsPanel.setLayout(new BoxLayout(clientsPanel, BoxLayout.Y_AXIS));
 
+
         //TODO: GET THE LIST OF CLIENTS IN THE LOBBY MODIFY THIS
-        ArrayList<User> userList = new ArrayList<>();
-        userList.add(new User("pippo", "127.0.0.1"));
-        userList.add(new User("pluto", "127.0.0.1"));
-        userList.add(new User("nome_molto_molto_lungo", "127.0.0.1"));
-        userList.add(new User("qEGE<G", "127.0.0.1"));
-        userList.add(new User("ADRZEDFH", "127.0.0.1"));
-        userList.add(new User("dfzhdfhz", "127.0.0.1"));
+        ArrayList<User> userList = new ArrayList<>(controller.getLocalModel().getCurrentGroup().getUsers());
+        //display local user differently
 
         ClientButtonListener userButtonListener = new ClientButtonListener();
         for (User user : userList){

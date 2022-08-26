@@ -44,6 +44,7 @@ public class LocalController {
      * @param group BeamGroup joined
      */
     public void addBeamGroup(BeamGroup group, int id){
+        //gui.startParticipantFrame();
         localModel.addBeamGroup(group);
         localModel.enterGroup(id);
     }

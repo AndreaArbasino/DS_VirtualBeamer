@@ -103,7 +103,6 @@ public class GUI {
       }
       presentation = new Presentation(localController);
       presentation.startLeaderFrame();
-
   }
 
 }

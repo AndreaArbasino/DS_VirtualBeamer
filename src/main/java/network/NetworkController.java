@@ -67,6 +67,7 @@ public class NetworkController {
         } else if (message instanceof  AliveMessage){
             System.out.println("I RECEIVED AN ALIVE MESSAGE");
         } else if (message instanceof JoinMessage){
+            System.out.println("I have received a JOIN message");
             localController.addToBeamGroup(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
         } else if (message instanceof ShareBeamGroupMessage){
             localController.addBeamGroup(((ShareBeamGroupMessage) message).getBeamGroup(), ((ShareBeamGroupMessage) message).getId());
