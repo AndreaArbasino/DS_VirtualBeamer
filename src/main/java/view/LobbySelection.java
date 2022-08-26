@@ -85,7 +85,6 @@ public class LobbySelection {
     }
 
     private class CreateButtonListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             frame.dispose();
@@ -111,7 +110,11 @@ public class LobbySelection {
 
         for (Lobby lobby : lobbies){
             LobbyButton lobbyButton = new LobbyButton(lobby);
-            lobbyButton.setText(lobby.getNameOfLobby());
+            lobbyButton.setLayout(new BorderLayout());
+            JLabel label1 = new JLabel(lobby.getNameOfLobby());
+            JLabel label2 = new JLabel(lobby.getIpOfMulticast());
+            lobbyButton.add(BorderLayout.NORTH,label1);
+            lobbyButton.add(BorderLayout.SOUTH,label2);
             lobbyButton.addActionListener(lobbyButtonListener);
             topPanel.add(lobbyButton);
         }
@@ -119,12 +122,12 @@ public class LobbySelection {
 
     private void addElementsForGraphTest(boolean isForRefresh){
         if (isForRefresh){
-            localModel.addLobby("adad","adada","Refresh_lobby1");
-            localModel.addLobby("adad","adada","Refresh_Nome_lobby_molto_Lungo");
+            localModel.addLobby("adad","230.100.80.0","Refresh_lobby1");
+            localModel.addLobby("adad","231.100.83.2","Refresh_Nome_lobby_molto_Lungo");
         } else {
-            localModel.addLobby("adad","adada","Nome_lobby1");
-            localModel.addLobby("adad","adada","Nome_lobby_molto_Lungo");
-            localModel.addLobby("adad","adada","NomeLobbyCaso");
+            localModel.addLobby("adad","234.130.87.0","Nome_lobby1");
+            localModel.addLobby("adad","236.120.80.0","Nome_lobby_molto_Lungo");
+            localModel.addLobby("adad","237.140.80.0","NomeLobbyCaso");
         }
     }
 }

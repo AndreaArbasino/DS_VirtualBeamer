@@ -41,6 +41,7 @@ public class Presentation {
 
     public void startLeaderFrame(){
         leaderFrame = new JFrame();
+        leaderFrame.setTitle(controller.getLocalModel().getCurrentGroup().getName() + " (" + controller.getLocalModel().getCurrentGroup().getGroupAddress() + ")");
         leaderFrame.setLayout(new BorderLayout());
         leaderFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -61,11 +62,18 @@ public class Presentation {
         userList.add(new User("pippo", "127.0.0.1"));
         userList.add(new User("pluto", "127.0.0.1"));
         userList.add(new User("nome_molto_molto_lungo", "127.0.0.1"));
+        userList.add(new User("qEGE<G", "127.0.0.1"));
+        userList.add(new User("ADRZEDFH", "127.0.0.1"));
+        userList.add(new User("dfzhdfhz", "127.0.0.1"));
 
         ClientButtonListener userButtonListener = new ClientButtonListener();
         for (User user : userList){
             userButton = new UserButton(user);
-            userButton.setText(user.getUsername());
+            userButton.setLayout(new BorderLayout());
+            JLabel label1 = new JLabel(user.getUsername());
+            JLabel label2 = new JLabel("("+user.getIpAddress()+")", SwingConstants.RIGHT);
+            userButton.add(BorderLayout.CENTER,label1);
+            userButton.add(BorderLayout.SOUTH,label2);
             userButton.addActionListener(userButtonListener);
             clientsPanel.add(userButton);
         }
