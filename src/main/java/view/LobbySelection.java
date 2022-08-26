@@ -53,7 +53,7 @@ public class LobbySelection {
         frame.pack();
     }
 
-    public void restart(){
+    public void refresh(){
         addElementsForGraphTest(true);
         topPanel.removeAll();
         topPanel.revalidate();
@@ -80,7 +80,7 @@ public class LobbySelection {
             } catch (InterruptedException err) {
                 throw new RuntimeException(err);
             }
-            restart();
+            refresh();
         }
     }
 

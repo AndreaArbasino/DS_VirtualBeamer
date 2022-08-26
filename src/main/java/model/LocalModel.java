@@ -5,10 +5,9 @@ import elementsOfNetwork.Lobby;
 import elementsOfNetwork.User;
 
 import java.awt.image.BufferedImage;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
-
-import static utilities.StaticUtilities.DEFAULT_DISCOVER_IP;
 
 /**
  *
@@ -17,7 +16,7 @@ public class LocalModel {
     //TODO: vedere se unire con lo user
     //scegliere bene il nome dei possibili stati ed eventualmente utilizzarli --> penso servano per la GUI
     private final String username;
-    private int id;
+    private int localId;
     private InternalState internalState; // FSM state that defines the current situation of the node
 
     private List<Lobby> lobbies; //list of the lobbies that already exist
@@ -51,8 +50,8 @@ public class LocalModel {
         return internalState;
     }
 
-    public int getId() {
-        return id;
+    public int getLocalId() {
+        return localId;
     }
 
     public List<Lobby> getLobbies() {
@@ -80,7 +79,7 @@ public class LocalModel {
      * @param id id of the node inside the group
      */
     public void enterGroup(int id){
-        this.id = id;
+        this.localId = id;
         inGroup = true;
     }
 
@@ -108,29 +107,10 @@ public class LocalModel {
         this.currentGroup = new BeamGroup(group);
     }
 
-    public void createBeamGroup(BeamGroup group){
-        this.currentGroup = new BeamGroup(group);
+    public void createLocalBeamGroup(InetAddress localIp, String groupName, String newPresentationAddress){
+        this.currentGroup = new BeamGroup(new User(username, localIp.getHostAddress()), groupName, newPresentationAddress);
         isLeader = true;
     }
-
-    public String findAddressForPresentation(){
-        String ip;
-        List<String> usedIPs = new ArrayList<>();
-        usedIPs.add(DEFAULT_DISCOVER_IP);
-        for (Lobby lobby : lobbies){
-            usedIPs.add(lobby.getIpOfMulticast());
-        }
-        do{
-            int value1 = 225 + (int)(Math.random() * ((239 - 225) + 1));
-            int value2 = (int)(Math.random() * ((255) + 1));
-            int value3 = (int)(Math.random() * ((255) + 1));
-            int value4 = (int)(Math.random() * ((255) + 1));
-            ip = value1 + "." + value2 + "." + value3 + "." + value4;
-        } while (usedIPs.contains(ip));
-        System.out.println(ip + " is the ip for the presentation of the new group" );
-        return ip;
-    }
-
 
     public void setInternalState(InternalState internalState) {
         this.internalState = internalState;

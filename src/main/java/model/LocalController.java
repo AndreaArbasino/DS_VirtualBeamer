@@ -9,6 +9,11 @@ import view.GUI;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static utilities.StaticUtilities.DEFAULT_DISCOVER_IP;
 
 public class LocalController {
     /*Multicast receiver se devi joinare è sul multicast hello una volta dentro ad una lobby sei su multicast lobby
@@ -70,11 +75,12 @@ public class LocalController {
     public void createBeamGroup(String groupName){
         //find a local ip address in order to create the new BeamGroup
         InetAddress localIp =  findLocalIp();
-        System.out.println(localIp.getHostAddress() + " is the local ip "); // DA CANCELLARE, TENUTO QUI PER TESTING
-        //find a multicast address different from the ones that already exist
-        String newPresentationAddress = localModel.findAddressForPresentation();
+        System.out.println(localIp.getHostAddress() + " is the local ip ");
 
-        localModel.createBeamGroup(new BeamGroup(new User(localModel.getUsername(), localIp.getHostAddress()), groupName, newPresentationAddress));
+        //find a multicast address different from the ones that already exist
+        String newPresentationAddress = findAddressForPresentation();
+
+        localModel.createLocalBeamGroup(localIp, groupName, newPresentationAddress);
         gui.chooseImages();
     }
 
@@ -126,5 +132,32 @@ public class LocalController {
 
     public void sendJoinMessage(Lobby lobby){
         networkController.sendJoinMessage(lobby, localModel.getUsername());
+    }
+
+    private String findAddressForPresentation(){
+        String ip;
+        List<String> usedIPs = new ArrayList<>();
+        usedIPs.add(DEFAULT_DISCOVER_IP);
+
+        //search if other groups have been created meanwhile: conservative approach (old groups are kept, maybe the leader is currently down)
+        networkController.sendDiscover();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        for (Lobby lobby : localModel.getLobbies()){
+            usedIPs.add(lobby.getIpOfMulticast());
+        }
+        do{
+            int value1 = 225 + (int)(Math.random() * ((239 - 225) + 1));
+            int value2 = (int)(Math.random() * ((255) + 1));
+            int value3 = (int)(Math.random() * ((255) + 1));
+            int value4 = (int)(Math.random() * ((255) + 1));
+            ip = value1 + "." + value2 + "." + value3 + "." + value4;
+        } while (usedIPs.contains(ip));
+        System.out.println(ip + " is the ip for the presentation of the new group" );
+        return ip;
     }
 }
