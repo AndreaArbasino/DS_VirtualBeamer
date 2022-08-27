@@ -3,14 +3,12 @@ package view;
 import model.LocalController;
 import model.LocalModel;
 
-import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.concurrent.TimeUnit;
 
 public class GUI {
@@ -106,7 +104,7 @@ public class GUI {
     }
 
     public void refreshLeaderPresentation(){
-        presentation.refreshLeaderPresentation();
+        presentation.refresh();
     }
 
 }

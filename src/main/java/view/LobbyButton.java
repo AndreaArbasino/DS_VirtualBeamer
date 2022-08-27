@@ -1,7 +1,6 @@
 package view;
 
 import elementsOfNetwork.Lobby;
-import elementsOfNetwork.User;
 
 import javax.swing.*;
 
