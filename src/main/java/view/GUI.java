@@ -63,46 +63,50 @@ public class GUI {
     /**
      * Opens a system window that allows to select the slides (jpg images) and adds them to the model
      */
-  public void chooseImages(){
-      frame = new JFrame("Select slides");
-      frame.setLocationRelativeTo(null);
+    public void chooseImages(){
+        frame = new JFrame("Select slides");
+        frame.setLocationRelativeTo(null);
 
-      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-      JFileChooser fc = new JFileChooser(new File(""));
-      fc.setDialogTitle("Select slides");
-      fc.setMultiSelectionEnabled(true);
-      frame.setVisible(true);
-      fc.showOpenDialog(frame);
-      File[] selectedFile = fc.getSelectedFiles();
-      frame.setVisible(false);
+        JFileChooser fc = new JFileChooser(new File(""));
+        fc.setDialogTitle("Select slides");
+        fc.setMultiSelectionEnabled(true);
+        frame.setVisible(true);
+        fc.showOpenDialog(frame);
+        File[] selectedFile = fc.getSelectedFiles();
+        frame.setVisible(false);
 
-      for (File file : selectedFile) {
-          try {
-              BufferedImage im = ImageIO.read(file);
+        for (File file : selectedFile) {
+            try {
+                BufferedImage im = ImageIO.read(file);
 
-              try{
-                  Image convertedImage = im.getScaledInstance(540, -1, BufferedImage.TYPE_INT_RGB);
-                  im = new BufferedImage(convertedImage.getWidth(null), convertedImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
-                  im.getGraphics().drawImage(convertedImage, 0, 0, null);
-              } catch (NullPointerException e){
-                  System.out.println("wrong type of file selected");
-                  ErrorMessageDisplay errorMessageDisplay = new ErrorMessageDisplay(new JFrame());
-                  errorMessageDisplay.displayErrorMessage("You have selected a file of the wrong type!");
-                  System.exit(0);
-              }
+                try{
+                    Image convertedImage = im.getScaledInstance(540, -1, BufferedImage.TYPE_INT_RGB);
+                    im = new BufferedImage(convertedImage.getWidth(null), convertedImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                    im.getGraphics().drawImage(convertedImage, 0, 0, null);
+                } catch (NullPointerException e){
+                    System.out.println("wrong type of file selected");
+                    ErrorMessageDisplay errorMessageDisplay = new ErrorMessageDisplay(new JFrame());
+                    errorMessageDisplay.displayErrorMessage("You have selected a file of the wrong type!");
+                    System.exit(0);
+                }
 
-              localModel.addSlide(im);
-          } catch (IOException e1) {
-              e1.printStackTrace();
-              ErrorMessageDisplay errorMessageDisplay = new ErrorMessageDisplay(new JFrame());
-              errorMessageDisplay.displayErrorMessage("We are sorry but an error occurred!");
-              System.exit(0);
-          }
+                localModel.addSlide(im);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                ErrorMessageDisplay errorMessageDisplay = new ErrorMessageDisplay(new JFrame());
+                errorMessageDisplay.displayErrorMessage("We are sorry but an error occurred!");
+                System.exit(0);
+            }
 
-      }
-      presentation = new Presentation(localController);
-      presentation.startLeaderFrame();
-  }
+        }
+        presentation = new Presentation(localController);
+        presentation.startLeaderFrame();
+    }
+
+    public void refreshLeaderPresentation(){
+        presentation.refreshLeaderPresentation();
+    }
 
 }

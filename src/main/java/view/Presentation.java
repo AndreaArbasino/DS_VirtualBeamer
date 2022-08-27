@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class Presentation {
@@ -57,22 +59,8 @@ public class Presentation {
         clientsPanel = new JPanel();
         clientsPanel.setLayout(new BoxLayout(clientsPanel, BoxLayout.Y_AXIS));
 
+        displayParticipantsButtons();
 
-        //TODO: GET THE LIST OF CLIENTS IN THE LOBBY MODIFY THIS
-        ArrayList<User> userList = new ArrayList<>(controller.getLocalModel().getCurrentGroup().getUsers());
-        //display local user differently
-
-        ClientButtonListener userButtonListener = new ClientButtonListener();
-        for (User user : userList){
-            userButton = new UserButton(user);
-            userButton.setLayout(new BorderLayout());
-            JLabel label1 = new JLabel(user.getUsername());
-            JLabel label2 = new JLabel("("+user.getIpAddress()+")", SwingConstants.RIGHT);
-            userButton.add(BorderLayout.CENTER,label1);
-            userButton.add(BorderLayout.SOUTH,label2);
-            userButton.addActionListener(userButtonListener);
-            clientsPanel.add(userButton);
-        }
         leaderFrame.add(clientsPanel, BorderLayout.WEST);
         splitPane.setTopComponent(slideLabel);
         splitPane.setBottomComponent(bottomPanel);
@@ -96,7 +84,39 @@ public class Presentation {
         }
     }
 
+    public void refreshLeaderPresentation(){
+        clientsPanel.removeAll();
+        clientsPanel.revalidate();
+        clientsPanel.repaint();
+        displayParticipantsButtons();
+        leaderFrame.pack();
+    }
 
+    private void displayParticipantsButtons() {
+        ArrayList<User> userList = new ArrayList<>(controller.getLocalModel().getCurrentGroup().getUsers());
 
+        if(1 == userList.size()){ //only the creator is in the group
+            JLabel line1 = new JLabel("You are");
+            JLabel line2 = new JLabel("the only");
+            JLabel line3 = new JLabel("participant!");
+            clientsPanel.add(line1);
+            clientsPanel.add(line2);
+            clientsPanel.add(line3);
+        } else {
+            ClientButtonListener userButtonListener = new ClientButtonListener();
+            userList.remove(controller.getLocalModel().getLocalUser());
+            for (User user : userList){
+                userButton = new UserButton(user);
+                userButton.setLayout(new BorderLayout());
+                JLabel label1 = new JLabel(user.getUsername());
+                JLabel label2 = new JLabel("("+user.getIpAddress()+")", SwingConstants.RIGHT);
+                userButton.add(BorderLayout.CENTER,label1);
+                userButton.add(BorderLayout.SOUTH,label2);
+                userButton.addActionListener(userButtonListener);
+                clientsPanel.add(userButton);
+            }
+        }
+
+    }
 
 }

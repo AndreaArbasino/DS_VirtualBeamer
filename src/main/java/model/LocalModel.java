@@ -62,6 +62,10 @@ public class LocalModel {
         return currentGroup;
     }
 
+    public User getLocalUser(){
+        return currentGroup.getParticipants().get(localId);
+    }
+
     public Boolean isInGroup() {
         return inGroup;
     }

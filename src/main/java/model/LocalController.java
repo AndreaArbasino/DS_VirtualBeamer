@@ -58,6 +58,7 @@ public class LocalController {
     public void addToBeamGroup(User user, String ip, int port){
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendShareBeamGroupMessage(id,(localModel.getCurrentGroup()), ip, port);
+        gui.refreshLeaderPresentation();
     }
 
     //aggiungere metodo per aggiungere partecipanti al beamGroup corrente: metodo che prende un messaggio come parametro
