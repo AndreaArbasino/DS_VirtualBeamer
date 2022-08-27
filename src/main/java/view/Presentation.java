@@ -104,7 +104,16 @@ public class Presentation {
             clientsPanel.add(line3);
         } else {
             ClientButtonListener userButtonListener = new ClientButtonListener();
-            userList.remove(controller.getLocalModel().getLocalUser());
+            User localUser = controller.getLocalModel().getLocalUser();
+            JLabel line1 = new JLabel("LOCAL INFORMATION");
+            JLabel line2 = new JLabel("username: "+localUser.getUsername());
+            JLabel line3 = new JLabel("ID: "+controller.getLocalModel().getLocalId());
+            JLabel line4 = new JLabel("IP: "+localUser.getIpAddress());
+            clientsPanel.add(line1);
+            clientsPanel.add(line2);
+            clientsPanel.add(line3);
+            clientsPanel.add(line4);
+            userList.remove(localUser);
             for (User user : userList){
                 userButton = new UserButton(user);
                 userButton.setLayout(new BorderLayout());
