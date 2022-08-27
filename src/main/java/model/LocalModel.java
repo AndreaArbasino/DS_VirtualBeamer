@@ -133,4 +133,8 @@ public class LocalModel {
     public int addUserToBeamGroup(User user){
         return currentGroup.addParticipant(user);
     }
+
+    public void addUserToBeamGroup(User user, int id){
+        currentGroup.addParticipant(user, id);
+    }
 }

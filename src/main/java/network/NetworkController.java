@@ -2,6 +2,7 @@ package network;
 
 import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.Lobby;
+import elementsOfNetwork.User;
 import messages.*;
 import model.LocalController;
 
@@ -11,7 +12,7 @@ import static utilities.StaticUtilities.*;
  * Controller of the network inside a node of the network
  */
 public class NetworkController {
-    private LocalController localController;
+    private final LocalController localController;
     private MulticastListener multicastListener;
     private UnicastListener unicastListener;
     private DatagramSender datagramSender;
@@ -72,6 +73,9 @@ public class NetworkController {
         } else if (message instanceof ShareBeamGroupMessage){
             System.out.println("I have correctly a joined a group");
             localController.addBeamGroup(((ShareBeamGroupMessage) message).getBeamGroup(), ((ShareBeamGroupMessage) message).getId());
+        } else if (message instanceof AddMemberMessage){
+            System.out.println("Somebody joined the group");
+            localController.addBeamGroup(((ShareBeamGroupMessage) message).getBeamGroup(), ((ShareBeamGroupMessage) message).getId());
         }
 
     }
@@ -92,4 +96,7 @@ public class NetworkController {
         datagramSender.sendMessage(new JoinMessage(username), lobby.getIpOfLeader(), DEFAULT_UNICAST_PORT);
     }
 
+    public void sendAddMemberMessage(User user, int id){
+        datagramSender.sendMessage(new AddMemberMessage(user, id), localController.getLocalModel().getCurrentGroup().getGroupAddress(), DEFAULT_MULTICAST_PORT);
+    }
 }

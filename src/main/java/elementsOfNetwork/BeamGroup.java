@@ -78,6 +78,10 @@ public class BeamGroup implements Serializable {
         return participants.size()-1;
     }
 
+    public void addParticipant(User user, int id){
+        participants.put(id, user);
+    }
+
     public void removeParticipant (int participantId){
         participants.remove(participantId);
     }

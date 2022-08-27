@@ -34,7 +34,7 @@ public class ClientSidePanelManager implements SidePanelManager {
                     new JFrame(),
                     "username :" + button.getUser().getUsername() + "\nIP :" + button.getUser().getIpAddress(),
                     "info",
-                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }
