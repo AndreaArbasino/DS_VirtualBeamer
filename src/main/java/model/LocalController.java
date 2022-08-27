@@ -44,9 +44,13 @@ public class LocalController {
      * @param group BeamGroup joined
      */
     public void addBeamGroup(BeamGroup group, int id){
-        //gui.startParticipantFrame();
         localModel.addBeamGroup(group);
         localModel.enterGroup(id);
+        //controllare se presentazione iniziata:
+        //se non ancora iniziata:
+        gui.startClientFrame();
+        //se già iniziata:
+        //qualcosa con download selection
     }
 
     /**
@@ -58,7 +62,7 @@ public class LocalController {
     public void addToBeamGroup(User user, String ip, int port){
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendShareBeamGroupMessage(id,(localModel.getCurrentGroup()), ip, port);
-        gui.refreshLeaderPresentation();
+        gui.refreshPresentation();
     }
 
     //aggiungere metodo per aggiungere partecipanti al beamGroup corrente: metodo che prende un messaggio come parametro

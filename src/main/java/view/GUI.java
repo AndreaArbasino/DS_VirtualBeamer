@@ -103,7 +103,12 @@ public class GUI {
         presentation.startLeaderFrame();
     }
 
-    public void refreshLeaderPresentation(){
+    public void startClientFrame(){
+        presentation = new Presentation(localController);
+        presentation.startClientFrame();
+    }
+
+    public void refreshPresentation(){
         presentation.refresh();
     }
 

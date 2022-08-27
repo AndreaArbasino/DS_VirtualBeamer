@@ -70,6 +70,7 @@ public class NetworkController {
             System.out.println("I have received a JOIN message");
             localController.addToBeamGroup(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
         } else if (message instanceof ShareBeamGroupMessage){
+            System.out.println("I have correctly a joined a group");
             localController.addBeamGroup(((ShareBeamGroupMessage) message).getBeamGroup(), ((ShareBeamGroupMessage) message).getId());
         }
 
