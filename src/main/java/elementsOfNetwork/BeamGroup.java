@@ -39,7 +39,7 @@ public class BeamGroup implements Serializable {
     public BeamGroup(BeamGroup originalGroup) {
         this.name = originalGroup.getGroupName();
         this.groupAddress = originalGroup.getGroupAddress();
-        this.creatorStillIn = originalGroup.creatorStillIn;
+        this.creatorStillIn = originalGroup.isCreatorStillIn();
         this.creator = originalGroup.getCreator();
         this.leaderId = originalGroup.getLeaderId();
         this.participants = new HashMap<>(originalGroup.getParticipants());
@@ -143,5 +143,10 @@ public class BeamGroup implements Serializable {
         }
 
         return toBeReturned;
+    }
+
+    public void reset(){
+        participants.clear();
+        //magari gestire creator still in e anche l'id del leader, possibilmente passarli come parametro
     }
 }

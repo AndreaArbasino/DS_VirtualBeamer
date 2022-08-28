@@ -49,7 +49,7 @@ public class Presentation {
         clientsPanel.revalidate();
         clientsPanel.repaint();
         sidePanelManager.createPanel(clientsPanel,
-                new ArrayList<>(controller.getLocalModel().getCurrentGroup().getUsers()),
+                new ArrayList<>(controller.getLocalModel().getCurrentGroupUsers()),
                 controller.getLocalModel().getLocalUser());
         mainFrame.pack();
     }
@@ -97,8 +97,8 @@ public class Presentation {
 
     private void startMainFrame(){
         mainFrame = new JFrame();
-        mainFrame.setTitle(controller.getLocalModel().getCurrentGroup().getGroupName() +
-                            " (" + controller.getLocalModel().getCurrentGroup().getGroupAddress() + ")");
+        mainFrame.setTitle(controller.getLocalModel().getCurrentGroupName() +
+                            " (" + controller.getLocalModel().getCurrentGroupAddress() + ")");
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -107,24 +107,25 @@ public class Presentation {
             }
         });
 
+        mainFrame.add(
+                new JLabel("Username: " + controller.getLocalModel().getUsername() +
+                        " , ID: " + controller.getLocalModel().getLocalId() +
+                        " , IP: " + controller.getLocalModel().getLocalUser().getIpAddress()),
+                BorderLayout.SOUTH);
+
+
         slideLabel.setPreferredSize(new Dimension(500,500));
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         clientsPanel = new JPanel();
         clientsPanel.setLayout(new BoxLayout(clientsPanel, BoxLayout.Y_AXIS));
         sidePanelManager.createPanel(clientsPanel,
-                                    new ArrayList<>(controller.getLocalModel().getCurrentGroup().getUsers()),
+                                    new ArrayList<>(controller.getLocalModel().getCurrentGroupUsers()),
                                     controller.getLocalModel().getLocalUser());
         mainFrame.add(clientsPanel, BorderLayout.WEST);
         splitPane.setTopComponent(slideLabel);
         splitPane.setBottomComponent(bottomPanel);
 
         mainFrame.add(splitPane, BorderLayout.CENTER);
-
-        mainFrame.add(
-                new JLabel("Username: " + controller.getLocalModel().getUsername() +
-                        " , ID: " + controller.getLocalModel().getLocalId() +
-                        " , IP: " + controller.getLocalModel().getLocalUser().getIpAddress()),
-                BorderLayout.SOUTH);
 
         mainFrame.setVisible(true);
         mainFrame.pack();
@@ -150,8 +151,8 @@ public class Presentation {
             mainFrame.dispose();
             JOptionPane.showMessageDialog(
                     new JFrame(),
-                    "The presentation in the group " + controller.getLocalModel().getCurrentGroup().getGroupName() +
-                            "(" + controller.getLocalModel().getCurrentGroup().getGroupAddress() + ")" + "was correctly terminated",
+                    "The presentation in the group " + controller.getLocalModel().getCurrentGroupName() +
+                            "(" + controller.getLocalModel().getCurrentGroupAddress() + ")" + "was correctly terminated",
                     "presentation correctly terminated",
                     JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);

@@ -35,17 +35,13 @@ public class LocalController {
         this.gui = gui;
     }
 
-    // chiamato quando client joina un gruppo, il beam group gli viene mandato dal leader, viene usato per conoscere tutti i partecipanti del gruppo
-    //serve sia per elezione che per far scegliere da chi scaricaare
-
     /**
      * Called when the client is added in a group. The BeamGroup is sent by the leader, and it is used to discover all the participants
      * of the group. This list is used for the election of a leader and/or to choose from who download the slides
      * @param group BeamGroup joined
      */
-    public void addBeamGroup(BeamGroup group, int id){
-        localModel.addBeamGroup(group);
-        localModel.enterGroup(id);
+    public void addBeamGroup(BeamGroup group, int assignedId){
+        localModel.addBeamGroup(group, assignedId);
         //controllare se presentazione iniziata:
         //se non ancora iniziata:
         gui.startClientFrame();
@@ -71,6 +67,7 @@ public class LocalController {
         gui.refreshPresentation();
     }
 
+    //called by client: used to update their view of the group
     public void addMember(User user, int id){
         localModel.addUserToBeamGroup(user, id);
     }

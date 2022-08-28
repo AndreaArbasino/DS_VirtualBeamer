@@ -116,8 +116,8 @@ public class GUI {
         presentation.close();
         JOptionPane.showMessageDialog(
                 new JFrame(),
-                "The presentation in the group " + localController.getLocalModel().getCurrentGroup().getGroupName() +
-                        "(" + localController.getLocalModel().getCurrentGroup().getGroupAddress() + ")" + "was terminated, thank you for following!",
+                "The presentation in the group " + localController.getLocalModel().getCurrentGroupName() +
+                        "(" + localController.getLocalModel().getCurrentGroupAddress() + ")" + "was terminated, thank you for following!",
                 "presentation terminated!",
                 JOptionPane.INFORMATION_MESSAGE);
         System.exit(0);

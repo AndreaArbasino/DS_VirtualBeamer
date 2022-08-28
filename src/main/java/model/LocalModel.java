@@ -13,18 +13,14 @@ import java.util.List;
  *
  */
 public class LocalModel {
-    //scegliere bene il nome dei possibili stati ed eventualmente utilizzarli --> penso servano per la GUI
+
     private final String username;
     private int localId;
-    private InternalState internalState; // FSM state that defines the current situation of the node
-
+    private Boolean presentationStarted; //TODO: set it true once the presentation starts, upon reception of a special message
     private List<Lobby> lobbies; //list of the lobbies that already exist
     private List<BufferedImage> slides;
-    private Boolean isLeader;
-    private Boolean isCreator;
-    private Boolean inGroup;
-
     private BeamGroup currentGroup; //group in which the client belongs to (if any)
+
 
 
     /**
@@ -33,20 +29,19 @@ public class LocalModel {
      */
     public LocalModel(String username) {
         this.username = username;
-        this.internalState = InternalState.STARTED;
-        this.inGroup = false;
-        this.isLeader = false;
-        this.isCreator = false;
+        this.presentationStarted = false;
         lobbies = new ArrayList<>();
         slides = new ArrayList<>();
     }
+
+
 
     public String getUsername() {
         return username;
     }
 
-    public InternalState getInternalState() {
-        return internalState;
+    public Boolean isPresentationStarted() {
+        return presentationStarted;
     }
 
     public int getLocalId() {
@@ -54,7 +49,19 @@ public class LocalModel {
     }
 
     public List<Lobby> getLobbies() {
-        return lobbies;
+        return new ArrayList<>(lobbies);
+    }
+
+    public String getCurrentGroupName(){
+        return currentGroup.getGroupName();
+    }
+
+    public String getCurrentGroupAddress(){
+        return currentGroup.getGroupAddress();
+    }
+
+    public List<User> getCurrentGroupUsers(){
+        return new ArrayList<>(currentGroup.getUsers());
     }
 
     public BeamGroup getCurrentGroup() {
@@ -65,26 +72,11 @@ public class LocalModel {
         return currentGroup.getParticipants().get(localId);
     }
 
-    public Boolean isInGroup() {
-        return inGroup;
-    }
-
     public Boolean isLeader() {
-        return isLeader;
+        return (localId == currentGroup.getLeaderId());
     }
 
-    public Boolean isCreator() {
-        return isCreator;
-    }
 
-    /**
-     * Enter a presentation group
-     * @param id id of the node inside the group
-     */
-    public void enterGroup(int id){
-        this.localId = id;
-        inGroup = true;
-    }
 
     /**
      * Once an InfoGroupMessage is received, the list of the already existing lobbies is updated.
@@ -106,22 +98,23 @@ public class LocalModel {
      * of the group. This list is used for the election of a leader and/or to choose from who download the slides
      * @param group BeamGroup joined
      */
-    public void addBeamGroup(BeamGroup group){
+    public void addBeamGroup(BeamGroup group, int assignedId){
         this.currentGroup = new BeamGroup(group);
+        this.localId = assignedId;
     }
 
     public void createLocalBeamGroup(InetAddress localIp, String groupName, String newPresentationAddress){
         this.currentGroup = new BeamGroup(new User(username, localIp.getHostAddress()), groupName, newPresentationAddress);
-        isLeader = true;
+        this.localId = BeamGroup.CREATOR_ID;
     }
 
-    public void setInternalState(InternalState internalState) {
-        this.internalState = internalState;
-    }
+    public void startPresentation() {
+        this.presentationStarted = true;
+    } //TODO: maybe merge this method with the one managin the beginning of slide show
 
     public Lobby getLobbyFromCurrentBeamGroup(){
-        //TODO: aggiungere il leader IP nel local model / currentGroup (Meglio nel beam group)
-
+        //TODO: aggiungere il leader IP nel local model / currentGroup (Meglio nel beam group) --> possibile richiedere il leader dal beamgroup e poi da li leggere l'address
+        //mi sembra che quanto scritto sopra sia risolto
         return new Lobby(currentGroup.getLeader().getIpAddress(), currentGroup.getGroupAddress(), currentGroup.getGroupName());
     }
 
@@ -129,10 +122,12 @@ public class LocalModel {
         this.lobbies = new ArrayList<>();
     }
 
+    //called by leaders, the integer returned is the one assigned to the new participant, user
     public int addUserToBeamGroup(User user){
         return currentGroup.addParticipant(user);
     }
 
+    //called by clients, add a certain user associating it to the given ID
     public void addUserToBeamGroup(User user, int id){
         currentGroup.addParticipant(user, id);
     }

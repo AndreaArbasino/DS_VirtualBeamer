@@ -69,7 +69,7 @@ public class NetworkController {
             System.out.println("I RECEIVED AN ALIVE MESSAGE");
         } else if (message instanceof JoinMessage){
             System.out.println("I have received a JOIN message");
-            localController.addToBeamGroup(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
+            localController.addToBeamGroup(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), messageToProcess.getSenderPort()); //TODO: controllare che la porta serva davvero e non si possa usare una default
         } else if (message instanceof ShareBeamGroupMessage){
             System.out.println("I have correctly a joined a group");
             localController.addBeamGroup(((ShareBeamGroupMessage) message).getBeamGroup(), ((ShareBeamGroupMessage) message).getId());
@@ -97,6 +97,6 @@ public class NetworkController {
     }
 
     public void sendAddMemberMessage(User user, int id){
-        datagramSender.sendMessage(new AddMemberMessage(user, id), localController.getLocalModel().getCurrentGroup().getGroupAddress(), DEFAULT_MULTICAST_PORT);
+        datagramSender.sendMessage(new AddMemberMessage(user, id), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
     }
 }

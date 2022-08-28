@@ -30,7 +30,7 @@ public class DownloadSelection {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel.setPreferredSize(new Dimension(500, 500));
 
-        ArrayList<User> users = new ArrayList<>(localModel.getCurrentGroup().getUsers());
+        ArrayList<User> users = new ArrayList<>(localModel.getCurrentGroupUsers());
         ClientButtonDownloadListener clientButtonDownloadListener = new ClientButtonDownloadListener();
 
         //TODO: RIMUOVERE
