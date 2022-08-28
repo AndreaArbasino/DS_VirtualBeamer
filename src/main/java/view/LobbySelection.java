@@ -120,6 +120,7 @@ public class LobbySelection {
         }
     }
 
+    //TODO: remove what follows since only used for testing
     private void addElementsForGraphTest(boolean isForRefresh){
         if (isForRefresh){
             localModel.addLobby("adad","230.100.80.0","Refresh_lobby1");

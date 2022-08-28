@@ -13,7 +13,6 @@ import java.util.List;
  *
  */
 public class LocalModel {
-    //TODO: vedere se unire con lo user
     //scegliere bene il nome dei possibili stati ed eventualmente utilizzarli --> penso servano per la GUI
     private final String username;
     private int localId;
@@ -123,7 +122,7 @@ public class LocalModel {
     public Lobby getLobbyFromCurrentBeamGroup(){
         //TODO: aggiungere il leader IP nel local model / currentGroup (Meglio nel beam group)
 
-        return new Lobby(currentGroup.getLeaderIp(), currentGroup.getGroupAddress(), currentGroup.getName());
+        return new Lobby(currentGroup.getLeader().getIpAddress(), currentGroup.getGroupAddress(), currentGroup.getGroupName());
     }
 
     public void resetLobbies(){

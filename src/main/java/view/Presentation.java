@@ -6,28 +6,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class Presentation {
 
     private JFrame mainFrame;
-
-    private JButton startButton;
-    private JButton terminateButton;
-    private JButton nextButton;
-    private JButton prevButton;
-
     private JPanel bottomPanel;
     private JPanel clientsPanel;
     private SidePanelManager sidePanelManager;
+    private final JSplitPane splitPane;
+    private final JLabel slideLabel;
 
     private int currentPosition;
     private ImageIcon currentSlide;
-
-    private JSplitPane splitPane;
-    private JLabel slideLabel;
-
-    private UserButton userButton;
 
     private LocalController controller;
 
@@ -65,7 +58,7 @@ public class Presentation {
         sidePanelManager = new LeaderSidePanelManager();
         refresh();
 
-        //add all buttons
+        //add all buttons for managing the presentation
         addBottomButtons();
     }
 
@@ -73,7 +66,7 @@ public class Presentation {
         sidePanelManager = new ClientSidePanelManager();
         refresh();
 
-        //remove all buttons
+        //remove all buttons for managing the presentation
         bottomPanel.removeAll();
         bottomPanel.revalidate();
         bottomPanel.repaint();
@@ -81,22 +74,22 @@ public class Presentation {
     }
 
     private void addBottomButtons(){
-        startButton = new JButton("START");
+        JButton startButton = new JButton("START");
         StartButtonListener startButtonListener = new StartButtonListener();
         startButton.addActionListener(startButtonListener);
         bottomPanel.add(startButton);
 
-        terminateButton = new JButton("TERMINATE");
+        JButton terminateButton = new JButton("TERMINATE");
         TerminateButtonListener terminateButtonListener = new TerminateButtonListener();
         terminateButton.addActionListener(terminateButtonListener);
         bottomPanel.add(terminateButton);
 
-        nextButton = new JButton("NEXT");
+        JButton nextButton = new JButton("NEXT");
         NextButtonListener nextButtonListener = new NextButtonListener();
         nextButton.addActionListener(nextButtonListener);
         bottomPanel.add(nextButton);
 
-        prevButton = new JButton("PREVIOUS");
+        JButton prevButton = new JButton("PREVIOUS");
         PreviousButtonListener previousButtonListener = new PreviousButtonListener();
         prevButton.addActionListener(previousButtonListener);
         bottomPanel.add(prevButton);
@@ -104,10 +97,15 @@ public class Presentation {
 
     private void startMainFrame(){
         mainFrame = new JFrame();
-        mainFrame.setTitle(controller.getLocalModel().getCurrentGroup().getName() +
+        mainFrame.setTitle(controller.getLocalModel().getCurrentGroup().getGroupName() +
                             " (" + controller.getLocalModel().getCurrentGroup().getGroupAddress() + ")");
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                //TODO: send a leaveNotificationMessage in multicast containing the local id
+            }
+        });
 
         slideLabel.setPreferredSize(new Dimension(500,500));
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -132,31 +130,47 @@ public class Presentation {
         mainFrame.pack();
     }
 
+    //metodo per chiudere la finestra (nel caso di terminazione)
+    public void close(){
+        mainFrame.dispose();
+    }
+
     private class StartButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            //controller.qualcosa
+            //TODO: attraverso il controller manda sia tutte le slide in multicast che un messaggio con la posizione corrente
         }
     }
 
     private class TerminateButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            //controller.qualcosa
+            //TODO: attraverso controller mandare un messaggio per terminare la presentazione
+            //TODO: alla ricezione di tale messaggio, presentation si chiude e viene fatto display di  una finestra che informa l'utente
+            mainFrame.dispose();
+            JOptionPane.showMessageDialog(
+                    new JFrame(),
+                    "The presentation in the group " + controller.getLocalModel().getCurrentGroup().getGroupName() +
+                            "(" + controller.getLocalModel().getCurrentGroup().getGroupAddress() + ")" + "was correctly terminated",
+                    "presentation correctly terminated",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
         }
     }
 
     private class NextButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            //controller.qualcosa
+            //TODO: se non poissibile, display messaggio di errore dicende che si è già alla prima slide
+            //TODO: muovere a slide successiva e mandare messaggio in multicast per far muovere a slide successiva
         }
     }
 
     private class PreviousButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            //controller.qualcosa
+            //TODO: se non poissibile, display messaggio di errore dicende che si è già all'ultima slide
+            //TODO: muovere a slide precedente e mandare messaggio in multicast per far muovere a slide precedente
         }
     }
 }

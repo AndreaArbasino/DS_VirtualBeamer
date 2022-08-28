@@ -63,6 +63,11 @@ public class LocalController {
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendAddMemberMessage(user, id);
         networkController.sendShareBeamGroupMessage(id,(localModel.getCurrentGroup()), ip, port);
+
+        if (BeamGroup.CREATOR_ID == id){
+            //TODO: send a message to creator to give control
+            //TODO: make the gui switch from leader view to client view
+        }
         gui.refreshPresentation();
     }
 
