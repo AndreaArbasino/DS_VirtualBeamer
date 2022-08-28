@@ -14,6 +14,7 @@ public class UnicastListener implements Runnable {
     private DatagramSocket socket;
     private Boolean isRunning;
     private int sizeToReceive;
+    private byte[] buf;
     private NetworkController networkController;
 
     public UnicastListener(int sizeToReceive, int port, NetworkController networkController) {
@@ -32,6 +33,7 @@ public class UnicastListener implements Runnable {
 
     public void run(){
         isRunning = true;
+        buf = new byte[sizeToReceive];
         while (isRunning){
             receiveMessage();
         }
@@ -47,7 +49,6 @@ public class UnicastListener implements Runnable {
     }
 
     public void receiveMessage(){
-        byte[] buf = new byte[sizeToReceive];
         DatagramPacket receivedPacket = new DatagramPacket(buf, buf.length);
         ByteArrayInputStream byteArrayInputStream;
         ObjectInputStream objectInputStream;
@@ -75,8 +76,6 @@ public class UnicastListener implements Runnable {
     public void printPacket(DatagramPacket receivedPacket){
         System.out.print("Received a packet in unicast listener ");
         System.out.println("Received IP: " + receivedPacket.getAddress() + " Port: " + receivedPacket.getPort() + " ,SocketAddress: " + receivedPacket.getSocketAddress());
-        /* String receivedData = new String(receivedPacket.getData());
-        System.out.println("Received data: " + receivedData); */
     }
 
 }

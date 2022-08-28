@@ -22,9 +22,9 @@ public class NetworkController {
     public NetworkController (LocalController localController){
         this.localController = localController;
 
-        unicastListener = new UnicastListener(DEFAULT_DISCOVER_RECEIVED_BYTES, DEFAULT_UNICAST_PORT, this);
+        unicastListener = new UnicastListener(DEFAULT_RECEIVED_BYTES, DEFAULT_UNICAST_PORT, this);
         datagramSender = new DatagramSender(unicastListener.getSocket());
-        multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_DISCOVER_RECEIVED_BYTES, this);
+        multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
 
         multicastListenerThread = new Thread(multicastListener);
         unicastListenerThread = new Thread(unicastListener);
@@ -50,6 +50,10 @@ public class NetworkController {
         multicastListener = new MulticastListener(ipAddress, port, bytesToReceive, this);
         multicastListenerThread = new Thread(multicastListener);
         multicastListenerThread.start();
+    }
+
+    public void processImage(){
+        ;
     }
 
     /**
