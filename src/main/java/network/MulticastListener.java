@@ -17,13 +17,12 @@ import java.net.StandardSocketOptions;
  */
 public class MulticastListener implements Runnable{
 
-    private final String ip;
-    private final int port;
     private final int sizeToReceive;
     private final NetworkController networkController;
 
     private InetAddress group;
     private MulticastSocket socket;
+    private byte[] buf;
     private Boolean isRunning;
 
     /**
@@ -35,10 +34,8 @@ public class MulticastListener implements Runnable{
     public MulticastListener(String ip, int port, int sizeToReceive, NetworkController networkController) {
         System.setProperty("java.net.preferIPv4Stack", "true");
 
-        this.networkController = networkController;
-        this.ip = ip;
-        this.port = port;
         this.sizeToReceive = sizeToReceive;
+        this.networkController = networkController;
         try {
             this.group = InetAddress.getByName(ip);
             this.socket = new MulticastSocket(port);
@@ -51,9 +48,11 @@ public class MulticastListener implements Runnable{
 
     public void run(){
         isRunning = true;
+        buf = new byte[sizeToReceive];
         while (isRunning){
             receiveMessage();
         }
+        close();
     }
 
     public void printPacket(DatagramPacket receivedPacket){
@@ -67,7 +66,6 @@ public class MulticastListener implements Runnable{
      * Receive messages from the multicast group
      */
     public void receiveMessage(){
-        byte[] buf = new byte[sizeToReceive];
         DatagramPacket receivedPacket = new DatagramPacket(buf, buf.length);
         ByteArrayInputStream byteArrayInputStream;
         ObjectInputStream objectInputStream;
