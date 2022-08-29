@@ -66,22 +66,28 @@ public class NetworkController {
 
         if (message instanceof DiscoverMessage){
             localController.manageDiscoverMessage(messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
+            System.out.println("I have sent a DISCOVER message");
         } else if (message instanceof InfoGroupMessage) {
             localController.manageInfoGroupMessage((InfoGroupMessage) message);
-            System.out.println("I received an info group message");
+            System.out.println("I received an INFO GROUP message");
         } else if (message instanceof  AliveMessage){
-            System.out.println("I RECEIVED AN ALIVE MESSAGE");
+            System.out.println("I have received an ALIVE message");
         } else if (message instanceof JoinMessage){
             System.out.println("I have received a JOIN message");
-            localController.addToBeamGroup(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), messageToProcess.getSenderPort()); //TODO: controllare che la porta serva davvero e non si possa usare una default
+            localController.manageJoinMessage(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
+            //TODO: controllare che la porta serva davvero e non si possa usare una default
         } else if (message instanceof ShareBeamGroupMessage){
+            ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
+            localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             System.out.println("I have correctly a joined a group");
-            localController.addBeamGroup(((ShareBeamGroupMessage) message).getBeamGroup(),
-                                        ((ShareBeamGroupMessage) message).getId(),
-                                        ((ShareBeamGroupMessage) message).isPresentationStarted());
         } else if (message instanceof AddMemberMessage){
+            localController.manageAddMemberMessage(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
             System.out.println("Somebody joined the group");
-            localController.addMember(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
+        } else if(message instanceof  LeaveNotificationMessage){
+            localController.manageLeaveNotificationMessage(((LeaveNotificationMessage) message).getId());
+            System.out.println("Somebody left the group");
+        } else if (message instanceof TerminationMessage){
+            localController.manageTerminationMessage();
         }
 
     }
@@ -104,5 +110,9 @@ public class NetworkController {
 
     public void sendAddMemberMessage(User user, int id){
         datagramSender.sendMessage(new AddMemberMessage(user, id), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+    }
+
+    public void sendTerminationMessage(){
+        datagramSender.sendMessage(new TerminationMessage(), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
     }
 }

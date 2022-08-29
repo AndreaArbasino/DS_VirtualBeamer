@@ -108,6 +108,11 @@ public class GUI {
         presentation.startClientFrame();
     }
 
+    public void switchToOtherView(){
+        presentation.switchToOtherView();
+
+    }
+
     public void refreshPresentation(){
         presentation.refresh();
     }
@@ -123,4 +128,8 @@ public class GUI {
         System.exit(0);
     }
 
+    public void displayDownloadSelection(){
+        DownloadSelection downloadSelection = new DownloadSelection(localController);
+        downloadSelection.start();
+    }
 }

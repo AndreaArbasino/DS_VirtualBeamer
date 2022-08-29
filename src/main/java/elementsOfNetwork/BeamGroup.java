@@ -147,6 +147,6 @@ public class BeamGroup implements Serializable {
 
     public void reset(){
         participants.clear();
-        //magari gestire creator still in e anche l'id del leader, possibilmente passarli come parametro
+        //TODO: magari gestire creator still in e anche l'id del leader, possibilmente passarli come parametro
     }
 }

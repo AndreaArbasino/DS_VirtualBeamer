@@ -4,9 +4,12 @@ import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.Lobby;
 import elementsOfNetwork.User;
 import messages.InfoGroupMessage;
+import messages.JoinMessage;
+import messages.ShareBeamGroupMessage;
 import network.NetworkController;
 import view.GUI;
 
+import java.awt.image.BufferedImage;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -29,59 +32,14 @@ public class LocalController {
     private final LocalModel localModel;
     private final GUI gui;
 
+
+
     public LocalController (String username, GUI gui){
         localModel = new LocalModel(username);
         networkController = new NetworkController(this);
         this.gui = gui;
     }
 
-    /**
-     * Called when the client is added in a group. The BeamGroup is sent by the leader, and it is used to discover all the participants
-     * of the group. This list is used for the election of a leader and/or to choose from who download the slides
-     * @param group BeamGroup joined
-     */
-    public void addBeamGroup(BeamGroup group, int assignedId, Boolean isPresentationStarted){
-        localModel.addBeamGroup(group, assignedId);
-        if (isPresentationStarted){
-            //TODO: mostrare schermata per fare scegliere da chi scaricare --> se quell'utente non ha ancora scaricato, mostrare tendina con errore e fare scegliere di nuovo
-        } else {
-            gui.startClientFrame();
-        }
-    }
-
-    /**
-     * Called when I add someone
-     * @param user
-     * @param ip
-     * @param port
-     */
-    public void addToBeamGroup(User user, String ip, int port){ //TODO: probably there is no need to pass the ip since can be taken from User
-        int id = localModel.addUserToBeamGroup(user);
-        networkController.sendAddMemberMessage(user, id);
-        networkController.sendShareBeamGroupMessage(id,(localModel.getCurrentGroup()), localModel.isPresentationStarted(), ip, port);
-
-        if (BeamGroup.CREATOR_ID == id){
-            //TODO: send a message to creator to give control
-            //TODO: make the gui switch from leader view to client view
-            //TODO: ricordarsi di far iniziare subito al nuovo leader a mandare messaggi per alive, non appena ricevuto messaggio per passare controllo!
-        }
-        gui.refreshPresentation();
-    }
-
-    //TODO: aggiungere metodo per aggiungere partecipanti al beamGroup corrente: metodo che prende un messaggio come parametro
-    //called by client: used to update their view of the group
-    public void addMember(User user, int id){
-        localModel.addUserToBeamGroup(user, id);
-        gui.refreshPresentation();
-    }
-
-
-
-    //aggiungere metodo per rimuovere partecipanti al beamGroup corrente: in base alla conoscenza (ad esempio leader non risponde più,
-    //si rimuove/ se il leader cambia per elezione, quello vecchio si è disconnesso quindi va rimosso)
-    //NOTA BENE: se il leader cambia per assegnamento, allora non bisogna rimuoverlo!
-
-    //aggiungere metodo che prende come parametro messaggio che dice numero di slide corrente
 
 
     /**
@@ -103,7 +61,7 @@ public class LocalController {
     /**
      * @return the ip of the client running the application
      */
-    public InetAddress findLocalIp(){
+    private InetAddress findLocalIp(){
         InetAddress host;
         try {
             host = InetAddress.getLocalHost();
@@ -112,42 +70,6 @@ public class LocalController {
         }
         System.out.println("host " + host);
         return host;
-    }
-
-    /**
-     * Once an InfoGroupMessage is received, the list of the already existing lobbies know to the user is updated.
-     * This way if the node wants to create a new Lobby, the node avoids to create a Lobby with a multicast ip of an already existing group
-     * @param message message containing the info of the group
-     */
-    public void manageInfoGroupMessage(InfoGroupMessage message){
-        localModel.addLobby(message.getIpOfLeader(), message.getIpOfMulticast(), message.getNameOfLobby());
-    }
-
-    /**
-     * Once a DiscoverMessage is received, if the recipient is the leader of the group, he replies to the sender of the
-     * message providing him information about the group of which the recipient is the leader
-     * @param senderIp ip of the user that sent the DiscoverMessage
-     * @param senderPort port of the user that sent the DiscoverMessage
-     */
-    public void manageDiscoverMessage( String senderIp, int senderPort){
-        System.out.println("I received a discover message");
-        if (localModel.isInGroup() && localModel.isLeader()){
-            System.out.println("I am leader, sending back info of the group");
-            networkController.sendInfoMessage(senderIp, senderPort, localModel.getLobbyFromCurrentBeamGroup());
-        }
-    }
-
-    public void sendDiscoverGroup(){
-        this.localModel.resetLobbies();
-        networkController.sendDiscover();
-    }
-
-    public LocalModel getLocalModel() {
-        return localModel;
-    }
-
-    public void sendJoinMessage(Lobby lobby){
-        networkController.sendJoinMessage(lobby, localModel.getUsername());
     }
 
     private String findAddressForPresentation(){
@@ -175,5 +97,135 @@ public class LocalController {
         } while (usedIPs.contains(ip));
         System.out.println(ip + " is the ip for the presentation of the new group" );
         return ip;
+    }
+
+
+    //aggiungere metodo che prende come parametro messaggio che dice numero di slide corrente
+
+    public LocalModel getLocalModel() {
+        return localModel;
+    }
+
+    public BufferedImage getCurrentSlide(){
+        return localModel.getCurrentSlide();
+    }
+
+    public BufferedImage getNextSlide() throws IndexOutOfBoundsException{
+        BufferedImage currentSlide = localModel.getCurrentSlide();
+        BufferedImage nextSlide = localModel.moveToNextSlide();
+        if (currentSlide.equals(nextSlide)){
+            throw new IndexOutOfBoundsException();
+        }
+        return nextSlide;
+    }
+
+    public BufferedImage getPreviousSlide() throws IndexOutOfBoundsException{
+        BufferedImage currentSlide = localModel.getCurrentSlide();
+        BufferedImage previousSlide = localModel.moveToPreviousSlide();
+        if (currentSlide.equals(previousSlide)){
+            throw new IndexOutOfBoundsException();
+        }
+        return previousSlide;
+    }
+
+
+
+
+    /**
+     * Once an InfoGroupMessage is received, the list of the already existing lobbies know to the user is updated.
+     * This way if the node wants to create a new Lobby, the node avoids to create a Lobby with a multicast ip of an already existing group
+     * @param message message containing the info of the group
+     */
+    public void manageInfoGroupMessage(InfoGroupMessage message){
+        localModel.addLobby(message.getIpOfLeader(), message.getIpOfMulticast(), message.getNameOfLobby());
+    }
+
+    /**
+     * Once a DiscoverMessage is received, if the recipient is the leader of the group, he replies to the sender of the
+     * message providing him information about the group of which the recipient is the leader
+     * @param senderIp ip of the user that sent the DiscoverMessage
+     * @param senderPort port of the user that sent the DiscoverMessage
+     */
+    public void manageDiscoverMessage( String senderIp, int senderPort){
+        System.out.println("I received a discover message");
+        if (localModel.isInGroup() && localModel.isLeader()){
+            System.out.println("I am leader, sending back info of the group");
+            networkController.sendInfoMessage(senderIp, senderPort, localModel.getLobbyFromCurrentBeamGroup());
+        }
+    }
+
+
+    /**
+     * Called by the leader in order to add a new participant
+     * @param user
+     * @param senderIp
+     * @param senderPort
+     */
+    public void manageJoinMessage(User user, String senderIp, int senderPort){ //TODO: probably there is no need to pass the ip since can be taken from User
+        int id = localModel.addUserToBeamGroup(user);
+        networkController.sendAddMemberMessage(user, id);
+        networkController.sendShareBeamGroupMessage(id,(localModel.getCurrentGroup()), localModel.isPresentationStarted(), senderIp, senderPort);
+
+        if (BeamGroup.CREATOR_ID == id){
+            //TODO: send a message to creator to give control
+            //TODO: make the gui switch from leader view to client view
+            //TODO: ricordarsi di far iniziare subito al nuovo leader a mandare messaggi per alive, non appena ricevuto messaggio per passare controllo!
+
+            gui.switchToOtherView();
+        } else {
+            gui.refreshPresentation();
+        }
+    }
+
+    /**
+     * Called when the client is added in a group. The BeamGroup is sent by the leader, and it is used to discover all the participants
+     * of the group. This list is used for the election of a leader and/or to choose from who download the slides
+     * @param groupToEnter BeamGroup joined
+     * @param assignedId id assigned to local user by leader
+     * @param isPresentationStarted used for knowing if the leader is already showing the slides
+     */
+    public void manageShareBeamGroupMessage(BeamGroup groupToEnter, int assignedId, Boolean isPresentationStarted){
+        localModel.addBeamGroup(groupToEnter, assignedId);
+        if (isPresentationStarted){
+            //TODO: mostrare schermata per fare scegliere da chi scaricare -->
+            // se quell'utente non ha ancora scaricato, mostrare tendina con errore e fare scegliere di nuovo
+            gui.displayDownloadSelection();
+        } else {
+            gui.startClientFrame();
+        }
+    }
+
+    //TODO: aggiungere metodo per aggiungere partecipanti al beamGroup corrente: metodo che prende un messaggio come parametro
+    //called by client: used to update their view of the group
+    public void manageAddMemberMessage(User user, int id){
+        localModel.addUserToBeamGroup(user, id);
+        gui.refreshPresentation();
+    }
+
+    //TODO: aggiungere metodo per rimuovere partecipanti al beamGroup corrente
+    public void manageLeaveNotificationMessage(int id){
+        localModel.removeFromBeamGroup(id);
+        gui.refreshPresentation();
+    }
+
+    public void manageTerminationMessage(){
+        gui.closePresentation();
+    }
+
+
+
+
+
+    public void sendDiscoverGroup(){
+        this.localModel.resetLobbies();
+        networkController.sendDiscover();
+    }
+
+    public void sendJoinMessage(Lobby lobby){
+        networkController.sendJoinMessage(lobby, localModel.getUsername());
+    }
+
+    public void sendTerminationMessage(){
+        networkController.sendTerminationMessage();
     }
 }

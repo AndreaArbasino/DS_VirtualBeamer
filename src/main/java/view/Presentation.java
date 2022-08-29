@@ -18,15 +18,12 @@ public class Presentation {
     private SidePanelManager sidePanelManager;
     private final JSplitPane splitPane;
     private final JLabel slideLabel;
-
-    private int currentPosition;
     private ImageIcon currentSlide;
-
-    private LocalController controller;
+    private final LocalController controller;
 
     public Presentation(LocalController controller) {
         this.controller = controller;
-        this.slideLabel = new JLabel();
+        this.slideLabel = new JLabel("", SwingConstants.CENTER);
         this.splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     }
 
@@ -35,7 +32,11 @@ public class Presentation {
         startMainFrame();
         //TODO: IMPOSTARE SLIDE INIZIALE
 
-        addBottomButtons();
+        //in the beginning only the start button is present
+        JButton startButton = new JButton("START");
+        StartButtonListener startButtonListener = new StartButtonListener();
+        startButton.addActionListener(startButtonListener);
+        bottomPanel.add(startButton);
     }
 
     public void startClientFrame(){
@@ -54,31 +55,27 @@ public class Presentation {
         mainFrame.pack();
     }
 
-    public void changeFromClientToLeader(){
-        sidePanelManager = new LeaderSidePanelManager();
-        refresh();
+    public void switchToOtherView(){
+        if (sidePanelManager instanceof LeaderSidePanelManager){
+            sidePanelManager = new ClientSidePanelManager();
+            refresh();
 
-        //add all buttons for managing the presentation
-        addBottomButtons();
-    }
+            //remove all buttons for managing the presentation
+            bottomPanel.removeAll();
+        } else {
+            sidePanelManager = new LeaderSidePanelManager();
+            refresh();
 
-    public void changeFromLeaderToClient(){
-        sidePanelManager = new ClientSidePanelManager();
-        refresh();
-
-        //remove all buttons for managing the presentation
-        bottomPanel.removeAll();
+            //add all buttons for managing the presentation
+            addBottomButtons();
+        }
+        //TODO: check if the following instructions are working ine for both switches or must be put only in the positive evaluation of if clause
         bottomPanel.revalidate();
         bottomPanel.repaint();
         mainFrame.pack();
     }
 
     private void addBottomButtons(){
-        JButton startButton = new JButton("START");
-        StartButtonListener startButtonListener = new StartButtonListener();
-        startButton.addActionListener(startButtonListener);
-        bottomPanel.add(startButton);
-
         JButton terminateButton = new JButton("TERMINATE");
         TerminateButtonListener terminateButtonListener = new TerminateButtonListener();
         terminateButton.addActionListener(terminateButtonListener);
@@ -96,6 +93,7 @@ public class Presentation {
     }
 
     private void startMainFrame(){
+        currentSlide = null;
         mainFrame = new JFrame();
         mainFrame.setTitle(controller.getLocalModel().getCurrentGroupName() +
                             " (" + controller.getLocalModel().getCurrentGroupAddress() + ")");
@@ -115,6 +113,7 @@ public class Presentation {
 
 
         slideLabel.setPreferredSize(new Dimension(500,500));
+        slideLabel.setText("The presentation is not started yet!");
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         clientsPanel = new JPanel();
         clientsPanel.setLayout(new BoxLayout(clientsPanel, BoxLayout.Y_AXIS));
@@ -140,6 +139,13 @@ public class Presentation {
         @Override
         public void actionPerformed(ActionEvent e) {
             //TODO: attraverso il controller manda sia tutte le slide in multicast che un messaggio con la posizione corrente
+            currentSlide = new ImageIcon(controller.getCurrentSlide());
+            slideLabel.removeAll();
+            slideLabel.setIcon(currentSlide);
+            slideLabel.repaint();
+            bottomPanel.removeAll();
+            addBottomButtons();
+            bottomPanel.repaint();
         }
     }
 
@@ -148,6 +154,7 @@ public class Presentation {
         public void actionPerformed(ActionEvent e) {
             //TODO: attraverso controller mandare un messaggio per terminare la presentazione
             //TODO: alla ricezione di tale messaggio, presentation si chiude e viene fatto display di  una finestra che informa l'utente
+            controller.sendTerminationMessage();
             mainFrame.dispose();
             JOptionPane.showMessageDialog(
                     new JFrame(),
@@ -164,6 +171,17 @@ public class Presentation {
         public void actionPerformed(ActionEvent e) {
             //TODO: se non poissibile, display messaggio di errore dicende che si è già alla prima slide
             //TODO: muovere a slide successiva e mandare messaggio in multicast per far muovere a slide successiva
+            try{
+                currentSlide = new ImageIcon(controller.getNextSlide());
+                slideLabel.setIcon(currentSlide);
+                slideLabel.repaint();
+            } catch (IndexOutOfBoundsException err){
+                JOptionPane.showMessageDialog(
+                        new JFrame(),
+                        "There aren't other slides after the one displayed!",
+                        "ATTENTION!",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -172,6 +190,17 @@ public class Presentation {
         public void actionPerformed(ActionEvent e) {
             //TODO: se non poissibile, display messaggio di errore dicende che si è già all'ultima slide
             //TODO: muovere a slide precedente e mandare messaggio in multicast per far muovere a slide precedente
+            try{
+                currentSlide = new ImageIcon(controller.getPreviousSlide());
+                slideLabel.setIcon(currentSlide);
+                slideLabel.repaint();
+            } catch (IndexOutOfBoundsException err){
+                JOptionPane.showMessageDialog(
+                        new JFrame(),
+                        "There aren't other slides before the one displayed!",
+                        "ATTENTION!",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }

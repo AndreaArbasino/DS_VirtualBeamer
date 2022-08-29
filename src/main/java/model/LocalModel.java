@@ -20,6 +20,7 @@ public class LocalModel {
     private Boolean presentationStarted; //TODO: set it true once the presentation starts, upon reception of a special message
     private List<Lobby> lobbies; //list of the lobbies that already exist
     private List<BufferedImage> slides;
+    private int currentSlideIndex;
     private BeamGroup currentGroup; //group in which the client belongs to (if any)
 
 
@@ -30,11 +31,11 @@ public class LocalModel {
      */
     public LocalModel(String username) {
         this.username = username;
+        inGroup = false;
         this.presentationStarted = false;
         lobbies = new ArrayList<>();
         slides = new ArrayList<>();
-        inGroup = false;
-        presentationStarted = false;
+        currentSlideIndex = 0;
     }
 
 
@@ -98,6 +99,7 @@ public class LocalModel {
 
     public void addSlide(BufferedImage image){
         slides.add(image);
+        System.out.println("One image added correctly");
     }
 
     /**
@@ -137,5 +139,31 @@ public class LocalModel {
     //called by clients, add a certain user associating it to the given ID
     public void addUserToBeamGroup(User user, int id){
         currentGroup.addParticipant(user, id);
+    }
+
+    public void removeFromBeamGroup(int id){
+        currentGroup.removeParticipant(id);
+    }
+
+    public BufferedImage getCurrentSlide(){
+        return slides.get(currentSlideIndex);
+    }
+
+    public BufferedImage moveToNextSlide(){
+        if (currentSlideIndex == (slides.size() - 1)){
+            return getCurrentSlide();
+        } else {
+            currentSlideIndex++;
+            return slides.get(currentSlideIndex);
+        }
+    }
+
+    public BufferedImage moveToPreviousSlide(){
+        if (currentSlideIndex == 0){
+            return getCurrentSlide();
+        } else {
+            currentSlideIndex--;
+            return slides.get(currentSlideIndex);
+        }
     }
 }
