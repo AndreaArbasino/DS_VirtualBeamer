@@ -16,6 +16,7 @@ public class LocalModel {
 
     private final String username;
     private int localId;
+    private Boolean inGroup;
     private Boolean presentationStarted; //TODO: set it true once the presentation starts, upon reception of a special message
     private List<Lobby> lobbies; //list of the lobbies that already exist
     private List<BufferedImage> slides;
@@ -32,6 +33,8 @@ public class LocalModel {
         this.presentationStarted = false;
         lobbies = new ArrayList<>();
         slides = new ArrayList<>();
+        inGroup = false;
+        presentationStarted = false;
     }
 
 
@@ -76,6 +79,10 @@ public class LocalModel {
         return (localId == currentGroup.getLeaderId());
     }
 
+    public Boolean isInGroup(){
+        return inGroup;
+    }
+
 
 
     /**
@@ -101,11 +108,13 @@ public class LocalModel {
     public void addBeamGroup(BeamGroup group, int assignedId){
         this.currentGroup = new BeamGroup(group);
         this.localId = assignedId;
+        this.inGroup = true;
     }
 
     public void createLocalBeamGroup(InetAddress localIp, String groupName, String newPresentationAddress){
         this.currentGroup = new BeamGroup(new User(username, localIp.getHostAddress()), groupName, newPresentationAddress);
         this.localId = BeamGroup.CREATOR_ID;
+        this.inGroup = true;
     }
 
     public void startPresentation() {

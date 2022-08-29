@@ -131,7 +131,7 @@ public class LocalController {
      */
     public void manageDiscoverMessage( String senderIp, int senderPort){
         System.out.println("I received a discover message");
-        if (localModel.isLeader()){
+        if (localModel.isInGroup() && localModel.isLeader()){
             System.out.println("I am leader, sending back info of the group");
             networkController.sendInfoMessage(senderIp, senderPort, localModel.getLobbyFromCurrentBeamGroup());
         }
