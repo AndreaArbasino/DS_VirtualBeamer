@@ -40,13 +40,13 @@ public class LocalController {
      * of the group. This list is used for the election of a leader and/or to choose from who download the slides
      * @param group BeamGroup joined
      */
-    public void addBeamGroup(BeamGroup group, int assignedId){
+    public void addBeamGroup(BeamGroup group, int assignedId, Boolean isPresentationStarted){
         localModel.addBeamGroup(group, assignedId);
-        //controllare se presentazione iniziata:
-        //se non ancora iniziata:
-        gui.startClientFrame();
-        //se già iniziata:
-        //qualcosa con download selection
+        if (isPresentationStarted){
+            //TODO: mostrare schermata per fare scegliere da chi scaricare --> se quell'utente non ha ancora scaricato, mostrare tendina con errore e fare scegliere di nuovo
+        } else {
+            gui.startClientFrame();
+        }
     }
 
     /**
@@ -55,24 +55,27 @@ public class LocalController {
      * @param ip
      * @param port
      */
-    public void addToBeamGroup(User user, String ip, int port){ //probably there is no need to pass the ip since can be taken from User
+    public void addToBeamGroup(User user, String ip, int port){ //TODO: probably there is no need to pass the ip since can be taken from User
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendAddMemberMessage(user, id);
-        networkController.sendShareBeamGroupMessage(id,(localModel.getCurrentGroup()), ip, port);
+        networkController.sendShareBeamGroupMessage(id,(localModel.getCurrentGroup()), localModel.isPresentationStarted(), ip, port);
 
         if (BeamGroup.CREATOR_ID == id){
             //TODO: send a message to creator to give control
             //TODO: make the gui switch from leader view to client view
+            //TODO: ricordarsi di far iniziare subito al nuovo leader a mandare messaggi per alive, non appena ricevuto messaggio per passare controllo!
         }
         gui.refreshPresentation();
     }
 
+    //TODO: aggiungere metodo per aggiungere partecipanti al beamGroup corrente: metodo che prende un messaggio come parametro
     //called by client: used to update their view of the group
     public void addMember(User user, int id){
         localModel.addUserToBeamGroup(user, id);
+        gui.refreshPresentation();
     }
 
-    //aggiungere metodo per aggiungere partecipanti al beamGroup corrente: metodo che prende un messaggio come parametro
+
 
     //aggiungere metodo per rimuovere partecipanti al beamGroup corrente: in base alla conoscenza (ad esempio leader non risponde più,
     //si rimuove/ se il leader cambia per elezione, quello vecchio si è disconnesso quindi va rimosso)

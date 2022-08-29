@@ -113,8 +113,6 @@ public class LocalModel {
     } //TODO: maybe merge this method with the one managin the beginning of slide show
 
     public Lobby getLobbyFromCurrentBeamGroup(){
-        //TODO: aggiungere il leader IP nel local model / currentGroup (Meglio nel beam group) --> possibile richiedere il leader dal beamgroup e poi da li leggere l'address
-        //mi sembra che quanto scritto sopra sia risolto
         return new Lobby(currentGroup.getLeader().getIpAddress(), currentGroup.getGroupAddress(), currentGroup.getGroupName());
     }
 

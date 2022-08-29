@@ -76,10 +76,12 @@ public class NetworkController {
             localController.addToBeamGroup(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), messageToProcess.getSenderPort()); //TODO: controllare che la porta serva davvero e non si possa usare una default
         } else if (message instanceof ShareBeamGroupMessage){
             System.out.println("I have correctly a joined a group");
-            localController.addBeamGroup(((ShareBeamGroupMessage) message).getBeamGroup(), ((ShareBeamGroupMessage) message).getId());
+            localController.addBeamGroup(((ShareBeamGroupMessage) message).getBeamGroup(),
+                                        ((ShareBeamGroupMessage) message).getId(),
+                                        ((ShareBeamGroupMessage) message).isPresentationStarted());
         } else if (message instanceof AddMemberMessage){
             System.out.println("Somebody joined the group");
-            localController.addBeamGroup(((ShareBeamGroupMessage) message).getBeamGroup(), ((ShareBeamGroupMessage) message).getId());
+            localController.addMember(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
         }
 
     }
@@ -91,8 +93,8 @@ public class NetworkController {
                                     senderPort);
     }
 
-    public void sendShareBeamGroupMessage(int id, BeamGroup beamGroup, String recipientAddress, int port){
-        datagramSender.sendMessage(new ShareBeamGroupMessage(beamGroup, id), recipientAddress, port);
+    public void sendShareBeamGroupMessage(int id, BeamGroup beamGroup, Boolean isPresentationStarted, String recipientAddress, int port){
+        datagramSender.sendMessage(new ShareBeamGroupMessage(beamGroup, id, isPresentationStarted), recipientAddress, port);
     }
 
     //TODO: sistemare porta
