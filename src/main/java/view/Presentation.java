@@ -76,6 +76,11 @@ public class Presentation {
     }
 
     private void addBottomButtons(){
+        JButton prevButton = new JButton("PREV");
+        PreviousButtonListener previousButtonListener = new PreviousButtonListener();
+        prevButton.addActionListener(previousButtonListener);
+        bottomPanel.add(prevButton);
+
         JButton terminateButton = new JButton("TERMINATE");
         TerminateButtonListener terminateButtonListener = new TerminateButtonListener();
         terminateButton.addActionListener(terminateButtonListener);
@@ -85,11 +90,6 @@ public class Presentation {
         NextButtonListener nextButtonListener = new NextButtonListener();
         nextButton.addActionListener(nextButtonListener);
         bottomPanel.add(nextButton);
-
-        JButton prevButton = new JButton("PREVIOUS");
-        PreviousButtonListener previousButtonListener = new PreviousButtonListener();
-        prevButton.addActionListener(previousButtonListener);
-        bottomPanel.add(prevButton);
     }
 
     private void startMainFrame(){
@@ -159,7 +159,7 @@ public class Presentation {
             JOptionPane.showMessageDialog(
                     new JFrame(),
                     "The presentation in the group " + controller.getLocalModel().getCurrentGroupName() +
-                            "(" + controller.getLocalModel().getCurrentGroupAddress() + ")" + "was correctly terminated",
+                            " (" + controller.getLocalModel().getCurrentGroupAddress() + ")" + " was correctly terminated",
                     "presentation correctly terminated",
                     JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);

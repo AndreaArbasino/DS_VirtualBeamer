@@ -99,7 +99,6 @@ public class LocalModel {
 
     public void addSlide(BufferedImage image){
         slides.add(image);
-        System.out.println("One image added correctly");
     }
 
     /**
