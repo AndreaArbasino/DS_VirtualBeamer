@@ -125,7 +125,7 @@ public class MulticastImageListener implements Runnable {
             }
 
             //TODO: CHIAMARE METODO DAL NETWORK CONTROLLER
-            networkController.processImage(image, session);
+            networkController.processImage(image, session-1);
         }
     }
 
