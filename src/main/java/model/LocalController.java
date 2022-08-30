@@ -132,8 +132,8 @@ public class LocalController {
 
 
 
-    public void manageReceivedImage(BufferedImage image){
-        localModel.addSlide(image);
+    public void manageReceivedImage(BufferedImage image, int position){
+        localModel.addSlide(image, position);
     }
 
     /**
@@ -222,8 +222,6 @@ public class LocalController {
         localModel.setCurrentSlide(slideNumber);
         gui.changeSlide();
     }
-
-
 
     public void sendPresentationImages(){
         List<BufferedImage> images = localModel.getSlides();

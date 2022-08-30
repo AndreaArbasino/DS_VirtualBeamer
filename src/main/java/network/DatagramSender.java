@@ -63,13 +63,13 @@ public class DatagramSender {
             // ADD ADDITIONAL HEADER
             byte[] data = new byte[HEADER_SIZE + size];
             data[0] = (byte)flags;
-            data[1] = (byte)sessionNumber;
-            data[2] = (byte)packets;
-            data[3] = (byte)(DATAGRAM_MAX_SIZE >> 8);
-            data[4] = (byte)DATAGRAM_MAX_SIZE;
-            data[5] = (byte)i;
-            data[6] = (byte)(size >> 8);
-            data[7] = (byte)size;
+            data[1] = (byte)sessionNumber;              //Number of the image the packet belongs to
+            data[2] = (byte)packets;                    //Number of packets the original image was divided into
+            data[3] = (byte)(DATAGRAM_MAX_SIZE >> 8);   //Maximum size of each packet (least significant)
+            data[4] = (byte)DATAGRAM_MAX_SIZE;          //Maximum size of each packet (most significant)
+            data[5] = (byte)i;                          //Number of the current packet out of the packets total(data[2])
+            data[6] = (byte)(size >> 8);                //Data size of the current packet (least significant)
+            data[7] = (byte)size;                       //Data size of the current packet (most significant)
 
             //COPY THE CURRENT SLICE TO THE BYTE ARRAY
             System.arraycopy(imageByteArray, i * DATAGRAM_MAX_SIZE, data, HEADER_SIZE, size);

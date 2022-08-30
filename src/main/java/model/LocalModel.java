@@ -111,6 +111,10 @@ public class LocalModel {
         slides.add(image);
     }
 
+    public void addSlide(BufferedImage image, int position){
+        slides.add(position, image);
+    }
+
     /**
      * Called when the client joins a group. The BeamGroup is sent by the leader and it is used to discover all the participants
      * of the group. This list is used for the election of a leader and/or to choose from who download the slides

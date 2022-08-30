@@ -67,8 +67,8 @@ public class NetworkController {
         multicastListenerThread.start();
     }
 
-    public void processImage(BufferedImage image){
-        localController.manageReceivedImage(image);
+    public void processImage(BufferedImage image, int position){
+        localController.manageReceivedImage(image, position);
     }
 
     /**
