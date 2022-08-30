@@ -38,12 +38,14 @@ public class Presentation {
         StartButtonListener startButtonListener = new StartButtonListener();
         startButton.addActionListener(startButtonListener);
         bottomPanel.add(startButton);
+        mainFrame.pack();
     }
 
     public void startClientFrame(){
         sidePanelManager = new ClientSidePanelManager();
         startMainFrame();
         //TODO: IMPOSTARE SLIDE INIZIALE
+        mainFrame.pack();
     }
 
     public void refresh(){
@@ -129,6 +131,9 @@ public class Presentation {
         mainFrame.add(splitPane, BorderLayout.CENTER);
 
         mainFrame.setVisible(true);
+    }
+
+    public void showPresentation(){
         mainFrame.pack();
     }
 
@@ -141,6 +146,7 @@ public class Presentation {
         currentSlide = new ImageIcon(controller.getCurrentSlide());
         slideLabel.setIcon(currentSlide);
         slideLabel.repaint();
+        mainFrame.pack();
     }
 
     private class StartButtonListener implements ActionListener{
@@ -155,11 +161,12 @@ public class Presentation {
             addBottomButtons();
             bottomPanel.repaint();
 
-            try {
-                TimeUnit.SECONDS.sleep(2);
+            //TODO: controllare se togliere o meno quanto segue per ricezione file molto grandi
+            /*try {
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException err) {
                 throw new RuntimeException(err);
-            }
+            }*/
 
             controller.sendPresentationImages();
             controller.sendCurrentSlideMessage();

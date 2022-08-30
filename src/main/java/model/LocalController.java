@@ -231,6 +231,7 @@ public class LocalController {
             for(BufferedImage image : images){
                 networkController.sendImage(image, applicantIp);
             }
+            networkController.sendCurrentSlideMessage(localModel.getCurrentSlideIndex(), applicantIp);
         }
     }
 
@@ -244,7 +245,7 @@ public class LocalController {
     }
 
     public void sendCurrentSlideMessage(){
-        networkController.sendCurrentSlideMessage(localModel.getCurrentSlideIndex());
+        networkController.sendCurrentSlideMessage(localModel.getCurrentSlideIndex(), localModel.getCurrentGroupAddress());
     }
 
     public void sendDiscoverGroup(){

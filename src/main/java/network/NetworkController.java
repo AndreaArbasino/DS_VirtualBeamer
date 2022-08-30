@@ -163,8 +163,8 @@ public class NetworkController {
         datagramSender.sendImage(image, recipientIp, DEFAULT_IMAGE_PORT);
     }
 
-    public void sendCurrentSlideMessage(int slideNumber){
-        datagramSender.sendMessage(new CurrentSlideMessage(slideNumber),localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+    public void sendCurrentSlideMessage(int slideNumber, String ipAddress){
+        datagramSender.sendMessage(new CurrentSlideMessage(slideNumber), ipAddress, DEFAULT_MULTICAST_PORT);
     }
 
     public void sendDownloadRequestMessage(User user){
