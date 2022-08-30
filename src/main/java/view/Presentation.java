@@ -56,9 +56,7 @@ public class Presentation {
         clientsPanel.removeAll();
         clientsPanel.revalidate();
         clientsPanel.repaint();
-        sidePanelManager.createPanel(clientsPanel,
-                new ArrayList<>(controller.getLocalModel().getCurrentGroupUsers()),
-                controller.getLocalModel().getLocalUser());
+        sidePanelManager.createPanel(clientsPanel, controller);
         mainFrame.pack();
     }
 
@@ -125,9 +123,7 @@ public class Presentation {
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         clientsPanel = new JPanel();
         clientsPanel.setLayout(new BoxLayout(clientsPanel, BoxLayout.Y_AXIS));
-        sidePanelManager.createPanel(clientsPanel,
-                                    new ArrayList<>(controller.getLocalModel().getCurrentGroupUsers()),
-                                    controller.getLocalModel().getLocalUser());
+        sidePanelManager.createPanel(clientsPanel, controller);
         mainFrame.add(clientsPanel, BorderLayout.WEST);
         splitPane.setTopComponent(slideLabel);
         splitPane.setBottomComponent(bottomPanel);

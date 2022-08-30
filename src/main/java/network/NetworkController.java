@@ -128,9 +128,17 @@ public class NetworkController {
             localController.manageDownloadRequestMessage(messageToProcess.getSenderIp());
         } else if (message instanceof TotalNumberOfSlidesMessage){
             localController.manageTotalNumberOfSlidesMessage(((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides());
+        } else if (message instanceof AssignLeaderMessage){
+            localController.manageAssignLeaderMessage(((AssignLeaderMessage) message).getNewLeaderId());
         }
 
     }
+
+    public void switchToOtherMulticastListener(){
+        multicastListener.setRunning(false);
+        startMulticastListener(DEFAULT_DISCOVER_IP);
+    }
+
 
     public void sendInfoMessage (String recipientAddress, int senderPort, Lobby lobby){
         //crea messaggio UDP e lo manda
@@ -175,6 +183,12 @@ public class NetworkController {
 
     public void sendDownloadRequestMessage(User user){
         datagramSender.sendMessage(new SlideDownloadRequestMessage(), user.getIpAddress(), DEFAULT_UNICAST_PORT);
+    }
+
+    public void sendAssignLeaderMessage(int newLeaderId){
+        datagramSender.sendMessage(new AssignLeaderMessage(newLeaderId), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+        multicastListener.setRunning(false);
+        startMulticastListener(localController.getLocalModel().getCurrentGroupAddress());
     }
 
     public void resetImageSendingSessionNumber(){

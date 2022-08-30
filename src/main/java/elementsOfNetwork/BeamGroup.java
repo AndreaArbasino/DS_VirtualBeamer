@@ -108,6 +108,7 @@ public class BeamGroup implements Serializable {
             creatorStillIn = true;
             return BeamGroup.CREATOR_ID;
         }
+
         if (participants.containsValue(participant)){
             for (Map.Entry<Integer, User> entry : participants.entrySet()) {
                 if (entry.getValue().equals(participant)) {
@@ -115,6 +116,7 @@ public class BeamGroup implements Serializable {
                 }
             }
         }
+
         participants.put(nextIdAvailable, new User(participant.getUsername(), participant.getIpAddress()));
         nextIdAvailable++;
         return nextIdAvailable-1;

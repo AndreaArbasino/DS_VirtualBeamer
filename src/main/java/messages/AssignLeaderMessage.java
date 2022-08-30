@@ -5,8 +5,17 @@ package messages;
  */
 public class AssignLeaderMessage extends Message {
 
-    //prima di fare assegnamento pingare i partecipanti per sapere chi up
-    //aggiornare local beamGroup
-    //indurre aggiornament beamgroup su titti gli ascoltatori di conseguenza
+    //TODO: prima di fare assegnamento pingare i partecipanti per sapere chi up
+    // aggiornare local beamGroup
+    // indurre aggiornament beamgroup su titti gli ascoltatori di conseguenza
 
+    private final int newLeaderId;
+
+    public AssignLeaderMessage(int newLeaderId){
+        this.newLeaderId = newLeaderId;
+    }
+
+    public int getNewLeaderId() {
+        return newLeaderId;
+    }
 }

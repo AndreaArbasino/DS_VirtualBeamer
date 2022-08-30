@@ -1,6 +1,7 @@
 package view;
 
 import elementsOfNetwork.User;
+import model.LocalController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,12 +10,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class LeaderSidePanelManager implements SidePanelManager{
+    private LocalController controller;
 
     @Override
-    public void createPanel(JPanel clientsPanel, ArrayList<User> userList, User localUser) {
-        //ArrayList<User> userList = ;
+    public void createPanel(JPanel clientsPanel, LocalController controller) {
+        this.controller = controller ;
 
-        if(1 == userList.size()){ //only the creator is in the group
+        if(1 == controller.getLocalModel().getCurrentGroupUsers().size()){ //only the creator is in the group
             JLabel line1 = new JLabel("You are");
             JLabel line2 = new JLabel("the only");
             JLabel line3 = new JLabel("participant!");
@@ -24,7 +26,8 @@ public class LeaderSidePanelManager implements SidePanelManager{
         } else {
             JButton userButton;
             ClientButtonListener userButtonListener = new ClientButtonListener();
-            userList.remove(localUser);
+            ArrayList<User> userList = new ArrayList<>(controller.getLocalModel().getCurrentGroupUsers());
+            userList.remove(controller.getLocalModel().getLocalUser());
             for (User user : userList){
                 userButton = new UserButton(user);
                 userButton.setLayout(new BorderLayout());
@@ -41,14 +44,14 @@ public class LeaderSidePanelManager implements SidePanelManager{
     private class ClientButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            /*if (controller.isPresentationStarted()){
+            if (controller.getLocalModel().isPresentationStarted()){
                 //TODO:give to that selected user the leadership
+                controller.passLeadershipTo(((UserButton) e.getSource()).getUser());
             } else {
-
-            }*/
-            System.out.println("Error since not possible to pass control yet");
-            ErrorMessageDisplay errorMessage= new ErrorMessageDisplay(new JFrame());
-            errorMessage.displayErrorMessage("It is not possible to pass the control of the presentation before it is started!");
+                System.out.println("Error since not possible to pass control yet");
+                ErrorMessageDisplay errorMessage= new ErrorMessageDisplay(new JFrame());
+                errorMessage.displayErrorMessage("It is not possible to pass the control of the presentation before it is started!");
+            }
         }
     }
 }

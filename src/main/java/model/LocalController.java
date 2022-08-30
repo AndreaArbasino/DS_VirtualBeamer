@@ -3,6 +3,7 @@ package model;
 import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.Lobby;
 import elementsOfNetwork.User;
+import messages.AssignLeaderMessage;
 import messages.InfoGroupMessage;
 import network.NetworkController;
 import view.GUI;
@@ -136,6 +137,12 @@ public class LocalController {
         localModel.startPresentation();
     }
 
+    public void passLeadershipTo(User newLeader){
+        int idOfNewLeader = localModel.passLeadershipTo(newLeader);
+        gui.switchToOtherView();
+        networkController.sendAssignLeaderMessage(idOfNewLeader);
+    }
+
 
 
     public void manageReceivedImage(BufferedImage image, int position){
@@ -247,6 +254,15 @@ public class LocalController {
             networkController.sendCurrentSlideMessage(localModel.getCurrentSlideIndex(), applicantIp);
         }
     }
+
+    public void manageAssignLeaderMessage(int newLeaderId){
+        if (newLeaderId == localModel.getLocalId()){
+            gui.switchToOtherView();
+            networkController.switchToOtherMulticastListener();
+        }
+        localModel.setCurrentLeader(newLeaderId);
+    }
+
 
 
     public void sendTotalNumberOfSlidesToGroup(){

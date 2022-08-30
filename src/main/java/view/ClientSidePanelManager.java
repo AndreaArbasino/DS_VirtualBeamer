@@ -1,7 +1,9 @@
 package view;
 
 import elementsOfNetwork.User;
+import model.LocalController;
 
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,10 +13,11 @@ import java.util.ArrayList;
 public class ClientSidePanelManager implements SidePanelManager {
 
     @Override
-    public void createPanel(JPanel clientsPanel, ArrayList<User> userList, User localUser) {
+    public void createPanel(JPanel clientsPanel, LocalController controller) {
         UserButton userButton;
         ClientButtonListener userButtonListener = new ClientButtonListener();
-        userList.remove(localUser);
+        ArrayList<User> userList = new ArrayList<>(controller.getLocalModel().getCurrentGroupUsers());
+        userList.remove(controller.getLocalModel().getLocalUser());
         for (User user : userList){
             userButton = new UserButton(user);
             userButton.setLayout(new BorderLayout());

@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -43,6 +44,8 @@ public class LocalModel {
         currentSlideIndex = INITIAL_SLIDE_INDEX;
         lastSlideIndex = INITIAL_SLIDE_INDEX;
     }
+
+
 
     public List<BufferedImage> getSlides() {
         ArrayList<BufferedImage> listOfSlides = new ArrayList<>();
@@ -107,12 +110,18 @@ public class LocalModel {
     }
 
 
+
+
     public void setCurrentSlide(int slideNumber){
         currentSlideIndex = slideNumber;
     }
 
     public void setTotalNumberOfSlides(int totalNumberOfSlides) {
         this.totalNumberOfSlides = totalNumberOfSlides;
+    }
+
+    public void setCurrentLeader(int newLeaderId){
+        currentGroup.setLeaderId(newLeaderId);
     }
 
     /**
@@ -203,5 +212,18 @@ public class LocalModel {
             currentSlideIndex--;
             return slides.get(currentSlideIndex);
         }
+    }
+
+    public int passLeadershipTo(User newLeader){
+        int newLeaderId;
+        for (Map.Entry<Integer, User> entry : currentGroup.getParticipants().entrySet()) {
+            if (entry.getValue().equals(newLeader)) {
+                newLeaderId = entry.getKey();
+                currentGroup.setLeaderId(newLeaderId);
+                return newLeaderId;
+            }
+        }
+
+        return -1;
     }
 }
