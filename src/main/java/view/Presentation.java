@@ -159,7 +159,7 @@ public class Presentation {
             controller.sendPresentationImages();
 
             try {
-                TimeUnit.SECONDS.sleep(2);
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException err) {
                 throw new RuntimeException(err);
             }
