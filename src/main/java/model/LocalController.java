@@ -72,6 +72,8 @@ public class LocalController {
     }
 
     public boolean slidesReady(){
+        System.out.println("SLIDES THAT WILL BE RECEIVED " + localModel.getTotalNumberOfSlides());
+        System.out.println("SLIDES IN LOCAL " + localModel.getSlides().size());
         return localModel.getTotalNumberOfSlides() == localModel.getSlides().size();
     }
 
