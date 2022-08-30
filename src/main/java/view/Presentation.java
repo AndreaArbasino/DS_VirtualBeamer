@@ -155,6 +155,12 @@ public class Presentation {
             addBottomButtons();
             bottomPanel.repaint();
 
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException err) {
+                throw new RuntimeException(err);
+            }
+
             controller.sendPresentationImages();
             controller.sendCurrentSlideMessage();
 

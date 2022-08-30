@@ -125,7 +125,7 @@ public class NetworkController {
         } else if (message instanceof CurrentSlideMessage){
             localController.manageCurrentSlideMessage(((CurrentSlideMessage) message).getSlideNumber());
         } else if (message instanceof SlideDownloadRequestMessage){
-            localController.manageDownloadRequestMessage();
+            localController.manageDownloadRequestMessage(messageToProcess.getSenderIp());
         }
 
     }

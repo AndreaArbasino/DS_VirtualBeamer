@@ -225,9 +225,12 @@ public class LocalController {
         gui.changeSlide();
     }
 
-    public void manageDownloadRequestMessage(){
+    public void manageDownloadRequestMessage(String applicantIp){
         if (!localModel.getSlides().isEmpty()){
-            //TODO: unicast sharing of images
+            List<BufferedImage> images = localModel.getSlides();
+            for(BufferedImage image : images){
+                networkController.sendImage(image, applicantIp);
+            }
         }
     }
 
