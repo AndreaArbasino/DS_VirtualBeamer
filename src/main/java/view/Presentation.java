@@ -193,6 +193,7 @@ public class Presentation {
             //TODO: muovere a slide successiva e mandare messaggio in multicast per far muovere a slide successiva
             try{
                 currentSlide = new ImageIcon(controller.getNextSlide());
+                controller.sendCurrentSlideMessage();
                 slideLabel.setIcon(currentSlide);
                 slideLabel.repaint();
             } catch (IndexOutOfBoundsException err){
@@ -212,6 +213,7 @@ public class Presentation {
             //TODO: muovere a slide precedente e mandare messaggio in multicast per far muovere a slide precedente
             try{
                 currentSlide = new ImageIcon(controller.getPreviousSlide());
+                controller.sendCurrentSlideMessage();
                 slideLabel.setIcon(currentSlide);
                 slideLabel.repaint();
             } catch (IndexOutOfBoundsException err){
