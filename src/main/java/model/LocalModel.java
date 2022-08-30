@@ -7,20 +7,23 @@ import elementsOfNetwork.User;
 import java.awt.image.BufferedImage;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  *
  */
 public class LocalModel {
+    private static final int INITIAL_SLIDE_INDEX = 0;
 
     private final String username;
     private int localId;
     private Boolean inGroup;
     private Boolean presentationStarted; //TODO: set it true once the presentation starts, upon reception of a special message
     private List<Lobby> lobbies; //list of the lobbies that already exist
-    private List<BufferedImage> slides;
+    private HashMap<Integer, BufferedImage> slides;
     private int currentSlideIndex;
+    private int lastSlideIndex;
     private BeamGroup currentGroup; //group in which the client belongs to (if any)
 
 
@@ -34,12 +37,19 @@ public class LocalModel {
         inGroup = false;
         this.presentationStarted = false;
         lobbies = new ArrayList<>();
-        slides = new ArrayList<>();
-        currentSlideIndex = 0;
+        slides = new HashMap<>();
+        currentSlideIndex = INITIAL_SLIDE_INDEX;
+        lastSlideIndex = INITIAL_SLIDE_INDEX;
     }
 
     public List<BufferedImage> getSlides() {
-        return slides;
+        ArrayList<BufferedImage> listOfSlides = new ArrayList<>();
+        for (int i = INITIAL_SLIDE_INDEX; i <= slides.size(); i++){
+            if (slides.containsKey(i)){
+                listOfSlides.add(slides.get(i));
+            }
+        }
+        return listOfSlides;
     }
 
     public String getUsername() {
@@ -108,11 +118,12 @@ public class LocalModel {
     }
 
     public void addSlide(BufferedImage image){
-        slides.add(image);
+        slides.put(lastSlideIndex, image);
+        lastSlideIndex++;
     }
 
     public void addSlide(BufferedImage image, int position){
-        slides.add(position, image);
+        slides.put(position, image);
     }
 
     /**
@@ -163,7 +174,7 @@ public class LocalModel {
     }
 
     public BufferedImage moveToNextSlide(){
-        if (currentSlideIndex == (slides.size() - 1)){
+        if (currentSlideIndex == (lastSlideIndex - 1)){
             return getCurrentSlide();
         } else {
             currentSlideIndex++;
@@ -172,7 +183,7 @@ public class LocalModel {
     }
 
     public BufferedImage moveToPreviousSlide(){
-        if (currentSlideIndex == 0){
+        if (currentSlideIndex == INITIAL_SLIDE_INDEX){
             return getCurrentSlide();
         } else {
             currentSlideIndex--;
