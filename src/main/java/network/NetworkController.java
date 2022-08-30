@@ -85,8 +85,7 @@ public class NetworkController {
             System.out.println("I have received an ALIVE message");
         } else if (message instanceof JoinMessage){
             System.out.println("I have received a JOIN message");
-            localController.manageJoinMessage(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), DEFAULT_UNICAST_PORT);
-            //TODO: controllare che la porta serva davvero e non si possa usare una default + controllare se serve passare indirizzo sender
+            localController.manageJoinMessage(((JoinMessage) message).getUser(), DEFAULT_UNICAST_PORT);
         } else if (message instanceof ShareBeamGroupMessage){
             ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
             multicastListener = new MulticastListener(messageReceived.getBeamGroup().getGroupAddress(), DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);

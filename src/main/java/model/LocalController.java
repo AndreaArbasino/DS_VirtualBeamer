@@ -127,6 +127,10 @@ public class LocalController {
         return previousSlide;
     }
 
+    public void startPresentation(){
+        localModel.startPresentation();
+    }
+
 
 
 
@@ -157,15 +161,12 @@ public class LocalController {
     /**
      * Called by the leader in order to add a new participant
      * @param user
-     * @param senderIp
      * @param senderPort
      */
-    public void manageJoinMessage(User user, String senderIp, int senderPort){ //TODO: probably there is no need to pass the ip since can be taken from User
-        System.out.println("address from User: " + user.getIpAddress());
-        System.out.println("address passed: " + senderIp);
+    public void manageJoinMessage(User user, int senderPort){
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendAddMemberMessage(user, id);
-        networkController.sendShareBeamGroupMessage(id,localModel.getCurrentGroup(), localModel.isPresentationStarted(), senderIp, senderPort);
+        networkController.sendShareBeamGroupMessage(id,localModel.getCurrentGroup(), localModel.isPresentationStarted(), user.getIpAddress(), senderPort);
 
         if (BeamGroup.CREATOR_ID == id){
             //TODO: send a message to creator to give control

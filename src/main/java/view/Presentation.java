@@ -139,8 +139,9 @@ public class Presentation {
         @Override
         public void actionPerformed(ActionEvent e) {
             //TODO: attraverso il controller manda sia tutte le slide in multicast che un messaggio con la posizione corrente
-            currentSlide = new ImageIcon(controller.getCurrentSlide());
+            controller.startPresentation();
             slideLabel.removeAll();
+            currentSlide = new ImageIcon(controller.getCurrentSlide());
             slideLabel.setIcon(currentSlide);
             slideLabel.repaint();
             bottomPanel.removeAll();
