@@ -1,7 +1,6 @@
 package network;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -78,16 +77,16 @@ public class MulticastImageListener implements Runnable {
 
         short session = (short)(data[1] & 0xff);
 
-        System.out.println("Image number " + session + " received");
+        System.out.println("First fragment of image number " + session + " received");
 
         short slices = (short)(data[2] & 0xff);
 
-        System.out.println("Total slices received" + slices);
+        System.out.println("Total slices to receive" + slices);
 
         int maxPacketSize = (int)((data[3] & 0xff) << 8 | (data[4] & 0xff)); // mask the sign bit
         short slice = (short)(data[5] & 0xff);
 
-        System.out.println("Slice" + slice +" out of " + slices);
+        System.out.println("Slice" + slice +" out of " + slices + " just received ");
 
         int size = (int)((data[6] & 0xff) << 8 | (data[7] & 0xff)); // mask the sign bit
 
@@ -113,9 +112,10 @@ public class MulticastImageListener implements Runnable {
                 slicesStored++;
             }
         }
-
+        System.out.println("");
         //If the image is completed
         if(slicesStored == slices) {
+            System.out.println("I received all the slices of the image " + session);
             ByteArrayInputStream bis= new ByteArrayInputStream(imageData);
             BufferedImage image = null;
             try {

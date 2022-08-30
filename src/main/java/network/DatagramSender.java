@@ -47,6 +47,7 @@ public class DatagramSender {
         //image = shrink(image, SCALING);
         byte[] imageByteArray = bufferedImageToByteArray(image, IMAGE_OUTPUT_FORMAT);
         int packets = (int) Math.ceil(imageByteArray.length / (float) DATAGRAM_DATA_SIZE);
+        System.out.println("Number of messages that will be sent: " + packets);
 
         if (packets > MAX_PACKETS) {
             System.out.println("Image too large to be transmitted!");
