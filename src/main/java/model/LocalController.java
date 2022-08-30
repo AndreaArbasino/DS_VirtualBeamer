@@ -244,6 +244,7 @@ public class LocalController {
         for(BufferedImage image : images){
             networkController.sendImage(image, localModel.getCurrentGroupAddress());
         }
+        networkController.resetImageSendingSessionNumber();
     }
 
     public void sendCurrentSlideMessage(){
