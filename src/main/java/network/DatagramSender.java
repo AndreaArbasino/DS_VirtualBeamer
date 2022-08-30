@@ -44,7 +44,7 @@ public class DatagramSender {
     }
 
     public void sendImage(BufferedImage image, String recipientIp, int port){
-        image = shrink(image, SCALING);
+        //image = shrink(image, SCALING);
         byte[] imageByteArray = bufferedImageToByteArray(image, IMAGE_OUTPUT_FORMAT);
         int packets = (int) Math.ceil(imageByteArray.length / (float) DATAGRAM_DATA_SIZE);
 
