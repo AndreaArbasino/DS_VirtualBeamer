@@ -108,6 +108,11 @@ public class GUI {
         presentation.startClientFrame();
     }
 
+    public void createHiddenPresentation(){
+        presentation = new Presentation(localController);
+        presentation.createHidden();
+    }
+
     public void switchToOtherView(){
         presentation.switchToOtherView();
 

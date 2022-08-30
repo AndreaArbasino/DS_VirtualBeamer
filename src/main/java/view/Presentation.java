@@ -44,8 +44,12 @@ public class Presentation {
     public void startClientFrame(){
         sidePanelManager = new ClientSidePanelManager();
         startMainFrame();
-        //TODO: IMPOSTARE SLIDE INIZIALE
         mainFrame.pack();
+    }
+
+    public void createHidden(){
+        sidePanelManager = new ClientSidePanelManager();
+        startMainFrame();
     }
 
     public void refresh(){

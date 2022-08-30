@@ -197,6 +197,7 @@ public class LocalController {
             // se quell'utente non ha ancora scaricato, mostrare tendina con errore e fare scegliere di nuovo
             networkController.startUnicastImageListener();
             localModel.startPresentation();
+            gui.createHiddenPresentation();
             gui.displayDownloadSelection();
         } else {
             networkController.startMulticastImageListener(groupToEnter.getGroupAddress());
