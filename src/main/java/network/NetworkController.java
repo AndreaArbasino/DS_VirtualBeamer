@@ -170,4 +170,9 @@ public class NetworkController {
     public void sendDownloadRequestMessage(User user){
         datagramSender.sendMessage(new SlideDownloadRequestMessage(), user.getIpAddress(), DEFAULT_UNICAST_PORT);
     }
+
+    public void resetImageSendingSessionNumber(){
+        datagramSender.resetSessionNumber();
+    }
+
 }

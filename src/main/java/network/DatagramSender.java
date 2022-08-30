@@ -117,4 +117,8 @@ public class DatagramSender {
         return  scale(source, width, height);
     }
 
+    public void resetSessionNumber(){
+        sessionNumber = 0;
+    }
+
 }

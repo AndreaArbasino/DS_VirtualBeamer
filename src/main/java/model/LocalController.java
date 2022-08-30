@@ -232,6 +232,7 @@ public class LocalController {
             for(BufferedImage image : images){
                 networkController.sendImage(image, applicantIp);
             }
+            networkController.resetImageSendingSessionNumber(); //Reset the session number for possible future requests
             networkController.sendCurrentSlideMessage(localModel.getCurrentSlideIndex(), applicantIp);
         }
     }
