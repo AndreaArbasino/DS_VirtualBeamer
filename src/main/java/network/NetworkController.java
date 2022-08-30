@@ -19,19 +19,24 @@ public class NetworkController {
     private Thread multicastListenerThread;
     private Thread unicastListenerThread;
 
+
+
     public NetworkController (LocalController localController){
         this.localController = localController;
 
         unicastListener = new UnicastListener(DEFAULT_RECEIVED_BYTES, DEFAULT_UNICAST_PORT, this);
         datagramSender = new DatagramSender(unicastListener.getSocket());
-        multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
 
-        multicastListenerThread = new Thread(multicastListener);
+        //TODO: controllare si possano togliere le seguenti righe
+        //multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
+        //multicastListenerThread = new Thread(multicastListener);
+        //multicastListenerThread.start();
+
         unicastListenerThread = new Thread(unicastListener);
-
-        multicastListenerThread.start();
         unicastListenerThread.start();
     }
+
+
 
     public void sendDiscover(){
         datagramSender.sendMessage((new DiscoverMessage()), DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT);
@@ -48,6 +53,12 @@ public class NetworkController {
         multicastListener.setRunning(false);
         multicastListener.close();
         multicastListener = new MulticastListener(ipAddress, port, bytesToReceive, this);
+        multicastListenerThread = new Thread(multicastListener);
+        multicastListenerThread.start();
+    }
+
+    public void startDefaultMulticastListener(){
+        multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
         multicastListenerThread = new Thread(multicastListener);
         multicastListenerThread.start();
     }
@@ -74,10 +85,14 @@ public class NetworkController {
             System.out.println("I have received an ALIVE message");
         } else if (message instanceof JoinMessage){
             System.out.println("I have received a JOIN message");
-            localController.manageJoinMessage(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
-            //TODO: controllare che la porta serva davvero e non si possa usare una default
+            localController.manageJoinMessage(((JoinMessage) message).getUser(), messageToProcess.getSenderIp(), DEFAULT_UNICAST_PORT);
+            //TODO: controllare che la porta serva davvero e non si possa usare una default + controllare se serve passare indirizzo sender
         } else if (message instanceof ShareBeamGroupMessage){
             ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
+            multicastListener = new MulticastListener(messageReceived.getBeamGroup().getGroupAddress(), DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
+            multicastListenerThread = new Thread(multicastListener);
+            multicastListenerThread.start();
+            //TODO: creare multicast per ascoltare immaigni se presentazione nonn iniziata
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             System.out.println("I have correctly a joined a group");
         } else if (message instanceof AddMemberMessage){

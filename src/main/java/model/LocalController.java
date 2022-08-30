@@ -4,8 +4,6 @@ import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.Lobby;
 import elementsOfNetwork.User;
 import messages.InfoGroupMessage;
-import messages.JoinMessage;
-import messages.ShareBeamGroupMessage;
 import network.NetworkController;
 import view.GUI;
 
@@ -16,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static utilities.StaticUtilities.DEFAULT_DISCOVER_IP;
+import static utilities.StaticUtilities.*;
 
 public class LocalController {
     /*Multicast receiver se devi joinare è sul multicast hello una volta dentro ad una lobby sei su multicast lobby
@@ -56,6 +54,7 @@ public class LocalController {
 
         localModel.createLocalBeamGroup(localIp, groupName, newPresentationAddress);
         gui.chooseImages();
+        networkController.startDefaultMulticastListener();
     }
 
     /**
@@ -162,9 +161,11 @@ public class LocalController {
      * @param senderPort
      */
     public void manageJoinMessage(User user, String senderIp, int senderPort){ //TODO: probably there is no need to pass the ip since can be taken from User
+        System.out.println("address from User: " + user.getIpAddress());
+        System.out.println("address passed: " + senderIp);
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendAddMemberMessage(user, id);
-        networkController.sendShareBeamGroupMessage(id,(localModel.getCurrentGroup()), localModel.isPresentationStarted(), senderIp, senderPort);
+        networkController.sendShareBeamGroupMessage(id,localModel.getCurrentGroup(), localModel.isPresentationStarted(), senderIp, senderPort);
 
         if (BeamGroup.CREATOR_ID == id){
             //TODO: send a message to creator to give control

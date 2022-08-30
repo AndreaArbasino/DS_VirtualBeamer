@@ -104,5 +104,4 @@ public class MulticastListener implements Runnable{
     public void setRunning(Boolean running) {
         isRunning = running;
     }
-
 }
