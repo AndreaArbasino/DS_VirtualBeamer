@@ -156,7 +156,7 @@ public class Presentation {
             bottomPanel.repaint();
 
             try {
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException err) {
                 throw new RuntimeException(err);
             }
