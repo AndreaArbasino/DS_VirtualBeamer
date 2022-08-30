@@ -105,8 +105,8 @@ public class MulticastImageListener implements Runnable {
         }
 
         //If the received packet belongs to the current session
-        if(sessionAvailable && session == currentSession){
-            if(slicesCol != null && slicesCol[slice] == 0) {
+        if(sessionAvailable && (session == currentSession)){
+            if((slicesCol != null) && (slicesCol[slice] == 0)) {
                 slicesCol[slice] = 1;
                 System.arraycopy(data, HEADER_SIZE, imageData, slice * maxPacketSize, size);
                 slicesStored++;
@@ -117,7 +117,7 @@ public class MulticastImageListener implements Runnable {
         }
         System.out.println("");
         //If the image is completed
-        //if(slicesStored == slices) {
+        if(slicesStored == slices) {
             System.out.println("I received all the slices of the image " + session);
             ByteArrayInputStream bis= new ByteArrayInputStream(imageData);
             BufferedImage image = null;
@@ -129,7 +129,7 @@ public class MulticastImageListener implements Runnable {
 
             //TODO: CHIAMARE METODO DAL NETWORK CONTROLLER
             networkController.processImage(image, session);
-        //}
+        }
     }
 
     /**
