@@ -55,7 +55,9 @@ public class BeamGroup implements Serializable {
     public List<User> getUsers(){
         List<User> users = new ArrayList<>();
         for (int i = BeamGroup.CREATOR_ID; i < participants.size(); i++){
-            users.add(participants.get(i));
+            if (null != participants.get(i)){
+                users.add(participants.get(i));
+            }
         }
         return users;
     }
