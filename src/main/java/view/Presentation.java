@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class Presentation {
 
@@ -145,7 +146,6 @@ public class Presentation {
     private class StartButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-
             controller.startPresentation();
             slideLabel.removeAll();
             currentSlide = new ImageIcon(controller.getCurrentSlide());
@@ -157,6 +157,13 @@ public class Presentation {
             //TODO: attraverso il controller manda sia tutte le slide in multicast che un messaggio con la posizione corrente
 
             controller.sendPresentationImages();
+
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException err) {
+                throw new RuntimeException(err);
+            }
+
             controller.sendCurrentSlideMessage();
 
         }
