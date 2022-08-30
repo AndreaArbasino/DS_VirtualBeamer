@@ -98,6 +98,9 @@ public class MulticastImageListener implements Runnable {
                 slicesStored = 0;
                 imageData = new byte[slices * maxPacketSize];
                 slicesCol = new int[slices];
+                for (int k=0; k < slices; k++){
+                    slicesCol[k] = 0;
+                }
                 sessionAvailable = true;
             }
         }
@@ -122,12 +125,7 @@ public class MulticastImageListener implements Runnable {
             }
 
             //TODO: CHIAMARE METODO DAL NETWORK CONTROLLER
-            networkController.processImage(image, session-1);
-            ImageIcon justArrived = new ImageIcon(image);
-            JFrame frame = new JFrame();
-            JLabel slideLabel = new JLabel();
-            slideLabel.setIcon(justArrived);
-            frame.pack();
+            networkController.processImage(image, session);
         }
     }
 

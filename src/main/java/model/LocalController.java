@@ -232,7 +232,7 @@ public class LocalController {
     }
 
     public void sendCurrentSlideMessage(){
-        networkController.sendCurrentSlideMessage(0);
+        networkController.sendCurrentSlideMessage(localModel.getCurrentSlideIndex());
     }
 
     public void sendDiscoverGroup(){

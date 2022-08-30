@@ -170,6 +170,10 @@ public class LocalModel {
         currentGroup.removeParticipant(id);
     }
 
+    public int getCurrentSlideIndex(){
+        return currentSlideIndex;
+    }
+
     public BufferedImage getCurrentSlide(){
         return slides.get(currentSlideIndex);
     }
