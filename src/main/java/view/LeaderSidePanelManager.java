@@ -23,7 +23,7 @@ public class LeaderSidePanelManager implements SidePanelManager{
             clientsPanel.add(line3);
         } else {
             JButton userButton;
-            LeaderSidePanelManager.ClientButtonListener userButtonListener = new LeaderSidePanelManager.ClientButtonListener();
+            ClientButtonListener userButtonListener = new ClientButtonListener();
             userList.remove(localUser);
             for (User user : userList){
                 userButton = new UserButton(user);

@@ -13,7 +13,7 @@ public class ClientSidePanelManager implements SidePanelManager {
     @Override
     public void createPanel(JPanel clientsPanel, ArrayList<User> userList, User localUser) {
         UserButton userButton;
-        ClientSidePanelManager.ClientButtonListener userButtonListener = new ClientSidePanelManager.ClientButtonListener();
+        ClientButtonListener userButtonListener = new ClientButtonListener();
         userList.remove(localUser);
         for (User user : userList){
             userButton = new UserButton(user);
