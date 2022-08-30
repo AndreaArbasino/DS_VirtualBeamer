@@ -41,7 +41,7 @@ public class MulticastImageListener implements Runnable {
     public MulticastImageListener(String ip, int port, int sizeToReceive, NetworkController networkController) {
         this.sizeToReceive = sizeToReceive;
         this.networkController = networkController;
-        this.currentSession = 0;
+        this.currentSession = -1;
 
         try {
             this.group = InetAddress.getByName(ip);
