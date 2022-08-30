@@ -18,10 +18,12 @@ public class NetworkController {
     private MulticastListener multicastListener;
     private MulticastImageListener multicastImageListener;
     private UnicastListener unicastListener;
+    private UnicastImageListener unicastImageListener;
     private DatagramSender datagramSender;
     private Thread multicastListenerThread;
     private Thread multicastImageListenerThread;
     private Thread unicastListenerThread;
+    private Thread unicastImageListenerThread;
 
 
 
@@ -67,6 +69,24 @@ public class NetworkController {
         multicastListenerThread.start();
     }
 
+    public void startUnicastImageListener(){
+        unicastImageListener = new UnicastImageListener(DEFAULT_IMAGE_PORT, DATAGRAM_DATA_SIZE, this);
+        unicastImageListenerThread = new Thread(unicastImageListener);
+        unicastImageListenerThread.start();
+    }
+
+    public void startMulticastImageListener(String multicastIp){
+        multicastImageListener = new MulticastImageListener(multicastIp, DEFAULT_IMAGE_PORT, DATAGRAM_DATA_SIZE, this);
+        multicastImageListenerThread = new Thread(multicastImageListener);
+        multicastImageListenerThread.start();
+    }
+
+    public void startMulticastListener(String multicastIp){
+        multicastListener = new MulticastListener(multicastIp, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
+        multicastListenerThread = new Thread(multicastListener);
+        multicastListenerThread.start();
+    }
+
     public void processImage(BufferedImage image, int position){
         localController.manageReceivedImage(image, position);
     }
@@ -92,14 +112,6 @@ public class NetworkController {
             localController.manageJoinMessage(((JoinMessage) message).getUser(), DEFAULT_UNICAST_PORT);
         } else if (message instanceof ShareBeamGroupMessage){
             ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
-            multicastListener = new MulticastListener(messageReceived.getBeamGroup().getGroupAddress(), DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
-            multicastListenerThread = new Thread(multicastListener);
-            multicastListenerThread.start();
-            //TODO: creare multicast per ascoltare immaigni se presentazione non iniziata
-            multicastImageListener = new MulticastImageListener(messageReceived.getBeamGroup().getGroupAddress(), DEFAULT_IMAGE_PORT, DATAGRAM_MAX_SIZE, this);
-            multicastImageListenerThread = new Thread(multicastImageListener);
-            multicastImageListenerThread.start();
-
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted());
         } else if (message instanceof AddMemberMessage){

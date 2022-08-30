@@ -190,13 +190,16 @@ public class LocalController {
      * @param isPresentationStarted used for knowing if the leader is already showing the slides
      */
     public void manageShareBeamGroupMessage(BeamGroup groupToEnter, int assignedId, Boolean isPresentationStarted){
+        networkController.startMulticastListener(groupToEnter.getGroupAddress());
         localModel.addBeamGroup(groupToEnter, assignedId);
         if (isPresentationStarted){
             //TODO: mostrare schermata per fare scegliere da chi scaricare -->
             // se quell'utente non ha ancora scaricato, mostrare tendina con errore e fare scegliere di nuovo
+            networkController.startUnicastImageListener();
             localModel.startPresentation();
             gui.displayDownloadSelection();
         } else {
+            networkController.startMulticastImageListener(groupToEnter.getGroupAddress());
             gui.startClientFrame();
         }
     }
