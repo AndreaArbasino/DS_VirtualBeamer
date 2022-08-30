@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static utilities.StaticUtilities.DEFAULT_DISCOVER_IP;
+import static utilities.StaticUtilities.*;
 
 public class LocalController {
     /*Multicast receiver se devi joinare è sul multicast hello una volta dentro ad una lobby sei su multicast lobby
@@ -69,6 +69,16 @@ public class LocalController {
         }
         System.out.println("host " + host);
         return host;
+    }
+
+    public void waitUntilAllSlidesReceived(){
+        while (localModel.getTotalNumberOfSlides() != localModel.getSlides().size()){
+            try {
+                TimeUnit.MILLISECONDS.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private String findAddressForPresentation(){
@@ -160,6 +170,10 @@ public class LocalController {
     }
 
 
+    public void manageTotalNumberOfSlidesMessage(int totalNumberOfSlides){
+        localModel.setTotalNumberOfSlides(totalNumberOfSlides);
+    }
+
     /**
      * Called by the leader in order to add a new participant
      * @param user
@@ -227,7 +241,8 @@ public class LocalController {
     }
 
     public void manageDownloadRequestMessage(String applicantIp){
-        if (!localModel.getSlides().isEmpty()){
+        if (localModel.getSlides().size() == getLocalModel().getTotalNumberOfSlides()){
+            networkController.sendTotalNumberOfSlides(localModel.getTotalNumberOfSlides(), applicantIp, DEFAULT_UNICAST_PORT);
             List<BufferedImage> images = localModel.getSlides();
             for(BufferedImage image : images){
                 networkController.sendImage(image, applicantIp);
@@ -238,6 +253,9 @@ public class LocalController {
     }
 
 
+    public void sendTotalNumberOfSlidesToGroup(){
+        networkController.sendTotalNumberOfSlides(localModel.getTotalNumberOfSlides(), localModel.getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT );
+    }
 
     public void sendPresentationImages(){
         List<BufferedImage> images = localModel.getSlides();
@@ -271,4 +289,5 @@ public class LocalController {
     public void sendDownloadRequestMessage(User user){
         networkController.sendDownloadRequestMessage(user);
     }
+
 }

@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class Presentation {
 
@@ -147,6 +146,7 @@ public class Presentation {
     }
 
     public void changeSlide(){
+        controller.waitUntilAllSlidesReceived();
         currentSlide = new ImageIcon(controller.getCurrentSlide());
         slideLabel.setIcon(currentSlide);
         slideLabel.repaint();
@@ -172,6 +172,7 @@ public class Presentation {
                 throw new RuntimeException(err);
             }*/
 
+            controller.sendTotalNumberOfSlidesToGroup();
             controller.sendPresentationImages();
             controller.sendCurrentSlideMessage();
 

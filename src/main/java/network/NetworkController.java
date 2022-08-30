@@ -126,6 +126,8 @@ public class NetworkController {
             localController.manageCurrentSlideMessage(((CurrentSlideMessage) message).getSlideNumber());
         } else if (message instanceof SlideDownloadRequestMessage){
             localController.manageDownloadRequestMessage(messageToProcess.getSenderIp());
+        } else if (message instanceof TotalNumberOfSlidesMessage){
+            localController.manageTotalNumberOfSlidesMessage(((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides());
         }
 
     }
@@ -157,6 +159,10 @@ public class NetworkController {
 
     public void sendTerminationMessage(){
         datagramSender.sendMessage(new TerminationMessage(), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+    }
+
+    public void sendTotalNumberOfSlides(int totalNumberOfSlides, String ip, int port){
+        datagramSender.sendMessage(new TotalNumberOfSlidesMessage(totalNumberOfSlides), ip, port);
     }
 
     public void sendImage(BufferedImage image, String recipientIp){

@@ -15,13 +15,14 @@ import java.util.List;
  */
 public class LocalModel {
     private static final int INITIAL_SLIDE_INDEX = 0;
-
+    public static final int NO_SLIDE = -1;
     private final String username;
     private int localId;
     private Boolean inGroup;
     private Boolean presentationStarted; //TODO: set it true once the presentation starts, upon reception of a special message
     private List<Lobby> lobbies; //list of the lobbies that already exist
     private HashMap<Integer, BufferedImage> slides;
+    private int totalNumberOfSlides;
     private int currentSlideIndex;
     private int lastSlideIndex;
     private BeamGroup currentGroup; //group in which the client belongs to (if any)
@@ -34,6 +35,7 @@ public class LocalModel {
      */
     public LocalModel(String username) {
         this.username = username;
+        totalNumberOfSlides = NO_SLIDE;
         inGroup = false;
         this.presentationStarted = false;
         lobbies = new ArrayList<>();
@@ -50,6 +52,10 @@ public class LocalModel {
             }
         }
         return listOfSlides;
+    }
+
+    public int getTotalNumberOfSlides() {
+        return totalNumberOfSlides;
     }
 
     public String getUsername() {
@@ -105,6 +111,9 @@ public class LocalModel {
         currentSlideIndex = slideNumber;
     }
 
+    public void setTotalNumberOfSlides(int totalNumberOfSlides) {
+        this.totalNumberOfSlides = totalNumberOfSlides;
+    }
 
     /**
      * Once an InfoGroupMessage is received, the list of the already existing lobbies is updated.

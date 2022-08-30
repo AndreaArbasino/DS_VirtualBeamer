@@ -75,6 +75,7 @@ public class GUI {
         File[] selectedFile = fc.getSelectedFiles();
         frame.setVisible(false);
 
+        localModel.setTotalNumberOfSlides(selectedFile.length);
         for (File file : selectedFile) {
             try {
                 BufferedImage im = ImageIO.read(file);
