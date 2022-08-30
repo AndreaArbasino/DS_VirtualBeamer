@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BeamGroup implements Serializable {
 
@@ -107,6 +108,13 @@ public class BeamGroup implements Serializable {
             creatorStillIn = true;
             return BeamGroup.CREATOR_ID;
         }
+        if (participants.containsValue(participant)){
+            for (Map.Entry<Integer, User> entry : participants.entrySet()) {
+                if (entry.getValue().equals(participant)) {
+                    return entry.getKey();
+                }
+            }
+        }
         participants.put(nextIdAvailable, new User(participant.getUsername(), participant.getIpAddress()));
         nextIdAvailable++;
         return nextIdAvailable-1;
@@ -118,7 +126,13 @@ public class BeamGroup implements Serializable {
             participants.put(BeamGroup.CREATOR_ID, creator);
             leaderId = BeamGroup.CREATOR_ID;
             creatorStillIn = true;
+            return;
         }
+
+        if(participants.containsKey(id)){
+            return;
+        }
+
         participants.put(id, user);
     }
 

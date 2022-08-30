@@ -31,12 +31,9 @@ public class DownloadSelection {
         panel.setPreferredSize(new Dimension(500, 500));
 
         ArrayList<User> users = new ArrayList<>(localModel.getCurrentGroupUsers());
+        users.remove(localModel.getLocalUser());
         ClientButtonDownloadListener clientButtonDownloadListener = new ClientButtonDownloadListener();
 
-        //TODO: RIMUOVERE
-        users.add(new User("pippo", "127.0.0.1"));
-        users.add(new User("pluto", "127.0.0.1"));
-        users.add(new User("paperino", "127.0.0.1"));
 
         for (User user : users) {
             userButton = new UserButton(user);
@@ -57,6 +54,7 @@ public class DownloadSelection {
             UserButton button = (UserButton) e.getSource();
 
             //TODO: AGGIUNGERE LOGICA, EFFETTUARE CHIAMATA A LOCAL CONTROLLER
+            localController.sendDownloadRequestMessage(button.getUser());
 
             frame.dispose();
         }

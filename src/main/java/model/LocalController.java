@@ -211,7 +211,6 @@ public class LocalController {
         gui.refreshPresentation();
     }
 
-    //TODO: aggiungere metodo per rimuovere partecipanti al beamGroup corrente
     public void manageLeaveNotificationMessage(int id){
         localModel.removeFromBeamGroup(id);
         gui.refreshPresentation();
@@ -226,12 +225,19 @@ public class LocalController {
         gui.changeSlide();
     }
 
+    public void manageDownloadRequestMessage(){
+        if (!localModel.getSlides().isEmpty()){
+            //TODO: unicast sharing of images
+        }
+    }
+
+
+
     public void sendPresentationImages(){
         List<BufferedImage> images = localModel.getSlides();
         for(BufferedImage image : images){
             networkController.sendImage(image, localModel.getCurrentGroupAddress());
         }
-        //TODO: VEDERE SE METTERE MESSAGGIO CHE INDICA FINE RICEZIONE IMMAGINI
     }
 
     public void sendCurrentSlideMessage(){
@@ -253,5 +259,9 @@ public class LocalController {
 
     public void sendLeaveNotificationMessage(){
         networkController.sendLeaveNotificationMessage(localModel.getLocalId());
+    }
+
+    public void sendDownloadRequestMessage(User user){
+        networkController.sendDownloadRequestMessage(user);
     }
 }

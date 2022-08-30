@@ -154,16 +154,8 @@ public class Presentation {
             bottomPanel.removeAll();
             addBottomButtons();
             bottomPanel.repaint();
-            //TODO: attraverso il controller manda sia tutte le slide in multicast che un messaggio con la posizione corrente
 
             controller.sendPresentationImages();
-
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException err) {
-                throw new RuntimeException(err);
-            }
-
             controller.sendCurrentSlideMessage();
 
         }

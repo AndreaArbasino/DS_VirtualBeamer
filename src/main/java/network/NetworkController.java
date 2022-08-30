@@ -124,6 +124,8 @@ public class NetworkController {
             localController.manageTerminationMessage();
         } else if (message instanceof CurrentSlideMessage){
             localController.manageCurrentSlideMessage(((CurrentSlideMessage) message).getSlideNumber());
+        } else if (message instanceof SlideDownloadRequestMessage){
+            localController.manageDownloadRequestMessage();
         }
 
     }
@@ -165,4 +167,7 @@ public class NetworkController {
         datagramSender.sendMessage(new CurrentSlideMessage(slideNumber),localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
     }
 
+    public void sendDownloadRequestMessage(User user){
+        datagramSender.sendMessage(new SlideDownloadRequestMessage(), user.getIpAddress(), DEFAULT_UNICAST_PORT);
+    }
 }
