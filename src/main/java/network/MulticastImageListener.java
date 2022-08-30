@@ -1,6 +1,7 @@
 package network;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -80,8 +81,14 @@ public class MulticastImageListener implements Runnable {
         System.out.println("Image number " + session + " received");
 
         short slices = (short)(data[2] & 0xff);
+
+        System.out.println("Total slices received" + slices);
+
         int maxPacketSize = (int)((data[3] & 0xff) << 8 | (data[4] & 0xff)); // mask the sign bit
         short slice = (short)(data[5] & 0xff);
+
+        System.out.println("Slice" + slice +" out of " + slices);
+
         int size = (int)((data[6] & 0xff) << 8 | (data[7] & 0xff)); // mask the sign bit
 
         //If the SESSION_START flag is set, setup the initial values
@@ -116,6 +123,11 @@ public class MulticastImageListener implements Runnable {
 
             //TODO: CHIAMARE METODO DAL NETWORK CONTROLLER
             networkController.processImage(image, session-1);
+            ImageIcon justArrived = new ImageIcon(image);
+            JFrame frame = new JFrame();
+            JLabel slideLabel = new JLabel();
+            slideLabel.setIcon(justArrived);
+            frame.pack();
         }
     }
 
