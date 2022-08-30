@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static utilities.StaticUtilities.*;
+import static utilities.StaticUtilities.DEFAULT_DISCOVER_IP;
 
 public class LocalController {
     /*Multicast receiver se devi joinare è sul multicast hello una volta dentro ad una lobby sei su multicast lobby
@@ -98,7 +98,6 @@ public class LocalController {
         return ip;
     }
 
-
     //aggiungere metodo che prende come parametro messaggio che dice numero di slide corrente
 
     public LocalModel getLocalModel() {
@@ -133,6 +132,9 @@ public class LocalController {
 
 
 
+    public void manageReceivedImage(BufferedImage image){
+        localModel.addSlide(image);
+    }
 
     /**
      * Once an InfoGroupMessage is received, the list of the already existing lobbies know to the user is updated.
@@ -216,9 +218,24 @@ public class LocalController {
         gui.closePresentation();
     }
 
+    public void manageCurrentSlideMessage(int slideNumber){
+        localModel.setCurrentSlide(slideNumber);
+        gui.changeSlide();
+    }
 
 
 
+    public void sendPresentationImages(){
+        List<BufferedImage> images = localModel.getSlides();
+        for(BufferedImage image : images){
+            networkController.sendImage(image, localModel.getCurrentGroupAddress());
+        }
+        //TODO: VEDERE SE METTERE MESSAGGIO CHE INDICA FINE RICEZIONE IMMAGINI
+    }
+
+    public void sendCurrentSlideMessage(){
+        networkController.sendCurrentSlideMessage(0);
+    }
 
     public void sendDiscoverGroup(){
         this.localModel.resetLobbies();

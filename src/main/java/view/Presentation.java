@@ -136,6 +136,12 @@ public class Presentation {
         mainFrame.dispose();
     }
 
+    public void changeSlide(){
+        currentSlide = new ImageIcon(controller.getCurrentSlide());
+        slideLabel.setIcon(currentSlide);
+        slideLabel.repaint();
+    }
+
     private class StartButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -149,7 +155,12 @@ public class Presentation {
             addBottomButtons();
             bottomPanel.repaint();
             //TODO: attraverso il controller manda sia tutte le slide in multicast che un messaggio con la posizione corrente
+
+            controller.sendPresentationImages();
+            controller.sendCurrentSlideMessage();
+
         }
+
     }
 
     private class TerminateButtonListener implements ActionListener{

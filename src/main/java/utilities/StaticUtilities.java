@@ -9,7 +9,7 @@ public class StaticUtilities {
     public static final int DEFAULT_MULTICAST_PORT = 42000;
     public static final int DEFAULT_UNICAST_PORT = 42001;
 
-    public static final int DEFAULT_IMAGE_TRANSFER_PORT = 42002;
+    public static final int DEFAULT_IMAGE_PORT = 42002;
 
     public static final int DATAGRAM_DATA_SIZE = 65507;
 

@@ -117,6 +117,10 @@ public class GUI {
         presentation.refresh();
     }
 
+    public void changeSlide(){
+        presentation.changeSlide();
+    }
+
     public void closePresentation(){
         presentation.close();
         JOptionPane.showMessageDialog(

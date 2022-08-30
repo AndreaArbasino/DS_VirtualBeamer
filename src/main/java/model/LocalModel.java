@@ -38,7 +38,9 @@ public class LocalModel {
         currentSlideIndex = 0;
     }
 
-
+    public List<BufferedImage> getSlides() {
+        return slides;
+    }
 
     public String getUsername() {
         return username;
@@ -88,6 +90,10 @@ public class LocalModel {
         return inGroup;
     }
 
+
+    public void setCurrentSlide(int slideNumber){
+        currentSlideIndex = slideNumber;
+    }
 
 
     /**

@@ -6,6 +6,8 @@ import elementsOfNetwork.User;
 import messages.*;
 import model.LocalController;
 
+import java.awt.image.BufferedImage;
+
 import static utilities.StaticUtilities.*;
 
 /**
@@ -14,9 +16,11 @@ import static utilities.StaticUtilities.*;
 public class NetworkController {
     private final LocalController localController;
     private MulticastListener multicastListener;
+    private MulticastImageListener multicastImageListener;
     private UnicastListener unicastListener;
     private DatagramSender datagramSender;
     private Thread multicastListenerThread;
+    private Thread multicastImageListenerThread;
     private Thread unicastListenerThread;
 
 
@@ -63,8 +67,8 @@ public class NetworkController {
         multicastListenerThread.start();
     }
 
-    public void processImage(){
-        ;
+    public void processImage(BufferedImage image){
+        localController.manageReceivedImage(image);
     }
 
     /**
@@ -92,6 +96,10 @@ public class NetworkController {
             multicastListenerThread = new Thread(multicastListener);
             multicastListenerThread.start();
             //TODO: creare multicast per ascoltare immaigni se presentazione non iniziata
+            multicastImageListener = new MulticastImageListener(messageReceived.getBeamGroup().getGroupAddress(), DEFAULT_IMAGE_PORT, DATAGRAM_MAX_SIZE, this);
+            multicastImageListenerThread = new Thread(multicastImageListener);
+            multicastImageListenerThread.start();
+
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted());
         } else if (message instanceof AddMemberMessage){
@@ -102,6 +110,8 @@ public class NetworkController {
             System.out.println("Somebody left the group");
         } else if (message instanceof TerminationMessage){
             localController.manageTerminationMessage();
+        } else if (message instanceof CurrentSlideMessage){
+            localController.manageCurrentSlideMessage(((CurrentSlideMessage) message).getSlideNumber());
         }
 
     }
@@ -134,4 +144,13 @@ public class NetworkController {
     public void sendTerminationMessage(){
         datagramSender.sendMessage(new TerminationMessage(), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
     }
+
+    public void sendImage(BufferedImage image, String recipientIp){
+        datagramSender.sendImage(image, recipientIp, DEFAULT_IMAGE_PORT);
+    }
+
+    public void sendCurrentSlideMessage(int slideNumber){
+        datagramSender.sendMessage(new CurrentSlideMessage(slideNumber),localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+    }
+
 }
