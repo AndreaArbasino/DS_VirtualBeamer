@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class Presentation {
 
@@ -146,7 +147,14 @@ public class Presentation {
     }
 
     public void changeSlide(){
-        controller.waitUntilAllSlidesReceived();
+        while (!controller.slidesReady()){
+            try {
+                TimeUnit.MILLISECONDS.sleep(200);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         currentSlide = new ImageIcon(controller.getCurrentSlide());
         slideLabel.setIcon(currentSlide);
         slideLabel.repaint();

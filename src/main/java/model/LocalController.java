@@ -71,14 +71,8 @@ public class LocalController {
         return host;
     }
 
-    public void waitUntilAllSlidesReceived(){
-        while (localModel.getTotalNumberOfSlides() != localModel.getSlides().size()){
-            try {
-                TimeUnit.MILLISECONDS.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    public boolean slidesReady(){
+        return localModel.getTotalNumberOfSlides() == localModel.getSlides().size();
     }
 
     private String findAddressForPresentation(){
