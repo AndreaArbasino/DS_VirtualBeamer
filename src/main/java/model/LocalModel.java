@@ -124,6 +124,7 @@ public class LocalModel {
 
     public void addSlide(BufferedImage image, int position){
         slides.put(position, image);
+        System.out.println("Slide in position "+ position + " added correctly");
     }
 
     /**
