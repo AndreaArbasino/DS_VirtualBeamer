@@ -166,6 +166,7 @@ public class LocalController {
     public void manageJoinMessage(User user, int senderPort){
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendAddMemberMessage(user, id);
+        System.out.println("Is the presentation started? " + localModel.isPresentationStarted());
         networkController.sendShareBeamGroupMessage(id,localModel.getCurrentGroup(), localModel.isPresentationStarted(), user.getIpAddress(), senderPort);
 
         if (BeamGroup.CREATOR_ID == id){
@@ -191,6 +192,7 @@ public class LocalController {
         if (isPresentationStarted){
             //TODO: mostrare schermata per fare scegliere da chi scaricare -->
             // se quell'utente non ha ancora scaricato, mostrare tendina con errore e fare scegliere di nuovo
+            localModel.startPresentation();
             gui.displayDownloadSelection();
         } else {
             gui.startClientFrame();

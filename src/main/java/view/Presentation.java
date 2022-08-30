@@ -102,6 +102,7 @@ public class Presentation {
         mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 controller.sendLeaveNotificationMessage();
+                System.out.println("Event of closing correctly captured");
             }
         });
 
@@ -138,7 +139,7 @@ public class Presentation {
     private class StartButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            //TODO: attraverso il controller manda sia tutte le slide in multicast che un messaggio con la posizione corrente
+
             controller.startPresentation();
             slideLabel.removeAll();
             currentSlide = new ImageIcon(controller.getCurrentSlide());
@@ -147,6 +148,7 @@ public class Presentation {
             bottomPanel.removeAll();
             addBottomButtons();
             bottomPanel.repaint();
+            //TODO: attraverso il controller manda sia tutte le slide in multicast che un messaggio con la posizione corrente
         }
     }
 
@@ -155,6 +157,7 @@ public class Presentation {
         public void actionPerformed(ActionEvent e) {
             controller.sendTerminationMessage();
             mainFrame.dispose();
+            //TODO: uccide thread che ascolta messaggi per entrare
             JOptionPane.showMessageDialog(
                     new JFrame(),
                     "The presentation in the group " + controller.getLocalModel().getCurrentGroupName() +

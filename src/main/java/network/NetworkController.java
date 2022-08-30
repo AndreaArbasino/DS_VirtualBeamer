@@ -91,13 +91,13 @@ public class NetworkController {
             multicastListener = new MulticastListener(messageReceived.getBeamGroup().getGroupAddress(), DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
             multicastListenerThread = new Thread(multicastListener);
             multicastListenerThread.start();
-            //TODO: creare multicast per ascoltare immaigni se presentazione nonn iniziata
+            //TODO: creare multicast per ascoltare immaigni se presentazione non iniziata
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted());
         } else if (message instanceof AddMemberMessage){
             localController.manageAddMemberMessage(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
             System.out.println("Somebody joined the group");
-        } else if(message instanceof  LeaveNotificationMessage){
+        } else if(message instanceof LeaveNotificationMessage){
             localController.manageLeaveNotificationMessage(((LeaveNotificationMessage) message).getId());
             System.out.println("Somebody left the group");
         } else if (message instanceof TerminationMessage){
@@ -127,6 +127,7 @@ public class NetworkController {
     }
 
     public void sendLeaveNotificationMessage(int id){
+        datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
         datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
     }
 

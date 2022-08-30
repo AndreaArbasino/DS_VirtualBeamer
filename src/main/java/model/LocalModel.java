@@ -76,6 +76,10 @@ public class LocalModel {
         return currentGroup.getParticipants().get(localId);
     }
 
+    public User getLeader() {
+        return currentGroup.getLeader();
+    }
+
     public Boolean isLeader() {
         return (localId == currentGroup.getLeaderId());
     }
