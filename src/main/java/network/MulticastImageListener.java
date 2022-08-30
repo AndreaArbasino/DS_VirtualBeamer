@@ -18,11 +18,11 @@ import static utilities.StaticUtilities.SESSION_START;
  */
 public class MulticastImageListener implements Runnable {
 
-    private int sizeToReceive;
-    private NetworkController networkController;
+    private final int sizeToReceive;
+    private final NetworkController networkController;
 
-    private MulticastSocket socket;
-    private InetAddress group;
+    private final MulticastSocket socket;
+    private final InetAddress group;
     private Boolean isRunning;
     private byte[] buf;
     // ---------------------------------//
@@ -41,6 +41,7 @@ public class MulticastImageListener implements Runnable {
     public MulticastImageListener(String ip, int port, int sizeToReceive, NetworkController networkController) {
         this.sizeToReceive = sizeToReceive;
         this.networkController = networkController;
+        this.currentSession = 0;
 
         try {
             this.group = InetAddress.getByName(ip);
@@ -81,7 +82,7 @@ public class MulticastImageListener implements Runnable {
 
         short slices = (short)(data[2] & 0xff);
 
-        System.out.println("Total slices to receive" + slices);
+        System.out.println("Total slices to receive " + slices);
 
         int maxPacketSize = (int)((data[3] & 0xff) << 8 | (data[4] & 0xff)); // mask the sign bit
         short slice = (short)(data[5] & 0xff);
@@ -102,6 +103,7 @@ public class MulticastImageListener implements Runnable {
                 }
                 sessionAvailable = true;
             }
+            System.out.println("Currently session available is: " + sessionAvailable);
         }
 
         //If the received packet belongs to the current session
@@ -115,12 +117,12 @@ public class MulticastImageListener implements Runnable {
                 System.out.println(slices);
             }
         }
-        System.out.println("");
+
         //If the image is completed
         if(slicesStored == slices) {
             System.out.println("I received all the slices of the image " + session);
             ByteArrayInputStream bis= new ByteArrayInputStream(imageData);
-            BufferedImage image = null;
+            BufferedImage image;
             try {
                 image = ImageIO.read(bis);
             } catch (IOException e) {
