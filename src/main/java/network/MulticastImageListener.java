@@ -76,6 +76,9 @@ public class MulticastImageListener implements Runnable {
         byte[] data = datagramPacket.getData();
 
         short session = (short)(data[1] & 0xff);
+
+        System.out.println("Image number " + session + " received");
+
         short slices = (short)(data[2] & 0xff);
         int maxPacketSize = (int)((data[3] & 0xff) << 8 | (data[4] & 0xff)); // mask the sign bit
         short slice = (short)(data[5] & 0xff);
@@ -112,7 +115,7 @@ public class MulticastImageListener implements Runnable {
             }
 
             //TODO: CHIAMARE METODO DAL NETWORK CONTROLLER
-            networkController.processImage(image, session);
+            networkController.processImage(image, session-1);
         }
     }
 
