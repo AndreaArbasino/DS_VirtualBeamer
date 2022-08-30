@@ -101,7 +101,7 @@ public class Presentation {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                //TODO: send a leaveNotificationMessage in multicast containing the local id
+                controller.sendLeaveNotificationMessage();
             }
         });
 
@@ -153,8 +153,6 @@ public class Presentation {
     private class TerminateButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            //TODO: attraverso controller mandare un messaggio per terminare la presentazione
-            //TODO: alla ricezione di tale messaggio, presentation si chiude e viene fatto display di  una finestra che informa l'utente
             controller.sendTerminationMessage();
             mainFrame.dispose();
             JOptionPane.showMessageDialog(

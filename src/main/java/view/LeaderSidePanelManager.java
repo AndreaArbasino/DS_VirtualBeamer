@@ -43,11 +43,12 @@ public class LeaderSidePanelManager implements SidePanelManager{
         public void actionPerformed(ActionEvent e) {
             /*if (controller.isPresentationStarted()){
                 //TODO:give to that selected user the leadership
-            } else {*/
-                ErrorMessageDisplay errorMessage= new ErrorMessageDisplay(new JFrame());
-                errorMessage.displayErrorMessage("It is not possible to pass the control of the presentation before it is started!");
-            //}
+            } else {
 
+            }*/
+            System.out.println("Error since not possible to pass control yet");
+            ErrorMessageDisplay errorMessage= new ErrorMessageDisplay(new JFrame());
+            errorMessage.displayErrorMessage("It is not possible to pass the control of the presentation before it is started!");
         }
     }
 }

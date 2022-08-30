@@ -93,7 +93,7 @@ public class NetworkController {
             multicastListenerThread.start();
             //TODO: creare multicast per ascoltare immaigni se presentazione nonn iniziata
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
-            System.out.println("I have correctly a joined a group");
+            System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted());
         } else if (message instanceof AddMemberMessage){
             localController.manageAddMemberMessage(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
             System.out.println("Somebody joined the group");
@@ -124,6 +124,10 @@ public class NetworkController {
 
     public void sendAddMemberMessage(User user, int id){
         datagramSender.sendMessage(new AddMemberMessage(user, id), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+    }
+
+    public void sendLeaveNotificationMessage(int id){
+        datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
     }
 
     public void sendTerminationMessage(){

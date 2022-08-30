@@ -230,4 +230,8 @@ public class LocalController {
     public void sendTerminationMessage(){
         networkController.sendTerminationMessage();
     }
+
+    public void sendLeaveNotificationMessage(){
+        networkController.sendLeaveNotificationMessage(localModel.getLocalId());
+    }
 }
