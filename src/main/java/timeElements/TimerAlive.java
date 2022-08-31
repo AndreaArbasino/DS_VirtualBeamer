@@ -2,16 +2,16 @@ package timeElements;
 
 import messages.AliveMessage;
 import messages.Message;
-import model.LocalController;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static utilities.StaticUtilities.DEFAULT_ALIVE_PORT;
 import static utilities.StaticUtilities.DEFAULT_MULTICAST_PORT;
 
 public class TimerAlive extends Timer {
@@ -23,9 +23,9 @@ public class TimerAlive extends Timer {
 
     private static long DEFAULT_PERIOD = 150;
 
-    public TimerAlive(LocalController controller) {
+    public TimerAlive(String groupIp, DatagramSocket socket) {
         timer = new Timer();
-        timerTask = new TimerAliveTask(controller.getLocalModel().getCurrentGroupAddress());
+        timerTask = new TimerAliveTask(groupIp, socket);
     }
 
     public void start(){
@@ -40,13 +40,9 @@ public class TimerAlive extends Timer {
     private class TimerAliveTask extends TimerTask{
         private final String groupAddress;
         private final DatagramSocket socket;
-        public TimerAliveTask(String groupAddress) {
+        public TimerAliveTask(String groupAddress, DatagramSocket socket) {
             this.groupAddress = groupAddress;
-            try {
-                this.socket = new DatagramSocket(DEFAULT_ALIVE_PORT, InetAddress.getLocalHost());
-            } catch (SocketException | UnknownHostException e) {
-                throw new RuntimeException(e);
-            }
+            this.socket = socket;
         }
 
         public void sendAliveMessage(){

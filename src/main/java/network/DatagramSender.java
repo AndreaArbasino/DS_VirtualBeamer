@@ -121,4 +121,7 @@ public class DatagramSender {
         sessionNumber = 0;
     }
 
+    public DatagramSocket getSocket() {
+        return socket;
+    }
 }

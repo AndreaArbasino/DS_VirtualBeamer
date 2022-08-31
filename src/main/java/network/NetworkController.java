@@ -5,6 +5,7 @@ import elementsOfNetwork.Lobby;
 import elementsOfNetwork.User;
 import messages.*;
 import model.LocalController;
+import timeElements.TimerAlive;
 
 import java.awt.image.BufferedImage;
 
@@ -20,6 +21,7 @@ public class NetworkController {
     private UnicastListener unicastListener;
     private UnicastImageListener unicastImageListener;
     private DatagramSender datagramSender;
+    private TimerAlive timerAlive;
     private Thread multicastListenerThread;
     private Thread multicastImageListenerThread;
     private Thread unicastListenerThread;
@@ -42,8 +44,6 @@ public class NetworkController {
         unicastListenerThread.start();
     }
 
-
-
     public void sendDiscover(){
         datagramSender.sendMessage((new DiscoverMessage()), DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT);
     }
@@ -61,6 +61,11 @@ public class NetworkController {
         multicastListener = new MulticastListener(ipAddress, port, bytesToReceive, this);
         multicastListenerThread = new Thread(multicastListener);
         multicastListenerThread.start();
+    }
+
+    public void startTimerAlive(){
+        timerAlive = new TimerAlive(localController.getLocalModel().getCurrentGroupAddress(), datagramSender.getSocket());
+        timerAlive.start();
     }
 
     public void startDefaultMulticastListener(){
