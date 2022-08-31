@@ -239,6 +239,9 @@ public class LocalController {
     }
 
     public void manageCurrentSlideMessage(int slideNumber){
+        if (!localModel.isPresentationStarted()){
+            localModel.startPresentation();
+        }
         localModel.setCurrentSlide(slideNumber);
         gui.changeSlide();
     }
