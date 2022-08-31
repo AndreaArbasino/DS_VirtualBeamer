@@ -186,6 +186,7 @@ public class LocalController {
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendAddMemberMessage(user, id);
         System.out.println("Is the presentation started? " + localModel.isPresentationStarted());
+        System.out.println("The new id assigned is: " + id);
         networkController.sendShareBeamGroupMessage(id,localModel.getCurrentGroup(), localModel.isPresentationStarted(), user.getIpAddress(), senderPort);
 
         if (BeamGroup.CREATOR_ID == id){
@@ -193,9 +194,11 @@ public class LocalController {
             //TODO: make the gui switch from leader view to client view
             //TODO: ricordarsi di far iniziare subito al nuovo leader a mandare messaggi per alive, non appena ricevuto messaggio per passare controllo!
 
+            passLeadershipTo(localModel.getCurrentGroup().getCreator());
             gui.switchToOtherView();
         } else {
             gui.refreshPresentation();
+            System.out.println("Presentation refreshed correctly");
         }
     }
 
@@ -211,7 +214,7 @@ public class LocalController {
         localModel.addBeamGroup(groupToEnter, assignedId);
         if (isPresentationStarted){
             //TODO: mostrare schermata per fare scegliere da chi scaricare -->
-            // se quell'utente non ha ancora scaricato, mostrare tendina con errore e fare scegliere di nuovo
+            // se quell'utente non ha ancora scaricato o non risponde in tempo (timer), mostrare tendina con errore e fare scegliere di nuovo
             networkController.startUnicastImageListener();
             localModel.startPresentation();
             gui.createHiddenPresentation();
