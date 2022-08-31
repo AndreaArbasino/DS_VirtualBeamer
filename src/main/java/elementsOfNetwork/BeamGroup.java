@@ -1,6 +1,7 @@
 package elementsOfNetwork;
 
 import java.io.Serializable;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,13 +55,8 @@ public class BeamGroup implements Serializable {
     }
 
     public List<User> getUsers(){
-        List<User> users = new ArrayList<>();
-        for (int i = BeamGroup.CREATOR_ID; i < participants.size(); i++){
-            if (null != participants.get(i)){
-                users.add(participants.get(i));
-            }
-        }
-        return users;
+        System.out.println("Currently in the has map there are " + participants.size() + " users");
+        return new ArrayList<>(participants.values());
     }
 
     public int getLeaderId() {

@@ -292,6 +292,25 @@ public class NetworkController {
             localController.passLeadershipTo(localController.getLocalModel().getCurrentGroup().getParticipants().get(((ExplicitAliveAck) message).getId()));
             System.out.println("The persona you required to check, is still alive and answered, now it can become the leader");
 
+        } else if (message instanceof CheckCreatorUpMessage){
+            //TODO: rispondere per fermare timer e mandare coord (penso basti mandare coorMessage e basta) message per dire che è diventato nuovo leader
+            // Da qui si starta timer per dire l'invio di ping
+
+        } else if (message instanceof ElectMessage){
+            //TODO: se lo ricevo, allora rispondo con un AckMessage per fermare l'elezione e ne inizio una nuova io, mandando un ElectMessage nuovo
+
+        } else if (message instanceof AckMessage){
+            //TODO: if received, the local election is  terminated (a coord message is waited)
+
+        } else if (message instanceof CoordMessage){
+            //TODO: l'id contenuto in questo messaggio è quello del nuovo leader, deve essere settato localmente + contiene anche lo user
+            // Da qui si può restartare il timer per ricevere i ping
+            // quando viene mandato questo messaggio, si ripulisce la lista utenti dentro il beamgroup in modo da ricostruirla con i StillUpNotificationMessage
+
+        } else if (message instanceof StillUpNotificationMessage){
+            //TODO: serve per rispondere a CoordMessage: l'utente locale condivide user e id per essere aggiunto al beamgroup che il nuovo leader sta ricostruendo
+            // eventualmente gestire l'id: potrebbe essere stato ammesso un nu --> non può succedere: prima di dire ad un client di essere stato ammesso, vengono informati gli altri partecipanti
+
         }
 
     }
