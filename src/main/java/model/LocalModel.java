@@ -25,7 +25,6 @@ public class LocalModel {
     private HashMap<Integer, BufferedImage> slides;
     private int totalNumberOfSlides;
     private int currentSlideIndex;
-    private int lastSlideIndex;
     private BeamGroup currentGroup; //group in which the client belongs to (if any)
 
 
@@ -42,7 +41,6 @@ public class LocalModel {
         lobbies = new ArrayList<>();
         slides = new HashMap<>();
         currentSlideIndex = INITIAL_SLIDE_INDEX;
-        lastSlideIndex = INITIAL_SLIDE_INDEX;
     }
 
 
@@ -136,8 +134,7 @@ public class LocalModel {
     }
 
     public void addSlide(BufferedImage image){
-        slides.put(lastSlideIndex, image);
-        lastSlideIndex++;
+        slides.put(slides.size(), image);
     }
 
     public void addSlide(BufferedImage image, int position){
@@ -197,7 +194,8 @@ public class LocalModel {
     }
 
     public BufferedImage moveToNextSlide(){
-        if (currentSlideIndex == (lastSlideIndex - 1)){
+        //TODO: controllare last slide index
+        if (currentSlideIndex == (slides.size() - 1)){
             return getCurrentSlide();
         } else {
             currentSlideIndex++;
