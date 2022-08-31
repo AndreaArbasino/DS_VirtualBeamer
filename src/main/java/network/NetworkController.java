@@ -5,8 +5,7 @@ import elementsOfNetwork.Lobby;
 import elementsOfNetwork.User;
 import messages.*;
 import model.LocalController;
-import timeElements.LeaderCrashTimer;
-import timeElements.SendAliveTimer;
+import timeElements.*;
 
 import java.awt.image.BufferedImage;
 
@@ -22,12 +21,21 @@ public class NetworkController {
     private UnicastListener unicastListener;
     private UnicastImageListener unicastImageListener;
     private DatagramSender datagramSender;
-    private SendAliveTimer sendAliveTimer;
-    private LeaderCrashTimer leaderCrashTimer;
+
+    // _____________________________THREAD_____________________________
     private Thread multicastListenerThread;
     private Thread multicastImageListenerThread;
     private Thread unicastListenerThread;
     private Thread unicastImageListenerThread;
+
+    // _____________________________TIMER_____________________________
+    private SendAliveTimer sendAliveTimer;
+    private LeaderCrashTimer leaderCrashTimer;
+    private SlideDownloadTimer slideDownloadTimer;
+    private JoinMessageTimer joinMessageTimer;
+    private CheckCreatorUpTimer checkCreatorUpTimer;
+    private ElectMessageTimer electMessageTimer;
+    private ExplicitAliveRequestTimer explicitAliveRequestTimer;
 
 
 
@@ -65,11 +73,17 @@ public class NetworkController {
         multicastListenerThread.start();
     }
 
-    public void startTimerAlive(){
+    // _________________________SEND_ALIVE_TIMER_________________________
+    public void startSendAliveTimer(){
         sendAliveTimer = new SendAliveTimer(localController.getLocalModel().getCurrentGroupAddress(), datagramSender.getSocket());
         sendAliveTimer.start();
     }
 
+    public void closeSendAliveTimer(){
+        sendAliveTimer.stop();
+    }
+
+    // _________________________LEADER_CRASH_TIMER_________________________
     public void startLeaderCrashTimer(){
         leaderCrashTimer = new LeaderCrashTimer(this);
         leaderCrashTimer.start();
@@ -82,6 +96,101 @@ public class NetworkController {
     public void closeLeaderCrashTimer(){
         leaderCrashTimer.close();
     }
+
+    public void manageLeaderCrashTimerFired(){
+        //TODO: SCRIVERE METODO
+    }
+
+    // _________________________SLIDE_DOWNLOAD_TIMER_________________________
+    public void startSlideDownloadTimer(){
+        slideDownloadTimer = new SlideDownloadTimer(this);
+        slideDownloadTimer.start();
+    }
+
+    public void resetSlideDownloadTimer(){
+        slideDownloadTimer.resetTimer();
+    }
+
+    public void closeSlideDownloadTimer(){
+        slideDownloadTimer.close();
+    }
+
+    public void manageSlideDownloadTimerFired(){
+        //TODO:SCRIVERE METODO
+    }
+
+    // _________________________JOIN_MESSAGE_TIMER_________________________
+    public void startJoinMessageTimer(){
+        joinMessageTimer = new JoinMessageTimer(this);
+        joinMessageTimer.start();
+    }
+
+    public void resetJoinMessageTimer(){
+        joinMessageTimer.resetTimer();
+    }
+
+    public void closeJoinMessageTimer(){
+        joinMessageTimer.close();
+    }
+
+    public void manageJoinMessageTimerFired(){
+        //TODO:SCRIVERE METODO
+    }
+
+    // _________________________CHECK_CREATOR_UP_TIMER_________________________
+    public void startCheckCreatorUpTimer(){
+        checkCreatorUpTimer = new CheckCreatorUpTimer(this);
+        checkCreatorUpTimer.start();
+    }
+
+    public void resetCheckCreatorUpTimer(){
+        checkCreatorUpTimer.resetTimer();
+    }
+
+    public void closeCheckCreatorUpTimer(){
+        checkCreatorUpTimer.close();
+    }
+
+    public void manageCheckCreatorUpTimerFired(){
+        //TODO:SCRIVERE METODO
+    }
+
+    // _________________________CHECK_ELECT_MESSAGE_TIMER_________________________
+    public void startElectMessageTimer(){
+        electMessageTimer = new ElectMessageTimer(this);
+        electMessageTimer.start();
+    }
+
+    public void resetElectMessageTimer(){
+        electMessageTimer.resetTimer();
+    }
+
+    public void closeElectMessageTimer(){
+        electMessageTimer.close();
+    }
+
+    public void manageElectMessageTimerFired(){
+        //TODO:SCRIVERE METODO
+    }
+
+    // _________________________EXPLICIT_ALIVE_REQUEST_TIMER_________________________
+    public void startExplicitAliveRequestTimer(){
+        explicitAliveRequestTimer = new ExplicitAliveRequestTimer(this);
+        explicitAliveRequestTimer.start();
+    }
+
+    public void resetExplicitAliveRequestTimer(){
+        explicitAliveRequestTimer.resetTimer();
+    }
+
+    public void closeExplicitAliveRequestTimer(){
+        explicitAliveRequestTimer.close();
+    }
+
+    public void manageExplicitAliveRequestTimerFired(){
+        //TODO:SCRIVERE METODO
+    }
+
 
     public void startDefaultMulticastListener(){
         multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
@@ -105,10 +214,6 @@ public class NetworkController {
         multicastListener = new MulticastListener(multicastIp, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
         multicastListenerThread = new Thread(multicastListener);
         multicastListenerThread.start();
-    }
-
-    public void startContactingCreator(){
-        //TODO: SCRIVERE METODI
     }
 
     public void processImage(BufferedImage image, int position){
@@ -247,15 +352,15 @@ public class NetworkController {
         startMulticastListener(localController.getLocalModel().getCurrentGroupAddress());
     }
 
-    public void resetImageSendingSessionNumber(){
-        datagramSender.resetSessionNumber();
-    }
-
     public void sendExplicitAliveRequestMessage(User user){
         datagramSender.sendMessage(new ExplicitAliveRequest(), user.getIpAddress(), DEFAULT_UNICAST_PORT);
     }
 
     public void sendExplicitAliveAck(int id){
         datagramSender.sendMessage(new ExplicitAliveAck(id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
+    }
+
+    public void resetImageSendingSessionNumber(){
+        datagramSender.resetSessionNumber();
     }
 }

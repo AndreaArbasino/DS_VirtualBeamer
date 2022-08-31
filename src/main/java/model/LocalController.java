@@ -54,7 +54,7 @@ public class LocalController {
         localModel.createLocalBeamGroup(localIp, groupName, newPresentationAddress);
         gui.chooseImages();
         networkController.startDefaultMulticastListener();
-        networkController.startTimerAlive();
+        networkController.startSendAliveTimer();
     }
 
     /**
