@@ -186,7 +186,7 @@ public class NetworkController {
     }
 
     public void sendLeaveNotificationMessage(int id){
-        if (1 > localController.getLocalModel().getCurrentGroupUsers().size()){
+        if (localController.getLocalModel().getCurrentGroupUsers().size() > 1){
             try {
                 datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
             } catch (IllegalArgumentException e){
