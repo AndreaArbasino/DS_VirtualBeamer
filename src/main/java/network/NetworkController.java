@@ -75,7 +75,8 @@ public class NetworkController {
 
     // _________________________SEND_ALIVE_TIMER_________________________
     public void startSendAliveTimer(){
-        sendAliveTimer = new SendAliveTimer(localController.getLocalModel().getCurrentGroupAddress(), datagramSender.getSocket());
+        sendAliveTimer = new SendAliveTimer(localController.getLocalModel().getCurrentGroupAddress(),
+                datagramSender.getSocket());
         sendAliveTimer.start();
     }
 
@@ -192,6 +193,7 @@ public class NetworkController {
     }
 
 
+    // _________________________SOCKET_METHODS_________________________
     public void startDefaultMulticastListener(){
         multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
         multicastListenerThread = new Thread(multicastListener);
@@ -216,6 +218,12 @@ public class NetworkController {
         multicastListenerThread.start();
     }
 
+    public void switchToOtherMulticastListener(){
+        multicastListener.setRunning(false);
+        startMulticastListener(DEFAULT_DISCOVER_IP);
+    }
+
+    // _________________________PROCESS_MESSAGES_________________________
     public void processImage(BufferedImage image, int position){
         localController.manageReceivedImage(image, position);
     }
@@ -288,12 +296,7 @@ public class NetworkController {
 
     }
 
-    public void switchToOtherMulticastListener(){
-        multicastListener.setRunning(false);
-        startMulticastListener(DEFAULT_DISCOVER_IP);
-    }
-
-
+    // _________________________MESSAGE_SENDERS_________________________
     public void sendInfoMessage (String recipientAddress, int senderPort, Lobby lobby){
         //crea messaggio UDP e lo manda
         datagramSender.sendMessage(new InfoGroupMessage(lobby.getIpOfLeader(), lobby.getIpOfMulticast(), lobby.getNameOfLobby()),
