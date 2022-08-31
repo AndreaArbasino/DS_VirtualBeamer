@@ -235,6 +235,8 @@ public class LocalController {
     public void manageLeaveNotificationMessage(int id){
         //TODO: gestire caso in cui lascia il leader corrente!
         localModel.removeFromBeamGroup(id);
+        System.out.println("Currently there are " + localModel.getCurrentGroupUsers().size() + " participants (Array)");
+        System.out.println("Currently there are " + localModel.getCurrentGroup().getParticipants().size() + "participants (HashMap)");
         gui.refreshPresentation();
     }
 
