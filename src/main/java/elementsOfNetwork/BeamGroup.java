@@ -71,8 +71,11 @@ public class BeamGroup implements Serializable {
         return new User(creator.getUsername(), creator.getIpAddress());
     }
 
-    public User getLeader() {
+    public User getLeader() throws IllegalArgumentException{
         User currentLeader = participants.get(leaderId);
+        if (null == currentLeader){ //this client knows that the current leader has left
+            throw new IllegalArgumentException();
+        }
         return new User(currentLeader.getUsername(), currentLeader.getIpAddress());
     }
 

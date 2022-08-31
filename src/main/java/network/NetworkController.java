@@ -173,7 +173,11 @@ public class NetworkController {
     }
 
     public void sendLeaveNotificationMessage(int id){
-        datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
+        try {
+            datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
+        } catch (IllegalArgumentException e){
+            //the leader has already left, no need to send him messages
+        }
         datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
     }
 

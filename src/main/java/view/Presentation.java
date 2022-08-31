@@ -153,6 +153,7 @@ public class Presentation {
 
         currentSlide = new ImageIcon(controller.getCurrentSlide());
         slideLabel.setIcon(currentSlide);
+        slideLabel.setText("");
         slideLabel.repaint();
         mainFrame.pack();
     }
@@ -162,6 +163,7 @@ public class Presentation {
         public void actionPerformed(ActionEvent e) {
             controller.startPresentation();
             slideLabel.removeAll();
+            slideLabel.setText("");
             currentSlide = new ImageIcon(controller.getCurrentSlide());
             slideLabel.setIcon(currentSlide);
             slideLabel.repaint();
