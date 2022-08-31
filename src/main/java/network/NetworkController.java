@@ -129,24 +129,31 @@ public class NetworkController {
 
         } else if (message instanceof TerminationMessage){
             localController.manageTerminationMessage();
+            System.out.println("Presentation was terminated");
 
         } else if (message instanceof CurrentSlideMessage){
             localController.manageCurrentSlideMessage(((CurrentSlideMessage) message).getSlideNumber());
+            System.out.println("A message for changing the slide was received. Now the " + ((CurrentSlideMessage) message).getSlideNumber() + " slide must be shown");
 
         } else if (message instanceof SlideDownloadRequestMessage){
             localController.manageDownloadRequestMessage(messageToProcess.getSenderIp());
+            System.out.println("A message for requiring to download the slides was received");
 
         } else if (message instanceof TotalNumberOfSlidesMessage){
             localController.manageTotalNumberOfSlidesMessage(((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides());
+            System.out.println("A message stating the total number of slides was received, there should be " + ((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides() + " slides");
 
         } else if (message instanceof AssignLeaderMessage){
             localController.manageAssignLeaderMessage(((AssignLeaderMessage) message).getNewLeaderId());
+            System.out.println("A message for changing the leader was received. Now the user with ID equals to " + ((AssignLeaderMessage) message).getNewLeaderId() + " is the leader");
 
         } else if (message instanceof ExplicitAliveRequest){
             localController.manageExplicitAliveRequestMessage();
+            System.out.println("Someone is checking that you are still alive in order to pass you the control of the presentation");
 
         } else if (message instanceof ExplicitAliveAck){
             localController.passLeadershipTo(localController.getLocalModel().getCurrentGroup().getParticipants().get(((ExplicitAliveAck) message).getId()));
+            System.out.println("The persona you required to check, is still alive and answered, now it can become the leader");
 
         }
 
@@ -179,7 +186,7 @@ public class NetworkController {
     }
 
     public void sendLeaveNotificationMessage(int id){
-        if (1 < localController.getLocalModel().getCurrentGroupUsers().size()){
+        if (1 > localController.getLocalModel().getCurrentGroupUsers().size()){
             try {
                 datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
             } catch (IllegalArgumentException e){
