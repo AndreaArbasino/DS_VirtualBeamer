@@ -16,6 +16,8 @@ public class LeaderSidePanelManager implements SidePanelManager{
     public void createPanel(JPanel clientsPanel, LocalController controller) {
         this.controller = controller ;
 
+        System.out.println("Currently there are " + controller.getLocalModel().getCurrentGroupUsers().size() + " participants (Array)");
+
         if(1 == controller.getLocalModel().getCurrentGroupUsers().size()){ //only the creator is in the group
             JLabel line1 = new JLabel("You are");
             JLabel line2 = new JLabel("the only");
