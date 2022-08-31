@@ -5,7 +5,8 @@ import elementsOfNetwork.Lobby;
 import elementsOfNetwork.User;
 import messages.*;
 import model.LocalController;
-import timeElements.TimerAlive;
+import timeElements.LeaderCrashTimer;
+import timeElements.SendAliveTimer;
 
 import java.awt.image.BufferedImage;
 
@@ -21,7 +22,8 @@ public class NetworkController {
     private UnicastListener unicastListener;
     private UnicastImageListener unicastImageListener;
     private DatagramSender datagramSender;
-    private TimerAlive timerAlive;
+    private SendAliveTimer sendAliveTimer;
+    private LeaderCrashTimer leaderCrashTimer;
     private Thread multicastListenerThread;
     private Thread multicastImageListenerThread;
     private Thread unicastListenerThread;
@@ -64,8 +66,21 @@ public class NetworkController {
     }
 
     public void startTimerAlive(){
-        timerAlive = new TimerAlive(localController.getLocalModel().getCurrentGroupAddress(), datagramSender.getSocket());
-        timerAlive.start();
+        sendAliveTimer = new SendAliveTimer(localController.getLocalModel().getCurrentGroupAddress(), datagramSender.getSocket());
+        sendAliveTimer.start();
+    }
+
+    public void startLeaderCrashTimer(){
+        leaderCrashTimer = new LeaderCrashTimer(this);
+        leaderCrashTimer.start();
+    }
+
+    public void resetLeaderCrashTimer(){
+        leaderCrashTimer.resetTimer();
+    }
+
+    public void closeLeaderCrashTimer(){
+        leaderCrashTimer.close();
     }
 
     public void startDefaultMulticastListener(){
@@ -90,6 +105,10 @@ public class NetworkController {
         multicastListener = new MulticastListener(multicastIp, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
         multicastListenerThread = new Thread(multicastListener);
         multicastListenerThread.start();
+    }
+
+    public void startContactingCreator(){
+        //TODO: SCRIVERE METODI
     }
 
     public void processImage(BufferedImage image, int position){

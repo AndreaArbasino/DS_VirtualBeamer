@@ -14,7 +14,7 @@ import java.util.TimerTask;
 
 import static utilities.StaticUtilities.DEFAULT_MULTICAST_PORT;
 
-public class TimerAlive extends Timer {
+public class SendAliveTimer extends Timer {
 
     private Timer timer;
     private TimerTask timerTask;
@@ -23,7 +23,7 @@ public class TimerAlive extends Timer {
 
     private static long DEFAULT_PERIOD = 150;
 
-    public TimerAlive(String groupIp, DatagramSocket socket) {
+    public SendAliveTimer(String groupIp, DatagramSocket socket) {
         timer = new Timer();
         timerTask = new TimerAliveTask(groupIp, socket);
     }
