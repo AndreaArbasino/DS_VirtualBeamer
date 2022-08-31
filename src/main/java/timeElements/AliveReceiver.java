@@ -43,7 +43,12 @@ public class AliveReceiver implements Runnable {
         while (isRunning){
             receiveMessage();
         }
-        close();
+        try {
+            socket.leaveGroup(group);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        socket.close();
     }
 
     public void printPacket(DatagramPacket receivedPacket){
@@ -77,13 +82,6 @@ public class AliveReceiver implements Runnable {
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Close the socket of the multicast receiver
-     */
-    public void close(){
-        socket.close();
     }
 
     /**

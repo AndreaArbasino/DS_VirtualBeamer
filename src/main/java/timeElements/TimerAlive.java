@@ -33,6 +33,7 @@ public class TimerAlive extends Timer {
     }
 
     public void stop(){
+        timerTask.cancel();
         timer.cancel();
     }
 
@@ -68,6 +69,11 @@ public class TimerAlive extends Timer {
             sendAliveMessage();
         }
 
+        @Override
+        public boolean cancel() {
+            socket.close();
+            return super.cancel();
+        }
     }
 
 }
