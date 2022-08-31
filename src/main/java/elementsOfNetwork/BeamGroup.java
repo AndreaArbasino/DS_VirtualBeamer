@@ -120,6 +120,8 @@ public class BeamGroup implements Serializable {
             }
         }
 
+        removeUsersWithSameIp(participant);
+
         participants.put(nextIdAvailable, new User(participant.getUsername(), participant.getIpAddress()));
         nextIdAvailable++;
         return nextIdAvailable-1;
@@ -138,7 +140,18 @@ public class BeamGroup implements Serializable {
             return;
         }
 
+        removeUsersWithSameIp(user);
         participants.put(id, user);
+    }
+
+    private void removeUsersWithSameIp(User user){
+        if(participants.size() > 0){
+            for(int currentKey: participants.keySet()){
+                if (user.getIpAddress().equals(participants.get(currentKey).getIpAddress())){
+                    participants.remove(currentKey);
+                }
+            }
+        }
     }
 
     public void removeParticipant (int participantId){

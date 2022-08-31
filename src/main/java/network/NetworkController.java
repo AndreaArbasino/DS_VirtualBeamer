@@ -144,8 +144,10 @@ public class NetworkController {
 
         } else if (message instanceof ExplicitAliveRequest){
             localController.manageExplicitAliveRequestMessage();
+
         } else if (message instanceof ExplicitAliveAck){
             localController.passLeadershipTo(localController.getLocalModel().getCurrentGroup().getParticipants().get(((ExplicitAliveAck) message).getId()));
+
         }
 
     }
