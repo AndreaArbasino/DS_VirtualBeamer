@@ -230,6 +230,7 @@ public class LocalController {
     }
 
     public void manageLeaveNotificationMessage(int id){
+        //TODO: gestire caso in cui lascia il leader corrente!
         localModel.removeFromBeamGroup(id);
         gui.refreshPresentation();
     }
@@ -264,6 +265,10 @@ public class LocalController {
             networkController.switchToOtherMulticastListener();
         }
         localModel.setCurrentLeader(newLeaderId);
+    }
+
+    public void manageExplicitAliveRequestMessage(){
+        networkController.sendExplicitAliveAck(localModel.getLocalId());
     }
 
 
@@ -305,4 +310,7 @@ public class LocalController {
         networkController.sendDownloadRequestMessage(user);
     }
 
+    public void sendExplicitAliveRequestMessage(User user){
+        networkController.sendExplicitAliveRequestMessage(user);
+    }
 }

@@ -142,6 +142,10 @@ public class NetworkController {
         } else if (message instanceof AssignLeaderMessage){
             localController.manageAssignLeaderMessage(((AssignLeaderMessage) message).getNewLeaderId());
 
+        } else if (message instanceof ExplicitAliveRequest){
+            localController.manageExplicitAliveRequestMessage();
+        } else if (message instanceof ExplicitAliveAck){
+            localController.passLeadershipTo(localController.getLocalModel().getCurrentGroup().getParticipants().get(((ExplicitAliveAck) message).getId()));
         }
 
     }
@@ -173,12 +177,15 @@ public class NetworkController {
     }
 
     public void sendLeaveNotificationMessage(int id){
-        try {
-            datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
-        } catch (IllegalArgumentException e){
-            //the leader has already left, no need to send him messages
+        if (1 < localController.getLocalModel().getCurrentGroupUsers().size()){
+            try {
+                datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
+            } catch (IllegalArgumentException e){
+                //the leader has already left, no need to send him messages
+            }
+            datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
         }
-        datagramSender.sendMessage(new LeaveNotificationMessage(id), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+
     }
 
     public void sendTerminationMessage(){
@@ -211,4 +218,11 @@ public class NetworkController {
         datagramSender.resetSessionNumber();
     }
 
+    public void sendExplicitAliveRequestMessage(User user){
+        datagramSender.sendMessage(new ExplicitAliveRequest(), user.getIpAddress(), DEFAULT_UNICAST_PORT);
+    }
+
+    public void sendExplicitAliveAck(int id){
+        datagramSender.sendMessage(new ExplicitAliveAck(id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
+    }
 }
