@@ -3,9 +3,9 @@ package model;
 import elementsOfNetwork.BeamGroup;
 import elementsOfNetwork.Lobby;
 import elementsOfNetwork.User;
-import messages.AssignLeaderMessage;
 import messages.InfoGroupMessage;
 import network.NetworkController;
+import timeElements.ElectionManager;
 import view.GUI;
 
 import java.awt.image.BufferedImage;
@@ -30,6 +30,8 @@ public class LocalController {
     private final NetworkController networkController;
     private final LocalModel localModel;
     private final GUI gui;
+
+    private ElectionManager electionManager;
 
 
 
@@ -56,6 +58,7 @@ public class LocalController {
         localModel.createLocalBeamGroup(localIp, groupName, newPresentationAddress);
         gui.chooseImages();
         networkController.startDefaultMulticastListener();
+        electionManager = new ElectionManager(this, localModel.isLeader());
     }
 
     /**
@@ -141,6 +144,7 @@ public class LocalController {
         int idOfNewLeader = localModel.passLeadershipTo(newLeader);
         gui.switchToOtherView();
         networkController.sendAssignLeaderMessage(idOfNewLeader);
+        electionManager.switchToClient();
     }
 
 
@@ -212,6 +216,7 @@ public class LocalController {
     public void manageShareBeamGroupMessage(BeamGroup groupToEnter, int assignedId, Boolean isPresentationStarted){
         networkController.startMulticastListener(groupToEnter.getGroupAddress());
         localModel.addBeamGroup(groupToEnter, assignedId);
+        electionManager = new ElectionManager(this, localModel.isLeader());
         if (isPresentationStarted){
             //TODO: mostrare schermata per fare scegliere da chi scaricare -->
             // se quell'utente non ha ancora scaricato o non risponde in tempo (timer), mostrare tendina con errore e fare scegliere di nuovo
@@ -268,6 +273,7 @@ public class LocalController {
         if (newLeaderId == localModel.getLocalId()){
             gui.switchToOtherView();
             networkController.switchToOtherMulticastListener();
+            electionManager.switchToLeader();
         }
         localModel.setCurrentLeader(newLeaderId);
     }

@@ -11,6 +11,8 @@ public class StaticUtilities {
 
     public static final int DEFAULT_IMAGE_PORT = 42002;
 
+    public static final int DEFAULT_ALIVE_PORT = 42003;
+
     public static final int DATAGRAM_DATA_SIZE = 65507;
 
     public static final int DEFAULT_RECEIVED_BYTES = 10000;
