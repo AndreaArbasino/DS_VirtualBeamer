@@ -99,7 +99,9 @@ public class NetworkController {
     }
 
     public void closeLeaderCrashTimer(){
-        leaderCrashTimer.close();
+        if(leaderCrashTimer != null){
+            leaderCrashTimer.close();
+        }
     }
 
     public void manageLeaderCrashTimerFired(){
@@ -121,11 +123,15 @@ public class NetworkController {
     }
 
     public void resetSlideDownloadTimer(){
-        slideDownloadTimer.resetTimer();
+        if(slideDownloadTimer != null){
+            slideDownloadTimer.resetTimer();
+        }
     }
 
     public void closeSlideDownloadTimer(){
-        slideDownloadTimer.close();
+        if(slideDownloadTimer != null){
+            slideDownloadTimer.close();
+        }
     }
 
     public void manageSlideDownloadTimerFired(){
@@ -139,11 +145,15 @@ public class NetworkController {
     }
 
     public void resetJoinMessageTimer(){
-        joinMessageTimer.resetTimer();
+        if(joinMessageTimer != null){
+            joinMessageTimer.resetTimer();
+        }
     }
 
     public void closeJoinMessageTimer(){
-        joinMessageTimer.close();
+        if(joinMessageTimer != null){
+            joinMessageTimer.close();
+        }
     }
 
     public void manageJoinMessageTimerFired(){
@@ -157,11 +167,15 @@ public class NetworkController {
     }
 
     public void resetCheckCreatorUpTimer(){
-        checkCreatorUpTimer.resetTimer();
+        if(checkCreatorUpTimer != null){
+            checkCreatorUpTimer.resetTimer();
+        }
     }
 
     public void closeCheckCreatorUpTimer(){
-        checkCreatorUpTimer.close();
+        if(checkCreatorUpTimer != null){
+            checkCreatorUpTimer.close();
+        }
     }
 
     public void manageCheckCreatorUpTimerFired(){
@@ -178,11 +192,15 @@ public class NetworkController {
     }
 
     public void resetElectMessageTimer(){
-        electMessageTimer.resetTimer();
+        if(electMessageTimer != null){
+            electMessageTimer.resetTimer();
+        }
     }
 
     public void closeElectMessageTimer(){
-        electMessageTimer.close();
+        if(electMessageTimer != null){
+            electMessageTimer.close();
+        }
     }
 
     public void manageElectMessageTimerFired(){
@@ -199,11 +217,15 @@ public class NetworkController {
     }
 
     public void resetExplicitAliveRequestTimer(){
-        explicitAliveRequestTimer.resetTimer();
+        if(explicitAliveRequestTimer != null){
+            explicitAliveRequestTimer.resetTimer();
+        }
     }
 
     public void closeExplicitAliveRequestTimer(){
-        explicitAliveRequestTimer.close();
+        if(explicitAliveRequestTimer != null){
+            explicitAliveRequestTimer.close();
+        }
     }
 
     public void manageExplicitAliveRequestTimerFired(){
@@ -217,11 +239,15 @@ public class NetworkController {
     }
 
     public void resetRandomPeriodTimer(){
-        randomPeriodTimer.resetTimer();
+        if(randomPeriodTimer != null){
+            randomPeriodTimer.resetTimer();
+        }
     }
 
     public void closeRandomPeriodTimer(){
-        randomPeriodTimer.close();
+        if(randomPeriodTimer != null){
+            randomPeriodTimer.close();
+        }
     }
 
     public void manageRandomPeriodTimerTaskFired(){
