@@ -104,7 +104,8 @@ public class NetworkController {
 
     public void manageLeaderCrashTimerFired(){
         System.out.println("I noticed the leader crashed");
-        //TODO: SCRIVERE METODO, AGGIUNGERE CLOSE TIMER
+        closeLeaderCrashTimer();
+        //TODO: SCRIVERE METODO
     }
 
     // _________________________SLIDE_DOWNLOAD_TIMER_________________________
