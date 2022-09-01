@@ -107,11 +107,12 @@ public class NetworkController {
     public void manageLeaderCrashTimerFired(){
         System.out.println("I noticed the leader crashed");
         closeLeaderCrashTimer();
-        //TODO: SCRIVERE METODO
+
+        //if the local user is the creator, then it will simply tell to all the other participants that it is the new leader
         if(localController.getLocalModel().getCurrentGroup().getCreator().equals(localController.getLocalModel().getLocalUser())){
             localController.sendCoordMessage();
             startSendAliveTimer();
-        } else {
+        } else { //if the local user is not the creator, it will wait a random time and then contact the creator
             startRandomPeriodTimer(MIN_RANDOM_TIME, MAX_RANDOM_TIME);
         }
     }
@@ -179,7 +180,6 @@ public class NetworkController {
     }
 
     public void manageCheckCreatorUpTimerFired(){
-        //TODO:SCRIVERE METODO
         closeCheckCreatorUpTimer();
         localController.startElection();
         startElectMessageTimer();
@@ -204,10 +204,9 @@ public class NetworkController {
     }
 
     public void manageElectMessageTimerFired(){
-        //TODO:SCRIVERE METODO
+        closeElectMessageTimer();
         localController.sendCoordMessage();
         startSendAliveTimer();
-        closeElectMessageTimer();
     }
 
     // _________________________EXPLICIT_ALIVE_REQUEST_TIMER_________________________
@@ -251,10 +250,16 @@ public class NetworkController {
     }
 
     public void manageRandomPeriodTimerTaskFired(){
-        //TODO: SCRIVERE METODO
         closeRandomPeriodTimer();
-        sendCheckCreatorUpMessage();
-        startCheckCreatorUpTimer();
+
+        //before trying to contact the creator, it checks if it is still in the group
+        if (localController.getLocalModel().getCurrentGroup().isCreatorStillIn()){
+            sendCheckCreatorUpMessage();
+            startCheckCreatorUpTimer();
+        } else {
+            localController.startElection();
+            startElectMessageTimer();
+        }
     }
 
 
@@ -321,12 +326,13 @@ public class NetworkController {
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             startLeaderCrashTimer();
             System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted());
+
         } else if (message instanceof AddMemberMessage){
             localController.manageAddMemberMessage(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
             System.out.println("Somebody joined the group");
 
         } else if(message instanceof LeaveNotificationMessage){
-            //TODO: iniziare timer random per iniziare elezione
+            //TODO: iniziare timer random per iniziare elezione se chi ha lasciato è il leader corrente
             localController.manageLeaveNotificationMessage(((LeaveNotificationMessage) message).getId());
             System.out.println("Somebody left the group");
 
@@ -363,34 +369,31 @@ public class NetworkController {
             System.out.println("The person you required to check, is still alive and answered, now it can become the leader");
 
         } else if (message instanceof CheckCreatorUpMessage){
-            //TODO: rispondere per fermare timer e mandare coord (penso basti mandare coorMessage e basta) message per dire che è diventato nuovo leader
-            // Da qui si starta timer per dire l'invio di ping
-            // TODO: fermare tutti quanti i timer e ricominciare con quello per le alive (solo quello)
             closeLeaderCrashTimer();
             localController.manageCheckCreatorUpMessage();
             startSendAliveTimer();
+            System.out.println("I was the creator, I didn't noticed the leader was down, but I was notified and now I am the new leader");
 
         } else if (message instanceof ElectMessage){
-            //TODO: se lo ricevo, allora rispondo con un AckMessage per fermare l'elezione e ne inizio una nuova io, mandando un ElectMessage nuovo
-            closeLeaderCrashTimer();
-            closeRandomPeriodTimer();
-            closeCheckCreatorUpTimer();
+            closeTimersForElection();
             sendAckMessage(messageToProcess.getSenderIp());
-            localController.startElection(); //TODO: mettere booleano per sapere se elezione già iniziata, se così fosse, allonra non ricominciarla
+            System.out.println("I stopped the election started by: " + messageToProcess.getSenderIp());
+
+            if (!localController.isElectionRunning()){ //if the election was already started, then I won't start a new one
+                localController.startElection();
+                startElectMessageTimer();
+                System.out.println("I started my election");
+            }
 
         } else if (message instanceof AckMessage){
-            //TODO: if received, the local election is  terminated (a coord message is waited)
             closeElectMessageTimer();
+            System.out.println("My election was stopped by: " + messageToProcess.getSenderIp());
 
         } else if (message instanceof CoordMessage){
-            //TODO: l'id contenuto in questo messaggio è quello del nuovo leader, deve essere settato localmente + contiene anche lo user
-            // Da qui si può restartare il timer per ricevere i ping
-            // quando viene mandato questo messaggio (COORD MESSAGE), si ripulisce la lista utenti dentro il beamgroup in modo da ricostruirla con i StillUpNotificationMessage
-
-            resetLeaderCrashTimer();
-            closeRandomPeriodTimer();
-            closeCheckCreatorUpTimer();
+            closeTimersForElection();
+            startLeaderCrashTimer();
             localController.manageCoordMessage(((CoordMessage) message).getNewLeaderId());
+
 
         } else if (message instanceof StillUpNotificationMessage){
             //TODO: serve per rispondere a CoordMessage: l'utente locale condivide user e id per essere aggiunto al beamgroup che il nuovo leader sta ricostruendo
@@ -493,5 +496,12 @@ public class NetworkController {
 
     public void resetImageSendingSessionNumber(){
         datagramSender.resetSessionNumber();
+    }
+
+    public void closeTimersForElection(){
+        //TODO:to be implemented
+        closeLeaderCrashTimer();
+        closeRandomPeriodTimer();
+        closeCheckCreatorUpTimer();
     }
 }
