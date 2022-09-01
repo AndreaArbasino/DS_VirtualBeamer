@@ -17,10 +17,12 @@ public class LeaderCrashTimer {
         this.networkController = networkController;
         threadPoolExecutor = new ScheduledThreadPoolExecutor(1);
         task = new LeaderCrashTask(networkController);
+        System.out.println("LeaderCrashTimer created at time: " + java.time.LocalTime.now());
     }
 
     public void start(){
-        threadPoolExecutor.scheduleAtFixedRate(task, DEFAULT_DELAY, BASE_PERIOD, TimeUnit.MILLISECONDS);
+        System.out.println("LeaderCrashTimer started at time: " + java.time.LocalTime.now());
+        threadPoolExecutor.scheduleAtFixedRate(task, BASE_PERIOD, BASE_PERIOD, TimeUnit.MILLISECONDS);
     }
 
     public void resetTimer(){

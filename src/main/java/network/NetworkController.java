@@ -349,7 +349,7 @@ public class NetworkController {
             ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             startLeaderCrashTimer();
-            System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted());
+            System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted() + "at time: " + java.time.LocalTime.now());
 
         } else if (message instanceof AddMemberMessage){
             localController.manageAddMemberMessage(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
