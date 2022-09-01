@@ -181,7 +181,7 @@ public class LocalController {
      * @param user
      * @param senderPort
      */
-    public void manageJoinMessage(User user, int senderPort){
+    public void manageJoinMessage(User user, int senderPort){//TODO: la porta non dovrebbe servire, dovrebbe essere DEF_UNICAST
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendAddMemberMessage(user, id);
         System.out.println("Is the presentation started? " + localModel.isPresentationStarted());
@@ -193,7 +193,8 @@ public class LocalController {
             //TODO: make the gui switch from leader view to client view
             //TODO: ricordarsi di far iniziare subito al nuovo leader a mandare messaggi per alive, non appena ricevuto messaggio per passare controllo!
 
-            passLeadershipTo(localModel.getCurrentGroup().getCreator());
+            //passLeadershipTo(localModel.getCurrentGroup().getCreator());
+            sendExplicitAliveRequestMessage(localModel.getCurrentGroup().getCreator());
             gui.switchToOtherView();
         } else {
             gui.refreshPresentation();
