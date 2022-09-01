@@ -281,6 +281,7 @@ public class NetworkController {
             System.out.println("A message stating the total number of slides was received, there should be " + ((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides() + " slides");
 
         } else if (message instanceof AssignLeaderMessage){
+            startSendAliveTimer();
             localController.manageAssignLeaderMessage(((AssignLeaderMessage) message).getNewLeaderId());
             System.out.println("A message for changing the leader was received. Now the user with ID equals to " + ((AssignLeaderMessage) message).getNewLeaderId() + " is the leader");
 
@@ -372,6 +373,7 @@ public class NetworkController {
         datagramSender.sendMessage(new AssignLeaderMessage(newLeaderId), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
         multicastListener.setRunning(false);
         startMulticastListener(localController.getLocalModel().getCurrentGroupAddress());
+        closeSendAliveTimer();
     }
 
     public void sendExplicitAliveRequestMessage(User user){
