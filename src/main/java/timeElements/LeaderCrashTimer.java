@@ -9,7 +9,6 @@ public class LeaderCrashTimer {
 
     private ScheduledThreadPoolExecutor threadPoolExecutor;
     private LeaderCrashTask task;
-    private static final long DEFAULT_DELAY = 0;
     private static final long BASE_PERIOD =  3000;
     private final NetworkController networkController;
 

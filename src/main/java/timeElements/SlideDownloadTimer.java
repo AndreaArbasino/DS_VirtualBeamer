@@ -9,8 +9,6 @@ public class SlideDownloadTimer {
 
     private Timer timer;
     private TimerTask timerTask;
-
-    private static final long DEFAULT_DELAY = 0;
     private static final long PERIOD = 5000; //TODO: VEDERE VALORE
 
     public SlideDownloadTimer(NetworkController networkController) {
@@ -19,7 +17,7 @@ public class SlideDownloadTimer {
     }
 
     public void start(){
-        timer.scheduleAtFixedRate(timerTask, DEFAULT_DELAY, PERIOD);
+        timer.scheduleAtFixedRate(timerTask, PERIOD, PERIOD);
     }
 
     public void resetTimer(){

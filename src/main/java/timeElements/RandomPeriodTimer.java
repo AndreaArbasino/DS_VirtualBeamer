@@ -13,7 +13,6 @@ public class RandomPeriodTimer {
 
     private Timer timer;
     private TimerTask timerTask;
-    private static final long DEFAULT_DELAY = 0;
     private static long period;
 
     /**
@@ -29,7 +28,7 @@ public class RandomPeriodTimer {
     }
 
     public void start(){
-        timer.scheduleAtFixedRate(timerTask, DEFAULT_DELAY, period);
+        timer.scheduleAtFixedRate(timerTask, period, period);
     }
 
     public void resetTimer(){

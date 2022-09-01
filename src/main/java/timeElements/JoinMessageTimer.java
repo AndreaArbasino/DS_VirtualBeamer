@@ -9,8 +9,6 @@ public class JoinMessageTimer {
 
     private Timer timer;
     private TimerTask timerTask;
-
-    private static final long DEFAULT_DELAY = 0;
     private static final long PERIOD = 5000; //TODO: VEDERE VALORE
 
     public JoinMessageTimer(NetworkController networkController) {
@@ -19,7 +17,7 @@ public class JoinMessageTimer {
     }
 
     public void start(){
-        timer.scheduleAtFixedRate(timerTask, DEFAULT_DELAY, PERIOD);
+        timer.scheduleAtFixedRate(timerTask, PERIOD, PERIOD);
     }
 
     public void resetTimer(){

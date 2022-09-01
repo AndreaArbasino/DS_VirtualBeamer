@@ -19,8 +19,6 @@ public class SendAliveTimer extends Timer {
     private Timer timer;
     private TimerTask timerTask;
 
-    private static long DEFAULT_DELAY = 0;
-
     private static long DEFAULT_PERIOD = 150;
 
     public SendAliveTimer(String groupIp, DatagramSocket socket) {
@@ -29,7 +27,7 @@ public class SendAliveTimer extends Timer {
     }
 
     public void start(){
-        timer.scheduleAtFixedRate(timerTask, DEFAULT_DELAY, DEFAULT_PERIOD);
+        timer.scheduleAtFixedRate(timerTask, DEFAULT_PERIOD, DEFAULT_PERIOD);
     }
 
     public void stop(){
