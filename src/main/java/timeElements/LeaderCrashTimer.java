@@ -25,6 +25,7 @@ public class LeaderCrashTimer {
     public void resetTimer(){
         timer.cancel();
         timer.purge();
+        timerTask.cancel();
         timer = new Timer();
         timerTask = new LeaderCrashTask(networkController);
         start();
