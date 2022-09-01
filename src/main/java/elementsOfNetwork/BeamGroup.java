@@ -54,7 +54,7 @@ public class BeamGroup implements Serializable {
     }
 
     public List<User> getUsers(){
-        System.out.println("Currently in the has map there are " + participants.size() + " users");
+        //System.out.println("Currently in the hasH map there are " + participants.size() + " users");
         return new ArrayList<>(participants.values());
     }
 

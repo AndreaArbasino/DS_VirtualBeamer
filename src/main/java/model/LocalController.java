@@ -204,6 +204,7 @@ public class LocalController {
     public void manageShareBeamGroupMessage(BeamGroup groupToEnter, int assignedId, Boolean isPresentationStarted){
         networkController.startMulticastListener(groupToEnter.getGroupAddress());
         if (assignedId == -1){ //this is not a possible id, it is used to indicate that it is received after an election
+            electionRunning = false;
             localModel.updateBeamGroup(groupToEnter);
             gui.refreshPresentation();
         } else {
@@ -278,7 +279,7 @@ public class LocalController {
     }
 
     public void manageCoordMessage(int newLeaderId){
-        electionRunning = false;
+        //electionRunning = false;
         localModel.setCurrentLeader(newLeaderId);
         sendStillUpNotificationMessage();
     }
@@ -290,6 +291,9 @@ public class LocalController {
     public void startElection(){
         electionRunning = true;
         List<User> usersWithHigherPriority = localModel.getCurrentGroup().participantsWithLowerId(localModel.getLocalId());
+
+        System.out.println("There are " + usersWithHigherPriority.size() + " user(s) with higher priority (lower ID)");
+
         if (usersWithHigherPriority.isEmpty()){ //the local user is the one with lower ID currently in the group, and so will become the leader
             sendCoordMessage();
             networkController.startSendAliveTimer();

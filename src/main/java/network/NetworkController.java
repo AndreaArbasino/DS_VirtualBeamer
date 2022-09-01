@@ -350,7 +350,7 @@ public class NetworkController {
             ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             startLeaderCrashTimer();
-            System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted() + "at time: " + java.time.LocalTime.now());
+            System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted() + " at time: " + java.time.LocalTime.now());
 
         } else if (message instanceof AddMemberMessage){
             localController.manageAddMemberMessage(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
@@ -423,6 +423,7 @@ public class NetworkController {
             closeTimersForElection();
             startLeaderCrashTimer();
             localController.manageCoordMessage(((CoordMessage) message).getNewLeaderId());
+            System.out.println("I have received a coord message by " + messageToProcess.getSenderIp());
 
 
         } else if (message instanceof StillUpNotificationMessage){
@@ -430,6 +431,7 @@ public class NetworkController {
             // eventualmente gestire l'id: potrebbe essere stato ammesso un nu --> non può succedere: prima di dire ad un client di essere stato ammesso, vengono informati gli altri partecipanti
 
             localController.manageStillUpNotificationMessage(((StillUpNotificationMessage) message).getUser(), ((StillUpNotificationMessage) message).getId());
+            System.out.println("I have received still up notification message");
         }
 
     }
