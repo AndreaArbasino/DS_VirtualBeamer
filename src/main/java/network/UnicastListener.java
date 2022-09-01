@@ -76,6 +76,8 @@ public class UnicastListener implements Runnable {
     public void printPacket(DatagramPacket receivedPacket){
         System.out.print("Received a packet in unicast listener ");
         System.out.println("Received IP: " + receivedPacket.getAddress() + " Port: " + receivedPacket.getPort() + " ,SocketAddress: " + receivedPacket.getSocketAddress());
+        String receivedData = new String(receivedPacket.getData());
+        System.out.println("Received data: " + receivedData);
     }
 
 }

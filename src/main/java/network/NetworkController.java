@@ -250,7 +250,7 @@ public class NetworkController {
     }
 
     /**
-     * Process the messages received and passed from the MulticastListener
+     * Process the messages received and passed from the listeners
      * @param messageToProcess message to process
      */
     public void processMessage(MessageToProcess messageToProcess){
