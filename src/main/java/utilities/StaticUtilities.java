@@ -11,7 +11,7 @@ public class StaticUtilities {
 
     public static final int DEFAULT_IMAGE_PORT = 42002;
 
-    public static final int MIN_RANDOM_TIME = 0;
+    public static final int MIN_RANDOM_TIME = 100;
     public static final int MAX_RANDOM_TIME = 500;
 
     public static final int DATAGRAM_DATA_SIZE = 65507;

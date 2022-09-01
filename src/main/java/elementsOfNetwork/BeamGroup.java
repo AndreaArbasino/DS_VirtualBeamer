@@ -166,7 +166,7 @@ public class BeamGroup implements Serializable {
 
         List< User> toBeReturned = new ArrayList<>();
 
-        for (int i = id; i>BeamGroup.CREATOR_ID; i--){
+        for (int i = id-1; i>BeamGroup.CREATOR_ID; i--){
             if (participants.containsKey(i)){
                 toBeReturned.add(participants.get(i));
             }

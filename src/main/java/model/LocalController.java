@@ -29,12 +29,14 @@ public class LocalController {
     private final NetworkController networkController;
     private final LocalModel localModel;
     private final GUI gui;
+    private boolean electionRunning;
 
 
     public LocalController (String username, GUI gui){
         localModel = new LocalModel(username);
         networkController = new NetworkController(this);
         this.gui = gui;
+        electionRunning = false;
     }
 
 
@@ -278,6 +280,7 @@ public class LocalController {
     }
 
     public void manageCoordMessage(int newLeaderId){
+        electionRunning = false;
         localModel.setCurrentLeader(newLeaderId);
         sendStillUpNotificationMessage();
     }
@@ -288,17 +291,21 @@ public class LocalController {
     }
 
     public void startElection(){
-        List<User> usersWithPriority = localModel.getCurrentGroup().participantsWithLowerId(localModel.getLocalId());
-        if (usersWithPriority.isEmpty()){
-            //TODO: questo è lo user con la massima priorità allora bisogna solo mandare coord messages
+        electionRunning = true;
+        List<User> usersWithHigherPriority = localModel.getCurrentGroup().participantsWithLowerId(localModel.getLocalId());
+        if (usersWithHigherPriority.isEmpty()){ //the local user is the one with lower ID currently in the group, and so will become the leader
             sendCoordMessage();
+            networkController.startSendAliveTimer();
         } else {
-            for (User userWithPriority: usersWithPriority){
+            for (User userWithPriority: usersWithHigherPriority){
                 networkController.sendElectMessage(userWithPriority.getIpAddress());
             }
-            //TODO iniziare timer per attendere risposte
         }
 
+    }
+
+    public boolean isElectionRunning(){
+        return electionRunning;
     }
 
 
@@ -346,13 +353,18 @@ public class LocalController {
     }
 
     public void sendCoordMessage(){
-        //TODO: reset internamente dei partecipanti del beamgroup, a parte quello locale
+        electionRunning = false;
+        networkController.closeTimersForElection();
+
         int newLeaderId = localModel.getLocalId();
         localModel.setCurrentLeader(newLeaderId);
+
         gui.switchToOtherView(); //the participants in the view will change while sending a message telling the leader that they are still up
+
         localModel.resetParticipantsInBeamGroup();
         networkController.switchToOtherMulticastListener();
         networkController.sendCoordMessage(newLeaderId);
+        //TODO: mettere timer per condividere di nuovo a tutti i partecipanti il nuovo beamgroup ricostruito --> bisogna mettere un nuovo booleano nel Sharebeamgroup message e gestirlo diversamente se per elezione
     }
 
     public void sendStillUpNotificationMessage(){
