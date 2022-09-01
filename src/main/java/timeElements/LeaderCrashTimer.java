@@ -13,12 +13,11 @@ public class LeaderCrashTimer {
     private static final long MAX_ALIVE_NOT_RECEIVED = 6;
     private static final long ALIVE_DEFUALT_LISTEN_INTERVAL = 200;
     private static final long BASE_PERIOD =  MAX_ALIVE_NOT_RECEIVED * ALIVE_DEFUALT_LISTEN_INTERVAL;
-    private int consecutiveAliveNotReceived;
-
+    private final NetworkController networkController;
     public LeaderCrashTimer(NetworkController networkController) {
+        this.networkController = networkController;
         timer = new Timer();
         timerTask = new LeaderCrashTask(networkController);
-        consecutiveAliveNotReceived = 0;
     }
 
     public void start(){
@@ -28,9 +27,8 @@ public class LeaderCrashTimer {
     public void resetTimer(){
         System.out.println("I am inside resetTimer of leaderCrashTimer");
         timer.cancel();
-        consecutiveAliveNotReceived = 0;
-        System.out.println("consecutive alive not rec in reset timer of leaderCrashTimer");
         timer = new Timer();
+        timerTask = new LeaderCrashTask(networkController);
         start();
     }
 
@@ -42,8 +40,10 @@ public class LeaderCrashTimer {
     private class LeaderCrashTask extends TimerTask{
 
         private NetworkController networkController;
+        private int consecutiveAliveNotReceived;
         public LeaderCrashTask(NetworkController controller) {
             this.networkController = controller;
+            consecutiveAliveNotReceived = 0;
         }
 
         @Override
