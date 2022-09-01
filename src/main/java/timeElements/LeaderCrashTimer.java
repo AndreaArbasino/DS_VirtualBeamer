@@ -13,18 +13,21 @@ public class LeaderCrashTimer {
     private static final long MAX_ALIVE_NOT_RECEIVED = 6;
     private static final long ALIVE_DEFUALT_LISTEN_INTERVAL = 200;
     private static final long BASE_PERIOD =  MAX_ALIVE_NOT_RECEIVED * ALIVE_DEFUALT_LISTEN_INTERVAL;
+    private int consecutiveAliveNotReceived;
 
     public LeaderCrashTimer(NetworkController networkController) {
         timer = new Timer();
         timerTask = new LeaderCrashTask(networkController);
+        consecutiveAliveNotReceived = 0;
     }
 
     public void start(){
-        timer.scheduleAtFixedRate(timerTask, DEFAULT_DELAY, BASE_PERIOD);
+        timer.scheduleAtFixedRate(timerTask, DEFAULT_DELAY, ALIVE_DEFUALT_LISTEN_INTERVAL);
     }
 
     public void resetTimer(){
         timer.cancel();
+        consecutiveAliveNotReceived = 0;
         timer = new Timer();
         start();
     }
@@ -43,7 +46,11 @@ public class LeaderCrashTimer {
 
         @Override
         public void run() {
-            networkController.manageLeaderCrashTimerFired();
+            consecutiveAliveNotReceived++;
+            System.out.println("I did not receive an alive message from leader " + consecutiveAliveNotReceived + " times in a row");
+            if (consecutiveAliveNotReceived == MAX_ALIVE_NOT_RECEIVED){
+                networkController.manageLeaderCrashTimerFired();
+            }
         }
     }
 

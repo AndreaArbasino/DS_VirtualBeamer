@@ -101,6 +101,7 @@ public class NetworkController {
     }
 
     public void manageLeaderCrashTimerFired(){
+        System.out.println("I noticed the leader crashed");
         //TODO: SCRIVERE METODO
     }
 
@@ -265,8 +266,8 @@ public class NetworkController {
             System.out.println("I received an INFO GROUP message");
 
         } else if (message instanceof  AliveMessage){
+            leaderCrashTimer.resetTimer();
             System.out.println("I have received an ALIVE message");
-
         } else if (message instanceof JoinMessage){
             System.out.println("I have received a JOIN message");
             localController.manageJoinMessage(((JoinMessage) message).getUser());
@@ -274,8 +275,8 @@ public class NetworkController {
         } else if (message instanceof ShareBeamGroupMessage){
             ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
+            leaderCrashTimer.start();
             System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted());
-
         } else if (message instanceof AddMemberMessage){
             localController.manageAddMemberMessage(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
             System.out.println("Somebody joined the group");
@@ -302,6 +303,7 @@ public class NetworkController {
 
         } else if (message instanceof AssignLeaderMessage){
             if (localController.getLocalModel().getLocalId() == ((AssignLeaderMessage) message).getNewLeaderId()){
+                closeLeaderCrashTimer();
                 startSendAliveTimer();
             }
             localController.manageAssignLeaderMessage(((AssignLeaderMessage) message).getNewLeaderId());
@@ -396,6 +398,7 @@ public class NetworkController {
         multicastListener.setRunning(false);
         startMulticastListener(localController.getLocalModel().getCurrentGroupAddress());
         closeSendAliveTimer();
+        startLeaderCrashTimer();
     }
 
     public void sendExplicitAliveRequestMessage(User user){
