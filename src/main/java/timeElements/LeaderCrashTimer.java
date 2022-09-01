@@ -21,7 +21,7 @@ public class LeaderCrashTimer {
     public synchronized void start(){
         timer = new Timer();
         timerTask = new LeaderCrashTask(networkController);
-        System.out.println("LeaderCrashTimer started at time: " + java.time.LocalTime.now());
+        //System.out.println("LeaderCrashTimer started at time: " + java.time.LocalTime.now());
         timer.scheduleAtFixedRate(timerTask, BASE_PERIOD, BASE_PERIOD);
     }
 

@@ -340,7 +340,8 @@ public class NetworkController {
 
         } else if (message instanceof  AliveMessage){
             resetLeaderCrashTimer();
-            System.out.println("I have received an ALIVE message  at time:" + java.time.LocalTime.now());
+            //System.out.println("I have received an ALIVE message  at time:" + java.time.LocalTime.now());
+
         } else if (message instanceof JoinMessage){
             System.out.println("I have received a JOIN message");
             localController.manageJoinMessage(((JoinMessage) message).getUser());

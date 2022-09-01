@@ -124,6 +124,10 @@ public class BeamGroup implements Serializable {
 
     //used for adding a participant knowing the id (performed by clients)
     public void addParticipant(User user, int id){
+        if (null == user){
+            throw new ArithmeticException();
+        }
+
         if (BeamGroup.CREATOR_ID == id){
             participants.put(BeamGroup.CREATOR_ID, creator);
             leaderId = BeamGroup.CREATOR_ID;
