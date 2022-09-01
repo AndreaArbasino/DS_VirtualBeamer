@@ -11,7 +11,7 @@ public class LeaderCrashTimer {
     private TimerTask timerTask;
     private static final long DEFAULT_DELAY = 0;
     private static final long MAX_ALIVE_NOT_RECEIVED = 6;
-    private static final long ALIVE_DEFUALT_LISTEN_INTERVAL = 200;
+    private static final long ALIVE_DEFUALT_LISTEN_INTERVAL = 400;
     private static final long BASE_PERIOD =  MAX_ALIVE_NOT_RECEIVED * ALIVE_DEFUALT_LISTEN_INTERVAL;
     private final NetworkController networkController;
     public LeaderCrashTimer(NetworkController networkController) {
