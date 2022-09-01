@@ -249,7 +249,7 @@ public class NetworkController {
 
         } else if (message instanceof JoinMessage){
             System.out.println("I have received a JOIN message");
-            localController.manageJoinMessage(((JoinMessage) message).getUser(), DEFAULT_UNICAST_PORT);
+            localController.manageJoinMessage(((JoinMessage) message).getUser());
 
         } else if (message instanceof ShareBeamGroupMessage){
             ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
@@ -323,8 +323,8 @@ public class NetworkController {
                                     senderPort);
     }
 
-    public void sendShareBeamGroupMessage(int id, BeamGroup beamGroup, Boolean isPresentationStarted, String recipientAddress, int port){
-        datagramSender.sendMessage(new ShareBeamGroupMessage(beamGroup, id, isPresentationStarted), recipientAddress, port);
+    public void sendShareBeamGroupMessage(int id, BeamGroup beamGroup, Boolean isPresentationStarted, String recipientAddress){
+        datagramSender.sendMessage(new ShareBeamGroupMessage(beamGroup, id, isPresentationStarted), recipientAddress, DEFAULT_UNICAST_PORT);
     }
 
     //TODO: sistemare porta

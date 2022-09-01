@@ -179,14 +179,13 @@ public class LocalController {
     /**
      * Called by the leader in order to add a new participant
      * @param user
-     * @param senderPort
      */
-    public void manageJoinMessage(User user, int senderPort){//TODO: la porta non dovrebbe servire, dovrebbe essere DEF_UNICAST
+    public void manageJoinMessage(User user){//TODO: la porta non dovrebbe servire, dovrebbe essere DEF_UNICAST
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendAddMemberMessage(user, id);
         System.out.println("Is the presentation started? " + localModel.isPresentationStarted());
         System.out.println("The new id assigned is: " + id);
-        networkController.sendShareBeamGroupMessage(id,localModel.getCurrentGroup(), localModel.isPresentationStarted(), user.getIpAddress(), senderPort);
+        networkController.sendShareBeamGroupMessage(id,localModel.getCurrentGroup(), localModel.isPresentationStarted(), user.getIpAddress());
 
         if (BeamGroup.CREATOR_ID == id){
             //TODO: send a message to creator to give control
