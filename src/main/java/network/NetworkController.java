@@ -36,8 +36,8 @@ public class NetworkController {
     private CheckCreatorUpTimer checkCreatorUpTimer;
     private ElectMessageTimer electMessageTimer;
     private ExplicitAliveRequestTimer explicitAliveRequestTimer;
-
     private RandomPeriodTimer randomPeriodTimer;
+    private ResetGroupTimer resetGroupTimer;
 
 
 
@@ -255,6 +255,28 @@ public class NetworkController {
         closeRandomPeriodTimer();
         sendCheckCreatorUpMessage();
         startCheckCreatorUpTimer();
+    }
+
+    // _________________________RESET_GROUP_TIMER_________________________
+    public void startResetGroupTimer(long min, long max){
+        resetGroupTimer = new ResetGroupTimer(this);
+        resetGroupTimer.start();
+    }
+
+    public void resetResetGroupTimer(){
+        if(resetGroupTimer != null){
+            resetGroupTimer.resetTimer();
+        }
+    }
+
+    public void closeResetGroupTimer(){
+        if(resetGroupTimer != null){
+            resetGroupTimer.close();
+        }
+    }
+
+    public void manageResetGroupTimerFired(){
+        //TODO: SCRIVERE METODO
     }
 
 
