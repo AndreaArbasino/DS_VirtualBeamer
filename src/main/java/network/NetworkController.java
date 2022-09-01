@@ -37,6 +37,8 @@ public class NetworkController {
     private ElectMessageTimer electMessageTimer;
     private ExplicitAliveRequestTimer explicitAliveRequestTimer;
 
+    private RandomPeriodTimer randomPeriodTimer;
+
 
 
     public NetworkController (LocalController localController){
@@ -190,6 +192,24 @@ public class NetworkController {
 
     public void manageExplicitAliveRequestTimerFired(){
         //TODO:SCRIVERE METODO
+    }
+
+    // _________________________RANDOM_PERIOD_TIMER_________________________
+    public void startRandomPeriodTimer(long min, long max){
+        randomPeriodTimer = new RandomPeriodTimer(this, min, max);
+        randomPeriodTimer.start();
+    }
+
+    public void resetRandomPeriodTimer(){
+        randomPeriodTimer.resetTimer();
+    }
+
+    public void closeRandomPeriodTimer(){
+        randomPeriodTimer.close();
+    }
+
+    public void manageRandomPeriodTimerTaskFired(){
+        //TODO: SCRIVERE METODO
     }
 
 

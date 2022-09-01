@@ -4,7 +4,6 @@ import network.NetworkController;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class LeaderCrashTimer {
 
@@ -14,18 +13,14 @@ public class LeaderCrashTimer {
     private static final long MAX_ALIVE_NOT_RECEIVED = 6;
     private static final long ALIVE_DEFUALT_LISTEN_INTERVAL = 200;
     private static final long BASE_PERIOD =  MAX_ALIVE_NOT_RECEIVED * ALIVE_DEFUALT_LISTEN_INTERVAL;
-    private static long period;
-    private static long randomPeriod;
 
     public LeaderCrashTimer(NetworkController networkController) {
         timer = new Timer();
         timerTask = new LeaderCrashTask(networkController);
-        randomPeriod = ThreadLocalRandom.current().nextLong(0,600);
-        period = BASE_PERIOD + randomPeriod;
     }
 
     public void start(){
-        timer.scheduleAtFixedRate(timerTask, DEFAULT_DELAY, period);
+        timer.scheduleAtFixedRate(timerTask, DEFAULT_DELAY, BASE_PERIOD);
     }
 
     public void resetTimer(){
