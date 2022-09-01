@@ -290,7 +290,7 @@ public class NetworkController {
 
         } else if (message instanceof ExplicitAliveAck){
             localController.passLeadershipTo(localController.getLocalModel().getCurrentGroup().getParticipants().get(((ExplicitAliveAck) message).getId()));
-            System.out.println("The persona you required to check, is still alive and answered, now it can become the leader");
+            System.out.println("The person you required to check, is still alive and answered, now it can become the leader");
 
         } else if (message instanceof CheckCreatorUpMessage){
             //TODO: rispondere per fermare timer e mandare coord (penso basti mandare coorMessage e basta) message per dire che è diventato nuovo leader

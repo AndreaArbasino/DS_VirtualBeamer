@@ -194,7 +194,7 @@ public class LocalController {
 
             //passLeadershipTo(localModel.getCurrentGroup().getCreator());
             sendExplicitAliveRequestMessage(localModel.getCurrentGroup().getCreator());
-            gui.switchToOtherView();
+            //gui.switchToOtherView();
         } else {
             gui.refreshPresentation();
             System.out.println("Presentation refreshed correctly");
