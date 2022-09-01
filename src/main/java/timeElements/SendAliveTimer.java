@@ -64,12 +64,6 @@ public class SendAliveTimer extends Timer {
         public void run() {
             sendAliveMessage();
         }
-
-        @Override
-        public boolean cancel() {
-            socket.close();
-            return super.cancel();
-        }
     }
 
 }
