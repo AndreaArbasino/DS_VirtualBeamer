@@ -2,39 +2,43 @@ package timeElements;
 
 import network.NetworkController;
 
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LeaderCrashTimer {
 
-    private ScheduledThreadPoolExecutor threadPoolExecutor;
-    private LeaderCrashTask task;
+    private Timer timer;
+    private TimerTask timerTask;
+
     private static final long BASE_PERIOD =  3000;
     private final NetworkController networkController;
 
     public LeaderCrashTimer(NetworkController networkController) {
         this.networkController = networkController;
-        threadPoolExecutor = new ScheduledThreadPoolExecutor(1);
-        task = new LeaderCrashTask(networkController);
+        timer = new Timer();
+        timerTask = new LeaderCrashTask(networkController);
         System.out.println("LeaderCrashTimer created at time: " + java.time.LocalTime.now());
     }
 
     public void start(){
         System.out.println("LeaderCrashTimer started at time: " + java.time.LocalTime.now());
-        threadPoolExecutor.scheduleAtFixedRate(task, BASE_PERIOD, BASE_PERIOD, TimeUnit.MILLISECONDS);
+        timer.scheduleAtFixedRate(timerTask, BASE_PERIOD, BASE_PERIOD);
     }
 
     public void resetTimer(){
-        threadPoolExecutor.shutdownNow();
-        threadPoolExecutor = new ScheduledThreadPoolExecutor(1);
+        close();
+        timer = new Timer();
+        timerTask = new LeaderCrashTask(networkController);
         start();
     }
 
     public void close(){
-        threadPoolExecutor.shutdownNow();
+        timer.cancel();
+        timer.purge();
+        timerTask.cancel();
     }
 
-    private class LeaderCrashTask implements Runnable{
+    private class LeaderCrashTask extends TimerTask{
         private NetworkController networkController;
         public LeaderCrashTask(NetworkController controller) {
             this.networkController = controller;
