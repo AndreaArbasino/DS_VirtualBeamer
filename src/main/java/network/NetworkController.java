@@ -512,6 +512,7 @@ public class NetworkController {
 
     public void sendElectMessage(String ipRecipient){
         datagramSender.sendMessage(new ElectMessage(), ipRecipient, DEFAULT_UNICAST_PORT);
+        System.out.println("I sent an elect message");
     }
 
     public void sendAckMessage(String ipRecipient){
