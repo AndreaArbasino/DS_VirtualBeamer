@@ -15,20 +15,18 @@ public class LeaderCrashTimer {
 
     public LeaderCrashTimer(NetworkController networkController) {
         this.networkController = networkController;
-        timer = new Timer();
-        timerTask = new LeaderCrashTask(networkController);
         System.out.println("LeaderCrashTimer created at time: " + java.time.LocalTime.now());
     }
 
     public void start(){
+        timer = new Timer();
+        timerTask = new LeaderCrashTask(networkController);
         System.out.println("LeaderCrashTimer started at time: " + java.time.LocalTime.now());
         timer.scheduleAtFixedRate(timerTask, BASE_PERIOD, BASE_PERIOD);
     }
 
     public void resetTimer(){
         close();
-        timer = new Timer();
-        timerTask = new LeaderCrashTask(networkController);
         start();
     }
 
