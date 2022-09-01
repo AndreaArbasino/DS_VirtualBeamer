@@ -301,7 +301,9 @@ public class NetworkController {
             System.out.println("A message stating the total number of slides was received, there should be " + ((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides() + " slides");
 
         } else if (message instanceof AssignLeaderMessage){
-            startSendAliveTimer();
+            if (localController.getLocalModel().getLocalId() == ((AssignLeaderMessage) message).getNewLeaderId()){
+                startSendAliveTimer();
+            }
             localController.manageAssignLeaderMessage(((AssignLeaderMessage) message).getNewLeaderId());
             System.out.println("A message for changing the leader was received. Now the user with ID equals to " + ((AssignLeaderMessage) message).getNewLeaderId() + " is the leader");
 
