@@ -350,7 +350,6 @@ public class LocalController {
     }
 
     public void sendCoordMessage(){
-        electionRunning = false;
         networkController.closeTimersForElection();
 
         int newLeaderId = localModel.getLocalId();
@@ -363,6 +362,7 @@ public class LocalController {
         networkController.sendCoordMessage(newLeaderId);
 
         networkController.startResetGroupTimer();
+        electionRunning = false;
     }
 
     public void sendStillUpNotificationMessage(){

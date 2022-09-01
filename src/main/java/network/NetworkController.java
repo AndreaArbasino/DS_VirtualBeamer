@@ -357,13 +357,13 @@ public class NetworkController {
             System.out.println("Somebody joined the group");
 
         } else if(message instanceof LeaveNotificationMessage){
+            localController.manageLeaveNotificationMessage(((LeaveNotificationMessage) message).getId());
             if (((LeaveNotificationMessage) message).getId() == localController.getLocalModel().getCurrentGroup().getLeaderId()){
                 //not necessary to be done explicitly, we could wait but will require more time
                 closeLeaderCrashTimer();
                 startRandomPeriodTimer(MIN_RANDOM_TIME, MAX_RANDOM_TIME);
                 System.out.println("The current leader left the group");
             }
-            localController.manageLeaveNotificationMessage(((LeaveNotificationMessage) message).getId());
             System.out.println("Somebody left the group");
 
         } else if (message instanceof TerminationMessage){
