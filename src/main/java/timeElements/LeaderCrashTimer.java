@@ -26,8 +26,10 @@ public class LeaderCrashTimer {
     }
 
     public void resetTimer(){
+        System.out.println("I am inside resetTimer of leaderCrashTimer");
         timer.cancel();
         consecutiveAliveNotReceived = 0;
+        System.out.println("consecutive alive not rec in reset timer of leaderCrashTimer");
         timer = new Timer();
         start();
     }

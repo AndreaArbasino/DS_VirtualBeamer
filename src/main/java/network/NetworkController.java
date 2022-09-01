@@ -102,7 +102,7 @@ public class NetworkController {
 
     public void manageLeaderCrashTimerFired(){
         System.out.println("I noticed the leader crashed");
-        //TODO: SCRIVERE METODO
+        //TODO: SCRIVERE METODO, AGGIUNGERE CLOSE TIMER
     }
 
     // _________________________SLIDE_DOWNLOAD_TIMER_________________________
@@ -266,7 +266,7 @@ public class NetworkController {
             System.out.println("I received an INFO GROUP message");
 
         } else if (message instanceof  AliveMessage){
-            leaderCrashTimer.resetTimer();
+            resetLeaderCrashTimer();
             System.out.println("I have received an ALIVE message");
         } else if (message instanceof JoinMessage){
             System.out.println("I have received a JOIN message");
