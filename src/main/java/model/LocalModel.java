@@ -228,4 +228,8 @@ public class LocalModel {
     public void resetParticipantsInBeamGroup(){
         currentGroup.reset();
     }
+
+    public void updateBeamGroup(BeamGroup newBeamGroup){
+        currentGroup.takeFromBeamGroup(newBeamGroup);
+    }
 }

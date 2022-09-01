@@ -263,7 +263,7 @@ public class NetworkController {
     }
 
     // _________________________RESET_GROUP_TIMER_________________________
-    public void startResetGroupTimer(long min, long max){
+    public void startResetGroupTimer(){
         resetGroupTimer = new ResetGroupTimer(this);
         resetGroupTimer.start();
     }
@@ -281,7 +281,9 @@ public class NetworkController {
     }
 
     public void manageResetGroupTimerFired(){
-        //TODO: SCRIVERE METODO
+        closeResetGroupTimer();
+        datagramSender.sendMessage(new ShareBeamGroupMessage(localController.getLocalModel().getCurrentGroup(), -1, true), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+        localController.refreshPresentation();
     }
 
 
@@ -354,7 +356,12 @@ public class NetworkController {
             System.out.println("Somebody joined the group");
 
         } else if(message instanceof LeaveNotificationMessage){
-            //TODO: iniziare timer random per iniziare elezione se chi ha lasciato è il leader corrente
+            if (((LeaveNotificationMessage) message).getId() == localController.getLocalModel().getCurrentGroup().getLeaderId()){
+                //not necessary to be done explicitly, we could wait but will require more time
+                closeLeaderCrashTimer();
+                startRandomPeriodTimer(MIN_RANDOM_TIME, MAX_RANDOM_TIME);
+                System.out.println("The current leader left the group");
+            }
             localController.manageLeaveNotificationMessage(((LeaveNotificationMessage) message).getId());
             System.out.println("Somebody left the group");
 
@@ -525,5 +532,6 @@ public class NetworkController {
         closeLeaderCrashTimer();
         closeRandomPeriodTimer();
         closeCheckCreatorUpTimer();
+        closeElectMessageTimer();
     }
 }

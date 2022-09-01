@@ -14,7 +14,7 @@ public class BeamGroup implements Serializable {
     private final User creator;
     private final String groupAddress;
     private final String name;
-    private final HashMap<Integer, User> participants;
+    private HashMap<Integer, User> participants;
 
     private Boolean creatorStillIn;
     private int leaderId;
@@ -182,5 +182,18 @@ public class BeamGroup implements Serializable {
         participants.clear();
         participants.put(leaderId, currentLeader);
         //TODO: magari gestire creator still in e anche l'id del leader, possibilmente passarli come parametro
+    }
+
+    public void takeFromBeamGroup(BeamGroup beamGroup){
+        if (nextIdAvailable <= beamGroup.getNextIdAvailable()){
+            this.participants = beamGroup.getParticipants();
+        } else {
+            for (int i= beamGroup.getNextIdAvailable() + 1; i < nextIdAvailable; i++){
+                if (participants.containsKey(i)){
+                    beamGroup.addParticipant(participants.get(i), i);
+                }
+            }
+            this.participants = beamGroup.getParticipants();
+        }
     }
 }

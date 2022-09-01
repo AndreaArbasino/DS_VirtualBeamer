@@ -17,15 +17,6 @@ import java.util.concurrent.TimeUnit;
 import static utilities.StaticUtilities.*;
 
 public class LocalController {
-    /*Multicast receiver se devi joinare è sul multicast hello una volta dentro ad una lobby sei su multicast lobby
-            sender su hello multicast se dentro e leader allora multicast presentazione
-
-    election
-            ti rendi conto che leader crash:
-            se il leader era il creatore, allora inizia elezione
-            altrimenti contatta creatore, se non risponde inizia elezione random timer mandi messaggio a tutti quelli con id inferiore
-            se ricevi risposta almeno da uno allora stop elezione e continui ad ascoltare multicast presentazione
-            altrimenti (scadere timer) se non ci sono risposte, mandi multicast su presentazione con messaggio coord*/
     private final NetworkController networkController;
     private final LocalModel localModel;
     private final GUI gui;
@@ -106,8 +97,6 @@ public class LocalController {
         return ip;
     }
 
-    //aggiungere metodo che prende come parametro messaggio che dice numero di slide corrente
-
     public LocalModel getLocalModel() {
         return localModel;
     }
@@ -142,6 +131,10 @@ public class LocalController {
         int idOfNewLeader = localModel.passLeadershipTo(newLeader);
         gui.switchToOtherView();
         networkController.sendAssignLeaderMessage(idOfNewLeader);
+    }
+
+    public void refreshPresentation(){
+        gui.refreshPresentation();
     }
 
 
@@ -182,7 +175,7 @@ public class LocalController {
      * Called by the leader in order to add a new participant
      * @param user
      */
-    public void manageJoinMessage(User user){//TODO: la porta non dovrebbe servire, dovrebbe essere DEF_UNICAST
+    public void manageJoinMessage(User user){
         int id = localModel.addUserToBeamGroup(user);
         networkController.sendAddMemberMessage(user, id);
         System.out.println("Is the presentation started? " + localModel.isPresentationStarted());
@@ -211,20 +204,25 @@ public class LocalController {
     public void manageShareBeamGroupMessage(BeamGroup groupToEnter, int assignedId, Boolean isPresentationStarted){
         networkController.startMulticastListener(groupToEnter.getGroupAddress());
         localModel.addBeamGroup(groupToEnter, assignedId);
-        if (isPresentationStarted){
-            //TODO: mostrare schermata per fare scegliere da chi scaricare -->
-            // se quell'utente non ha ancora scaricato o non risponde in tempo (timer), mostrare tendina con errore e fare scegliere di nuovo
-            networkController.startUnicastImageListener();
-            localModel.startPresentation();
-            gui.createHiddenPresentation();
-            gui.displayDownloadSelection();
+        if (assignedId == -1){ //this is not a possible id, it is used to indicate that it is received after an election
+            localModel.updateBeamGroup(groupToEnter);
+            gui.refreshPresentation();
         } else {
-            networkController.startMulticastImageListener(groupToEnter.getGroupAddress());
-            gui.startClientFrame();
+            if (isPresentationStarted){
+                //TODO: mostrare schermata per fare scegliere da chi scaricare -->
+                // se quell'utente non ha ancora scaricato o non risponde in tempo (timer), mostrare tendina con errore e fare scegliere di nuovo
+                networkController.startUnicastImageListener();
+                localModel.startPresentation();
+                gui.createHiddenPresentation();
+                gui.displayDownloadSelection();
+            } else {
+                networkController.startMulticastImageListener(groupToEnter.getGroupAddress());
+                gui.startClientFrame();
+            }
         }
+
     }
 
-    //TODO: aggiungere metodo per aggiungere partecipanti al beamGroup corrente: metodo che prende un messaggio come parametro
     //called by client: used to update their view of the group
     public void manageAddMemberMessage(User user, int id){
         localModel.addUserToBeamGroup(user, id);
@@ -287,7 +285,6 @@ public class LocalController {
 
     public void manageStillUpNotificationMessage(User participantAlreadyIn, int alreadyAssignedId){
         localModel.addUserToBeamGroup(participantAlreadyIn, alreadyAssignedId);
-        gui.refreshPresentation(); //TODO: magari fare refresh presentation solo quando parte il trigger per ricondividere il beamgroup del nuovo leader
     }
 
     public void startElection(){
@@ -364,7 +361,8 @@ public class LocalController {
         localModel.resetParticipantsInBeamGroup();
         networkController.switchToOtherMulticastListener();
         networkController.sendCoordMessage(newLeaderId);
-        //TODO: mettere timer per condividere di nuovo a tutti i partecipanti il nuovo beamgroup ricostruito --> bisogna mettere un nuovo booleano nel Sharebeamgroup message e gestirlo diversamente se per elezione
+
+        networkController.startResetGroupTimer();
     }
 
     public void sendStillUpNotificationMessage(){
