@@ -18,19 +18,19 @@ public class LeaderCrashTimer {
         System.out.println("LeaderCrashTimer created at time: " + java.time.LocalTime.now());
     }
 
-    public void start(){
+    public synchronized void start(){
         timer = new Timer();
         timerTask = new LeaderCrashTask(networkController);
         System.out.println("LeaderCrashTimer started at time: " + java.time.LocalTime.now());
         timer.scheduleAtFixedRate(timerTask, BASE_PERIOD, BASE_PERIOD);
     }
 
-    public void resetTimer(){
+    public synchronized void resetTimer(){
         close();
         start();
     }
 
-    public void close(){
+    public synchronized void close(){
         if(timer != null){
             timer.cancel();
             timer.purge();
