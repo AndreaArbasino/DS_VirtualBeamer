@@ -192,9 +192,7 @@ public class LocalController {
             //TODO: make the gui switch from leader view to client view
             //TODO: ricordarsi di far iniziare subito al nuovo leader a mandare messaggi per alive, non appena ricevuto messaggio per passare controllo!
 
-            //passLeadershipTo(localModel.getCurrentGroup().getCreator());
-            sendExplicitAliveRequestMessage(localModel.getCurrentGroup().getCreator());
-            gui.switchToOtherView();
+            passLeadershipTo(localModel.getCurrentGroup().getCreator());
         } else {
             gui.refreshPresentation();
             System.out.println("Presentation refreshed correctly");

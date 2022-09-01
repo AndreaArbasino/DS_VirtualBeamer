@@ -281,6 +281,7 @@ public class NetworkController {
             System.out.println("A message stating the total number of slides was received, there should be " + ((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides() + " slides");
 
         } else if (message instanceof AssignLeaderMessage){
+            startSendAliveTimer();
             localController.manageAssignLeaderMessage(((AssignLeaderMessage) message).getNewLeaderId());
             System.out.println("A message for changing the leader was received. Now the user with ID equals to " + ((AssignLeaderMessage) message).getNewLeaderId() + " is the leader");
 
@@ -290,7 +291,7 @@ public class NetworkController {
 
         } else if (message instanceof ExplicitAliveAck){
             localController.passLeadershipTo(localController.getLocalModel().getCurrentGroup().getParticipants().get(((ExplicitAliveAck) message).getId()));
-            System.out.println("The persona you required to check, is still alive and answered, now it can become the leader");
+            System.out.println("The person you required to check, is still alive and answered, now it can become the leader");
 
         } else if (message instanceof CheckCreatorUpMessage){
             //TODO: rispondere per fermare timer e mandare coord (penso basti mandare coorMessage e basta) message per dire che è diventato nuovo leader
@@ -372,6 +373,7 @@ public class NetworkController {
         datagramSender.sendMessage(new AssignLeaderMessage(newLeaderId), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
         multicastListener.setRunning(false);
         startMulticastListener(localController.getLocalModel().getCurrentGroupAddress());
+        closeSendAliveTimer();
     }
 
     public void sendExplicitAliveRequestMessage(User user){
