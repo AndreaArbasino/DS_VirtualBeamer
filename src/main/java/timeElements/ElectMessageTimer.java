@@ -11,7 +11,7 @@ public class ElectMessageTimer {
     private TimerTask timerTask;
 
     private static final long DEFAULT_DELAY = 0;
-    private static final long PERIOD = 5000; //TODO: VEDERE VALORE
+    private static final long PERIOD = 1000; //TODO: VEDERE VALORE
 
     public ElectMessageTimer(NetworkController networkController) {
         timer = new Timer();

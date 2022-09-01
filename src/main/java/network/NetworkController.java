@@ -106,6 +106,12 @@ public class NetworkController {
         System.out.println("I noticed the leader crashed");
         closeLeaderCrashTimer();
         //TODO: SCRIVERE METODO
+        if(localController.getLocalModel().getCurrentGroup().getCreator().equals(localController.getLocalModel().getLocalUser())){
+            localController.sendCoordMessage();
+            startSendAliveTimer();
+        } else {
+            startRandomPeriodTimer(MIN_RANDOM_TIME, MAX_RANDOM_TIME);
+        }
     }
 
     // _________________________SLIDE_DOWNLOAD_TIMER_________________________
@@ -160,6 +166,9 @@ public class NetworkController {
 
     public void manageCheckCreatorUpTimerFired(){
         //TODO:SCRIVERE METODO
+        closeCheckCreatorUpTimer();
+        localController.startElection();
+        startElectMessageTimer();
     }
 
     // _________________________CHECK_ELECT_MESSAGE_TIMER_________________________
@@ -178,6 +187,9 @@ public class NetworkController {
 
     public void manageElectMessageTimerFired(){
         //TODO:SCRIVERE METODO
+        localController.sendCoordMessage();
+        startSendAliveTimer();
+        closeElectMessageTimer();
     }
 
     // _________________________EXPLICIT_ALIVE_REQUEST_TIMER_________________________
@@ -214,6 +226,9 @@ public class NetworkController {
 
     public void manageRandomPeriodTimerTaskFired(){
         //TODO: SCRIVERE METODO
+        closeRandomPeriodTimer();
+        sendCheckCreatorUpMessage();
+        startCheckCreatorUpTimer();
     }
 
 
@@ -285,6 +300,7 @@ public class NetworkController {
             System.out.println("Somebody joined the group");
 
         } else if(message instanceof LeaveNotificationMessage){
+            //TODO: iniziare timer random per iniziare elezione
             localController.manageLeaveNotificationMessage(((LeaveNotificationMessage) message).getId());
             System.out.println("Somebody left the group");
 
@@ -323,22 +339,38 @@ public class NetworkController {
         } else if (message instanceof CheckCreatorUpMessage){
             //TODO: rispondere per fermare timer e mandare coord (penso basti mandare coorMessage e basta) message per dire che è diventato nuovo leader
             // Da qui si starta timer per dire l'invio di ping
+            // TODO: fermare tutti quanti i timer e ricominciare con quello per le alive (solo quello)
+            closeLeaderCrashTimer();
+            localController.manageCheckCreatorUpMessage();
+            startSendAliveTimer();
 
         } else if (message instanceof ElectMessage){
             //TODO: se lo ricevo, allora rispondo con un AckMessage per fermare l'elezione e ne inizio una nuova io, mandando un ElectMessage nuovo
+            closeLeaderCrashTimer();
+            closeRandomPeriodTimer();
+            closeCheckCreatorUpTimer();
+            sendAckMessage(messageToProcess.getSenderIp());
+            localController.startElection(); //TODO: mettere booleano per sapere se elezione già iniziata, se così fosse, allonra non ricominciarla
 
         } else if (message instanceof AckMessage){
             //TODO: if received, the local election is  terminated (a coord message is waited)
+            closeElectMessageTimer();
 
         } else if (message instanceof CoordMessage){
             //TODO: l'id contenuto in questo messaggio è quello del nuovo leader, deve essere settato localmente + contiene anche lo user
             // Da qui si può restartare il timer per ricevere i ping
-            // quando viene mandato questo messaggio, si ripulisce la lista utenti dentro il beamgroup in modo da ricostruirla con i StillUpNotificationMessage
+            // quando viene mandato questo messaggio (COORD MESSAGE), si ripulisce la lista utenti dentro il beamgroup in modo da ricostruirla con i StillUpNotificationMessage
+
+            resetLeaderCrashTimer();
+            closeRandomPeriodTimer();
+            closeCheckCreatorUpTimer();
+            localController.manageCoordMessage(((CoordMessage) message).getNewLeaderId());
 
         } else if (message instanceof StillUpNotificationMessage){
             //TODO: serve per rispondere a CoordMessage: l'utente locale condivide user e id per essere aggiunto al beamgroup che il nuovo leader sta ricostruendo
             // eventualmente gestire l'id: potrebbe essere stato ammesso un nu --> non può succedere: prima di dire ad un client di essere stato ammesso, vengono informati gli altri partecipanti
 
+            localController.manageStillUpNotificationMessage(((StillUpNotificationMessage) message).getUser(), ((StillUpNotificationMessage) message).getId());
         }
 
     }
@@ -410,6 +442,27 @@ public class NetworkController {
 
     public void sendExplicitAliveAck(int id){
         datagramSender.sendMessage(new ExplicitAliveAck(id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
+    }
+
+    public void sendCheckCreatorUpMessage(){
+        //TODO: se io sono il coordinatore mando un coord message e mi metto come leader
+        datagramSender.sendMessage(new CheckCreatorUpMessage(), localController.getLocalModel().getCurrentGroup().getCreator().getIpAddress(), DEFAULT_UNICAST_PORT);
+    }
+
+    public void sendElectMessage(String ipRecipient){
+        datagramSender.sendMessage(new ElectMessage(), ipRecipient, DEFAULT_UNICAST_PORT);
+    }
+
+    public void sendAckMessage(String ipRecipient){
+        datagramSender.sendMessage(new AckMessage(), ipRecipient, DEFAULT_UNICAST_PORT);
+    }
+
+    public void sendCoordMessage(int newLeaderId){
+        datagramSender.sendMessage(new CoordMessage(newLeaderId), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+    }
+
+    public void sendStillUpNotificationMessage(User user, int id){
+        datagramSender.sendMessage(new StillUpNotificationMessage(user,id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
     }
 
     public void resetImageSendingSessionNumber(){

@@ -176,7 +176,11 @@ public class BeamGroup implements Serializable {
     }
 
     public void reset(){
+        creatorStillIn = (leaderId == CREATOR_ID);
+
+        User currentLeader = participants.get(leaderId);
         participants.clear();
+        participants.put(leaderId, currentLeader);
         //TODO: magari gestire creator still in e anche l'id del leader, possibilmente passarli come parametro
     }
 }

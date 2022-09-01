@@ -273,6 +273,35 @@ public class LocalController {
         networkController.sendExplicitAliveAck(localModel.getLocalId());
     }
 
+    public void manageCheckCreatorUpMessage(){
+        sendCoordMessage();
+    }
+
+    public void manageCoordMessage(int newLeaderId){
+        localModel.setCurrentLeader(newLeaderId);
+        sendStillUpNotificationMessage();
+    }
+
+    public void manageStillUpNotificationMessage(User participantAlreadyIn, int alreadyAssignedId){
+        localModel.addUserToBeamGroup(participantAlreadyIn, alreadyAssignedId);
+        gui.refreshPresentation(); //TODO: magari fare refresh presentation solo quando parte il trigger per ricondividere il beamgroup del nuovo leader
+    }
+
+    public void startElection(){
+        List<User> usersWithPriority = localModel.getCurrentGroup().participantsWithLowerId(localModel.getLocalId());
+        if (usersWithPriority.isEmpty()){
+            //TODO: questo è lo user con la massima priorità allora bisogna solo mandare coord messages
+            sendCoordMessage();
+        } else {
+            for (User userWithPriority: usersWithPriority){
+                networkController.sendElectMessage(userWithPriority.getIpAddress());
+            }
+            //TODO iniziare timer per attendere risposte
+        }
+
+    }
+
+
 
 
     public void sendTotalNumberOfSlidesToGroup(){
@@ -314,5 +343,19 @@ public class LocalController {
 
     public void sendExplicitAliveRequestMessage(User user){
         networkController.sendExplicitAliveRequestMessage(user);
+    }
+
+    public void sendCoordMessage(){
+        //TODO: reset internamente dei partecipanti del beamgroup, a parte quello locale
+        int newLeaderId = localModel.getLocalId();
+        localModel.setCurrentLeader(newLeaderId);
+        gui.switchToOtherView(); //the participants in the view will change while sending a message telling the leader that they are still up
+        localModel.resetParticipantsInBeamGroup();
+        networkController.switchToOtherMulticastListener();
+        networkController.sendCoordMessage(newLeaderId);
+    }
+
+    public void sendStillUpNotificationMessage(){
+        networkController.sendStillUpNotificationMessage(localModel.getLocalUser(), localModel.getLocalId());
     }
 }
