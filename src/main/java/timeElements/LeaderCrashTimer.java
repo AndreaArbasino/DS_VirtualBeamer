@@ -31,9 +31,12 @@ public class LeaderCrashTimer {
     }
 
     public void close(){
-        timer.cancel();
-        timer.purge();
-        timerTask.cancel();
+        if(timer != null){
+            timer.cancel();
+            timer.purge();
+        } if (timerTask != null){
+            timerTask.cancel();
+        }
     }
 
     private class LeaderCrashTask extends TimerTask{

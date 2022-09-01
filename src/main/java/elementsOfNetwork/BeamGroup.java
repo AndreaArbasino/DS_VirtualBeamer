@@ -1,7 +1,6 @@
 package elementsOfNetwork;
 
 import java.io.Serializable;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -160,7 +159,9 @@ public class BeamGroup implements Serializable {
     //Retrieve the Users with an ID STRICTLY lower than the one passed as argument
     //(strictly since the check for the creator is performed as first, in the beginning)
     public List <User> participantsWithLowerId (int id) throws IllegalArgumentException{
+        System.out.println("Id in participantsWithLowerId: " + id);
         if (id < BeamGroup.CREATOR_ID){
+            System.out.println("The id passed has some problems");
             throw new IllegalArgumentException();
         }
 
