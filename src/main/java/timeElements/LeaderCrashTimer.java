@@ -29,6 +29,7 @@ public class LeaderCrashTimer {
         timer = new Timer();
         timerTask = new LeaderCrashTask(networkController);
         start();
+        System.out.println("I resetted the leaderCrashTimer");
     }
 
     public void close(){
