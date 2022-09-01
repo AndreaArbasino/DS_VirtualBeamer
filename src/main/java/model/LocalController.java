@@ -203,11 +203,11 @@ public class LocalController {
      */
     public void manageShareBeamGroupMessage(BeamGroup groupToEnter, int assignedId, Boolean isPresentationStarted){
         networkController.startMulticastListener(groupToEnter.getGroupAddress());
-        localModel.addBeamGroup(groupToEnter, assignedId);
         if (assignedId == -1){ //this is not a possible id, it is used to indicate that it is received after an election
             localModel.updateBeamGroup(groupToEnter);
             gui.refreshPresentation();
         } else {
+            localModel.addBeamGroup(groupToEnter, assignedId);
             if (isPresentationStarted){
                 //TODO: mostrare schermata per fare scegliere da chi scaricare -->
                 // se quell'utente non ha ancora scaricato o non risponde in tempo (timer), mostrare tendina con errore e fare scegliere di nuovo
