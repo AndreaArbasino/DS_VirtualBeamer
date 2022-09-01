@@ -93,7 +93,9 @@ public class NetworkController {
     }
 
     public void resetLeaderCrashTimer(){
-        leaderCrashTimer.resetTimer();
+        if(leaderCrashTimer != null){
+            leaderCrashTimer.resetTimer();
+        }
     }
 
     public void closeLeaderCrashTimer(){
