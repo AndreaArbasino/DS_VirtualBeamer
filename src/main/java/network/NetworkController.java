@@ -105,7 +105,7 @@ public class NetworkController {
     }
 
     public void manageLeaderCrashTimerFired(){
-        System.out.println("I noticed the leader crashed");
+        System.out.println("I noticed the leader crashed at time " + java.time.LocalTime.now());
         closeLeaderCrashTimer();
 
         //if the local user is the creator, then it will simply tell to all the other participants that it is the new leader
@@ -340,7 +340,7 @@ public class NetworkController {
 
         } else if (message instanceof  AliveMessage){
             resetLeaderCrashTimer();
-            System.out.println("I have received an ALIVE message");
+            System.out.println("I have received an ALIVE message  at time:" + java.time.LocalTime.now());
         } else if (message instanceof JoinMessage){
             System.out.println("I have received a JOIN message");
             localController.manageJoinMessage(((JoinMessage) message).getUser());
