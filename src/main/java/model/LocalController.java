@@ -134,6 +134,7 @@ public class LocalController {
     }
 
     public void refreshPresentation(){
+        electionRunning = false;
         gui.refreshPresentation();
     }
 
@@ -366,7 +367,7 @@ public class LocalController {
         networkController.sendCoordMessage(newLeaderId);
 
         networkController.startResetGroupTimer();
-        electionRunning = false;
+        //electionRunning = false;
     }
 
     public void sendStillUpNotificationMessage(){
