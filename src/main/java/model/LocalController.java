@@ -138,6 +138,10 @@ public class LocalController {
         gui.refreshPresentation();
     }
 
+    public void setElectionRunning(Boolean election){
+        this.electionRunning = election;
+    }
+
 
 
     public void manageReceivedImage(BufferedImage image, int position){

@@ -102,7 +102,8 @@ public class NetworkController {
         closeLeaderCrashTimer();
 
         //if the local user is the creator, then it will simply tell to all the other participants that it is the new leader
-        if(localController.getLocalModel().getCurrentGroup().getCreator().equals(localController.getLocalModel().getLocalUser())){
+        if(localController.getLocalModel().getLocalId() == BeamGroup.CREATOR_ID){
+            localController.setElectionRunning(true);
             localController.sendCoordMessage();
             startSendAliveTimer();
         } else { //if the local user is not the creator, it will wait a random time and then contact the creator
@@ -254,23 +255,18 @@ public class NetworkController {
     public void manageRandomPeriodTimerTaskFired(){
         closeRandomPeriodTimer();
         System.out.println("Random period timer fired at time " + java.time.LocalTime.now());
-        if (localController.getLocalModel().getLocalId() == BeamGroup.CREATOR_ID){
-            closeLeaderCrashTimer();
-            System.out.println("I noticed the leader was not reachable and I am the creator. I will be the new leader");
-            localController.sendCoordMessage();
-            startSendAliveTimer();
+
+        //before trying to contact the creator, it checks if it is still in the group
+        if (localController.getLocalModel().getCurrentGroup().isCreatorStillIn()){
+            sendCheckCreatorUpMessage();
+            startCheckCreatorUpTimer();
         } else {
-            if (localController.getLocalModel().getCurrentGroup().isCreatorStillIn()){
-                //before trying to contact the creator, it checks if it is still in the group
-                sendCheckCreatorUpMessage();
-                startCheckCreatorUpTimer();
-            } else {
-                System.out.println("Random period passed, but I already know the creator is no more in the group");
-                if (!localController.isElectionRunning()){
-                    localController.startElection();
-                }
+            System.out.println("Random period passed, but I already know the creator is no more in the group");
+            if (!localController.isElectionRunning()){
+                localController.startElection();
             }
         }
+
     }
 
     // _________________________RESET_GROUP_TIMER_________________________
@@ -376,10 +372,17 @@ public class NetworkController {
         } else if(message instanceof LeaveNotificationMessage){
             localController.manageLeaveNotificationMessage(((LeaveNotificationMessage) message).getId());
             if (((LeaveNotificationMessage) message).getId() == localController.getLocalModel().getCurrentGroup().getLeaderId()){
-                //not necessary to be done explicitly, we could wait but will require more time
+                //not necessary to be done explicitly, we could wait but will require more time and more messages
                 closeLeaderCrashTimer();
-                startRandomPeriodTimer(MIN_RANDOM_TIME, MAX_RANDOM_TIME);
                 System.out.println("The current leader left the group");
+                if (localController.getLocalModel().getLocalId() == BeamGroup.CREATOR_ID){
+                    localController.setElectionRunning(true);
+                    System.out.println("I noticed the leader was not reachable and I am the creator. I will be the new leader");
+                    localController.sendCoordMessage();
+                    startSendAliveTimer();
+                } else {
+                    startRandomPeriodTimer(MIN_RANDOM_TIME, MAX_RANDOM_TIME);
+                }
             }
             System.out.println("Somebody left the group");
 
