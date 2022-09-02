@@ -9,27 +9,35 @@ public class ElectMessageTimer {
 
     private Timer timer;
     private TimerTask timerTask;
+    private NetworkController networkController;
 
     private static final long PERIOD = 1000; //TODO: VEDERE VALORE
 
     public ElectMessageTimer(NetworkController networkController) {
         timer = new Timer();
         timerTask = new ElectMessageTimerTask(networkController);
+        this.networkController = networkController;
     }
 
-    public void start(){
+    public synchronized void start(){
+        timer = new Timer();
+        timerTask = new ElectMessageTimerTask(networkController);
+        //System.out.println("ElectMessageTimer started at time: " + java.time.LocalTime.now());
         timer.scheduleAtFixedRate(timerTask, PERIOD, PERIOD);
     }
 
-    public void resetTimer(){
-        timer.cancel();
-        timer = new Timer();
+    public synchronized void resetTimer(){
+        close();
         start();
     }
 
-    public void close(){
-        timer.cancel();
-        timerTask.cancel();
+    public synchronized void close(){
+        if(timer != null){
+            timer.cancel();
+            timer.purge();
+        } if (timerTask != null){
+            timerTask.cancel();
+        }
     }
 
     private class ElectMessageTimerTask extends TimerTask{

@@ -190,8 +190,12 @@ public class NetworkController {
 
     // _________________________CHECK_ELECT_MESSAGE_TIMER_________________________
     public void startElectMessageTimer(){
-        electMessageTimer = new ElectMessageTimer(this);
-        electMessageTimer.start();
+        if(electMessageTimer != null){
+            electMessageTimer.resetTimer();
+        } else {
+            electMessageTimer = new ElectMessageTimer(this);
+            electMessageTimer.start();
+        }
     }
 
     public void resetElectMessageTimer(){
@@ -421,9 +425,9 @@ public class NetworkController {
             System.out.println("I stopped the election started by: " + messageToProcess.getSenderIp());
 
             if (!localController.isElectionRunning()){ //if the election was already started, then I won't start a new one
+                System.out.println("I started my election");
                 localController.startElection();
                 startElectMessageTimer();
-                System.out.println("I started my election");
             }
 
         } else if (message instanceof AckMessage){

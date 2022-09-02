@@ -367,7 +367,6 @@ public class LocalController {
         networkController.sendCoordMessage(newLeaderId);
 
         networkController.startResetGroupTimer();
-        //electionRunning = false;
     }
 
     public void sendStillUpNotificationMessage(){
