@@ -304,9 +304,7 @@ public class NetworkController {
     }
 
     public void switchToOtherMulticastListener(String multicastIp){
-        multicastListener.setRunning(false);
-        multicastListener.close();
-        startMulticastListener(multicastIp);
+        multicastListener.switchGroup(multicastIp);
     }
 
     // _________________________PROCESS_MESSAGES_________________________

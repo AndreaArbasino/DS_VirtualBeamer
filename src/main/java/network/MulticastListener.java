@@ -7,10 +7,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.StandardSocketOptions;
+import java.net.*;
 
 /**
  * This class implements a multicast receiver. Upon creation, ip address, port and size to receive must be specified
@@ -105,5 +102,15 @@ public class MulticastListener implements Runnable{
      */
     public void setRunning(Boolean running) {
         isRunning = running;
+    }
+
+    public void switchGroup(String ipNewGroupToListen){
+        try {
+            socket.leaveGroup(group);
+            group = InetAddress.getByName(ipNewGroupToListen);
+            socket.joinGroup(group);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
