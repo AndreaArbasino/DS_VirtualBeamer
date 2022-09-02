@@ -189,6 +189,7 @@ public class NetworkController {
 
     // _________________________CHECK_ELECT_MESSAGE_TIMER_________________________
     public void startElectMessageTimer(){
+        System.out.println("Elect timer started");
         if(electMessageTimer != null){
             electMessageTimer.resetTimer();
         } else {
@@ -204,6 +205,7 @@ public class NetworkController {
     }
 
     public void closeElectMessageTimer(){
+        System.out.println("Elect timer closed");
         if(electMessageTimer != null){
             electMessageTimer.close();
         }
@@ -418,7 +420,10 @@ public class NetworkController {
             System.out.println("I was the creator, I didn't noticed the leader was down, but I was notified and now I am the new leader");
 
         } else if (message instanceof ElectMessage){
-            closeTimersForElection();
+            closeLeaderCrashTimer();
+            closeRandomPeriodTimer();
+            closeCheckCreatorUpTimer();
+
             sendAckMessage(messageToProcess.getSenderIp());
             System.out.println("I stopped the election started by: " + messageToProcess.getSenderIp());
 
