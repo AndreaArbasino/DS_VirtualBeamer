@@ -27,8 +27,12 @@ public class JoinMessageTimer {
     }
 
     public void close(){
-        timer.cancel();
-        timerTask.cancel();
+        if(timer != null){
+            timer.cancel();
+            timer.purge();
+        } if (timerTask != null){
+            timerTask.cancel();
+        }
     }
 
     private class JoinMessageTimerTask extends TimerTask{

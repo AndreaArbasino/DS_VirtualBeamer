@@ -365,9 +365,8 @@ public class NetworkController {
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             if (-1 != messageReceived.getId()){
                 //TODO: controllare che lo user locale sia dentro, altrimenti mandare al leader una notification still up message
-                startLeaderCrashTimer();
-            } else {
                 closeJoinMessageTimer();
+                startLeaderCrashTimer();
                 System.out.println("I have correctly joined a group, presentation state: " + messageReceived.isPresentationStarted() + " at time: " + java.time.LocalTime.now());
             }
 
