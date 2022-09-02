@@ -184,7 +184,6 @@ public class NetworkController {
         closeCheckCreatorUpTimer();
         if (!localController.isElectionRunning()){
             localController.startElection();
-            startElectMessageTimer();
         }
     }
 
@@ -268,7 +267,6 @@ public class NetworkController {
             System.out.println("Random period passed, but I already know the creator is no more in the group");
             if (!localController.isElectionRunning()){
                 localController.startElection();
-                startElectMessageTimer();
             }
         }
     }
@@ -427,7 +425,6 @@ public class NetworkController {
             if (!localController.isElectionRunning()){ //if the election was already started, then I won't start a new one
                 System.out.println("I started my election");
                 localController.startElection();
-                startElectMessageTimer();
             }
 
         } else if (message instanceof AckMessage){

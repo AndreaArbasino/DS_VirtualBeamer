@@ -302,8 +302,8 @@ public class LocalController {
             for (User userWithPriority: usersWithHigherPriority){
                 networkController.sendElectMessage(userWithPriority.getIpAddress());
             }
+            networkController.startElectMessageTimer();
         }
-
     }
 
     public boolean isElectionRunning(){
@@ -355,6 +355,7 @@ public class LocalController {
     }
 
     public void sendCoordMessage(){
+        System.out.println("I am sending the coord message");
         networkController.closeTimersForElection();
 
         int newLeaderId = localModel.getLocalId();
