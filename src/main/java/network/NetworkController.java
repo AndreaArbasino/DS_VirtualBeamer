@@ -342,17 +342,17 @@ public class NetworkController {
 
         Message message = messageToProcess.getMessage();
 
-        if (message instanceof DiscoverMessage){
+        if (message instanceof  AliveMessage){
+            resetLeaderCrashTimer();
+            //System.out.println("I have received an ALIVE message  at time:" + java.time.LocalTime.now());
+
+        } else if (message instanceof DiscoverMessage){
             localController.manageDiscoverMessage(messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
             System.out.println("I have sent a DISCOVER message");
 
         } else if (message instanceof InfoGroupMessage) {
             localController.manageInfoGroupMessage((InfoGroupMessage) message);
             System.out.println("I received an INFO GROUP message");
-
-        } else if (message instanceof  AliveMessage){
-            resetLeaderCrashTimer();
-            //System.out.println("I have received an ALIVE message  at time:" + java.time.LocalTime.now());
 
         } else if (message instanceof JoinMessage){
             System.out.println("I have received a JOIN message");
