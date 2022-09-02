@@ -254,14 +254,21 @@ public class NetworkController {
     public void manageRandomPeriodTimerTaskFired(){
         closeRandomPeriodTimer();
         System.out.println("Random period timer fired at time " + java.time.LocalTime.now());
-        //before trying to contact the creator, it checks if it is still in the group
-        if (localController.getLocalModel().getCurrentGroup().isCreatorStillIn()){
-            sendCheckCreatorUpMessage();
-            startCheckCreatorUpTimer();
+        if (localController.getLocalModel().getLocalId() == BeamGroup.CREATOR_ID){
+            closeLeaderCrashTimer();
+            System.out.println("I noticed the leader was not reachable and I am the creator. I will be the new leader");
+            localController.sendCoordMessage();
+            startSendAliveTimer();
         } else {
-            System.out.println("Random period passed, but I already know the creator is no more in the group");
-            if (!localController.isElectionRunning()){
-                localController.startElection();
+            if (localController.getLocalModel().getCurrentGroup().isCreatorStillIn()){
+                //before trying to contact the creator, it checks if it is still in the group
+                sendCheckCreatorUpMessage();
+                startCheckCreatorUpTimer();
+            } else {
+                System.out.println("Random period passed, but I already know the creator is no more in the group");
+                if (!localController.isElectionRunning()){
+                    localController.startElection();
+                }
             }
         }
     }
