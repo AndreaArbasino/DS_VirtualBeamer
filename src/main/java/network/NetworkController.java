@@ -180,6 +180,7 @@ public class NetworkController {
     }
 
     public void manageCheckCreatorUpTimerFired(){
+        System.out.println("Check creator up timer fired at time " + java.time.LocalTime.now());
         closeCheckCreatorUpTimer();
         if (!localController.isElectionRunning()){
             localController.startElection();
@@ -206,6 +207,7 @@ public class NetworkController {
     }
 
     public void manageElectMessageTimerFired(){
+        System.out.println("Elect message timer fired at time " + java.time.LocalTime.now());
         closeElectMessageTimer();
         localController.sendCoordMessage();
         startSendAliveTimer();
@@ -253,7 +255,7 @@ public class NetworkController {
 
     public void manageRandomPeriodTimerTaskFired(){
         closeRandomPeriodTimer();
-
+        System.out.println("Random period timer fired at time " + java.time.LocalTime.now());
         //before trying to contact the creator, it checks if it is still in the group
         if (localController.getLocalModel().getCurrentGroup().isCreatorStillIn()){
             sendCheckCreatorUpMessage();
@@ -287,6 +289,7 @@ public class NetworkController {
 
     public void manageResetGroupTimerFired(){
         closeResetGroupTimer();
+        System.out.println("Reset group timer fired at time " + java.time.LocalTime.now());
         datagramSender.sendMessage(new ShareBeamGroupMessage(localController.getLocalModel().getCurrentGroup(), -1, true), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
         localController.refreshPresentation();
     }
@@ -406,6 +409,7 @@ public class NetworkController {
             System.out.println("The person you required to check, is still alive and answered, now it can become the leader");
 
         } else if (message instanceof CheckCreatorUpMessage){
+            //TODO: FERMARE
             closeLeaderCrashTimer();
             localController.manageCheckCreatorUpMessage();
             startSendAliveTimer();
