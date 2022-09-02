@@ -20,9 +20,7 @@ public class UnicastListener implements Runnable {
     public UnicastListener(int sizeToReceive, int port, NetworkController networkController) {
         try {
             System.out.println("UNICAST LISTENER, port " + port + " local address " + InetAddress.getLocalHost().getHostAddress() );
-            socket = new DatagramSocket(port, InetAddress.getLocalHost()); //This is because once the bind is performed, the setReuseAddress will be useless
-            //TODO VEDERE SE SERVE socket.setReuseAddress(true); Sembrerebbe di no.
-            //socket.bind(new InetSocketAddress(port));
+            socket = new DatagramSocket(port, InetAddress.getLocalHost());
             this.sizeToReceive = sizeToReceive;
             this.networkController = networkController;
         } catch (

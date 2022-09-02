@@ -9,7 +9,7 @@ public class ResetGroupTimer {
 
     private Timer timer;
     private TimerTask timerTask;
-    private static final long PERIOD = 1000; //TODO: VEDERE VALORE
+    private static final long PERIOD = 1000;
 
     public ResetGroupTimer(NetworkController networkController) {
         timer = new Timer();

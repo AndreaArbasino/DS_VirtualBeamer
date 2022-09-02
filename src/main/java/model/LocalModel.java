@@ -20,7 +20,7 @@ public class LocalModel {
     private final String username;
     private int localId;
     private Boolean inGroup;
-    private Boolean presentationStarted; //TODO: set it true once the presentation starts, upon reception of a special message
+    private Boolean presentationStarted;
     private List<Lobby> lobbies; //list of the lobbies that already exist
     private HashMap<Integer, BufferedImage> slides;
     private int totalNumberOfSlides;
@@ -161,7 +161,7 @@ public class LocalModel {
 
     public void startPresentation() {
         this.presentationStarted = true;
-    } //TODO: maybe merge this method with the one managin the beginning of slide show
+    }
 
     public Lobby getLobbyFromCurrentBeamGroup(){
         return new Lobby(currentGroup.getLeader().getIpAddress(), currentGroup.getGroupAddress(), currentGroup.getGroupName());
@@ -194,7 +194,6 @@ public class LocalModel {
     }
 
     public BufferedImage moveToNextSlide(){
-        //TODO: controllare last slide index
         if (currentSlideIndex == (slides.size() - 1)){
             return getCurrentSlide();
         } else {

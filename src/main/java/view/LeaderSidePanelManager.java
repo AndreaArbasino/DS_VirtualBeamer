@@ -47,8 +47,6 @@ public class LeaderSidePanelManager implements SidePanelManager{
         @Override
         public void actionPerformed(ActionEvent e) {
             if (controller.getLocalModel().isPresentationStarted()){
-                //TODO:give to that selected user the leadership
-                //controller.passLeadershipTo(((UserButton) e.getSource()).getUser());
                 controller.sendExplicitAliveRequestMessage(((UserButton) e.getSource()).getUser());
             } else {
                 System.out.println("Error since not possible to pass control yet");

@@ -31,7 +31,6 @@ public class Presentation {
     public void startLeaderFrame(){
         sidePanelManager = new LeaderSidePanelManager();
         startMainFrame();
-        //TODO: IMPOSTARE SLIDE INIZIALE
 
         //in the beginning only the start button is present
         JButton startButton = new JButton("START");
@@ -74,7 +73,6 @@ public class Presentation {
             //add all buttons for managing the presentation
             addBottomButtons();
         }
-        //TODO: check if the following instructions are working ine for both switches or must be put only in the positive evaluation of if clause
         bottomPanel.revalidate();
         bottomPanel.repaint();
         mainFrame.pack();
@@ -171,13 +169,6 @@ public class Presentation {
             addBottomButtons();
             bottomPanel.repaint();
 
-            //TODO: controllare se togliere o meno quanto segue per ricezione file molto grandi
-            /*try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException err) {
-                throw new RuntimeException(err);
-            }*/
-
             controller.sendTotalNumberOfSlidesToGroup();
             controller.sendPresentationImages();
             controller.sendCurrentSlideMessage();
@@ -191,7 +182,6 @@ public class Presentation {
         public void actionPerformed(ActionEvent e) {
             controller.sendTerminationMessage();
             mainFrame.dispose();
-            //TODO: uccide thread che ascolta messaggi per entrare
             JOptionPane.showMessageDialog(
                     new JFrame(),
                     "The presentation in the group " + controller.getLocalModel().getCurrentGroupName() +
@@ -205,8 +195,6 @@ public class Presentation {
     private class NextButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            //TODO: se non poissibile, display messaggio di errore dicende che si è già alla prima slide
-            //TODO: muovere a slide successiva e mandare messaggio in multicast per far muovere a slide successiva
             try{
                 currentSlide = new ImageIcon(controller.getNextSlide());
                 controller.sendCurrentSlideMessage();
@@ -225,8 +213,6 @@ public class Presentation {
     private class PreviousButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            //TODO: se non poissibile, display messaggio di errore dicende che si è già all'ultima slide
-            //TODO: muovere a slide precedente e mandare messaggio in multicast per far muovere a slide precedente
             try{
                 currentSlide = new ImageIcon(controller.getPreviousSlide());
                 controller.sendCurrentSlideMessage();

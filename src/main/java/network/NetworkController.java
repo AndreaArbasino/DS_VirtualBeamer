@@ -47,11 +47,6 @@ public class NetworkController {
         unicastListener = new UnicastListener(DEFAULT_RECEIVED_BYTES, DEFAULT_UNICAST_PORT, this);
         datagramSender = new DatagramSender(unicastListener.getSocket());
 
-        //TODO: controllare si possano togliere le seguenti righe
-        //multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
-        //multicastListenerThread = new Thread(multicastListener);
-        //multicastListenerThread.start();
-
         unicastListenerThread = new Thread(unicastListener);
         unicastListenerThread.start();
     }
@@ -131,7 +126,6 @@ public class NetworkController {
 
     public void manageSlideDownloadTimerFired(){
         closeSlideDownloadTimer();
-        //TODO:SCRIVERE METODO
         localController.displayAgainDownloadPanel();
     }
 
@@ -155,7 +149,6 @@ public class NetworkController {
 
     public void manageJoinMessageTimerFired(){
         closeJoinMessageTimer();
-        //TODO: riaprire schermata con le lobby e fare display di un messaggio per dire che non è stato possibile entrare
         localController.displayAgainLobbies();
     }
 
@@ -366,10 +359,10 @@ public class NetworkController {
             ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             if (-1 != messageReceived.getId()){
-                //TODO: controllare che lo user locale sia dentro, altrimenti mandare al leader una notification still up message
                 closeJoinMessageTimer();
                 startLeaderCrashTimer();
                 System.out.println("I have correctly joined a group, presentation state: " + messageReceived.isPresentationStarted() + " at time: " + java.time.LocalTime.now());
+                //TODO: controllare che lo user locale sia dentro, altrimenti mandare al leader una notification still up message
             }
 
         } else if (message instanceof AddMemberMessage){
@@ -450,11 +443,9 @@ public class NetworkController {
             localController.manageCoordMessage(((CoordMessage) message).getNewLeaderId());
 
         } else if (message instanceof StillUpNotificationMessage){
-            //TODO: serve per rispondere a CoordMessage: l'utente locale condivide user e id per essere aggiunto al beamgroup che il nuovo leader sta ricostruendo
-            // eventualmente gestire l'id: potrebbe essere stato ammesso un nu --> non può succedere: prima di dire ad un client di essere stato ammesso, vengono informati gli altri partecipanti
-
             localController.manageStillUpNotificationMessage(((StillUpNotificationMessage) message).getUser(), ((StillUpNotificationMessage) message).getId());
             System.out.println("I have received still up notification message");
+
         }
 
     }
@@ -471,7 +462,6 @@ public class NetworkController {
         datagramSender.sendMessage(new ShareBeamGroupMessage(beamGroup, id, isPresentationStarted), recipientAddress, DEFAULT_UNICAST_PORT);
     }
 
-    //TODO: sistemare porta
     public void sendJoinMessage(Lobby lobby, String username){
         datagramSender.sendMessage(new JoinMessage(username), lobby.getIpOfLeader(), DEFAULT_UNICAST_PORT);
         startJoinMessageTimer();
@@ -521,6 +511,7 @@ public class NetworkController {
         switchToOtherMulticastListener(localController.getLocalModel().getCurrentGroupAddress());
         closeSendAliveTimer();
         startLeaderCrashTimer();
+        System.out.println("The leader IP address, locally to me that I previously was the leader, is "+ localController.getLocalModel().getLeader().getIpAddress());
     }
 
     public void sendExplicitAliveRequestMessage(User user){
@@ -532,7 +523,6 @@ public class NetworkController {
     }
 
     public void sendCheckCreatorUpMessage(){
-        //TODO: se io sono il coordinatore mando un coord message e mi metto come leader
         datagramSender.sendMessage(new CheckCreatorUpMessage(), localController.getLocalModel().getCurrentGroup().getCreator().getIpAddress(), DEFAULT_UNICAST_PORT);
     }
 
@@ -561,7 +551,6 @@ public class NetworkController {
     }
 
     public void closeTimersForElection(){
-        //TODO:to be implemented
         closeLeaderCrashTimer();
         closeRandomPeriodTimer();
         closeCheckCreatorUpTimer();

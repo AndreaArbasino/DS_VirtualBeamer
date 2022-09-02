@@ -113,7 +113,6 @@ public class UnicastImageListener implements Runnable{
                 throw new RuntimeException(e);
             }
 
-            //TODO: CHIAMARE METODO DAL NETWORK CONTROLLER
             networkController.processImage(image, session);
         }
     }

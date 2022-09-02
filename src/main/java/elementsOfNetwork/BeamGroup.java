@@ -101,7 +101,7 @@ public class BeamGroup implements Serializable {
     //used for adding a participant and assigning an id (performed by leaders) --> it returns the id of the user added
     public int addParticipant (User participant){
         //TODO: check that the user to be added is not the creator: if so it is set as the leader and 0 is returned
-        //TODO: manage returned value zero in order to pass control to creator: bully --> use same message for passing control to others!
+        //TODO: controllare che il leader sia settato correttamente quando viene passato controllo sia in chi da il controllo sia in chi lo riceve
         if(participant.equals(creator)){
             participants.put(BeamGroup.CREATOR_ID, new User(participant.getUsername(), participant.getIpAddress()));
             //leaderId = BeamGroup.CREATOR_ID;

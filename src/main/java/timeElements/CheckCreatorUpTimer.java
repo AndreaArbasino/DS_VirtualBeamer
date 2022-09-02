@@ -10,7 +10,7 @@ public class CheckCreatorUpTimer {
     private Timer timer;
     private TimerTask timerTask;
 
-    private static final long PERIOD = 1200; //TODO: VEDERE VALORE
+    private static final long PERIOD = 1200;
 
     public CheckCreatorUpTimer(NetworkController networkController) {
         timer = new Timer();

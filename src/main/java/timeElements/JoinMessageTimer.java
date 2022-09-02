@@ -9,7 +9,7 @@ public class JoinMessageTimer {
 
     private Timer timer;
     private TimerTask timerTask;
-    private static final long PERIOD = 3000; //TODO: VEDERE VALORE
+    private static final long PERIOD = 3000;
 
     public JoinMessageTimer(NetworkController networkController) {
         timer = new Timer();

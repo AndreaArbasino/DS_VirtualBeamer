@@ -53,7 +53,6 @@ public class DownloadSelection {
         public void actionPerformed(ActionEvent e) {
             UserButton button = (UserButton) e.getSource();
 
-            //TODO: AGGIUNGERE LOGICA, EFFETTUARE CHIAMATA A LOCAL CONTROLLER
             localController.sendDownloadRequestMessage(button.getUser());
 
             frame.dispose();

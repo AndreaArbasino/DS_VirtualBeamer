@@ -211,10 +211,6 @@ public class LocalController {
         networkController.sendShareBeamGroupMessage(id,localModel.getCurrentGroup(), localModel.isPresentationStarted(), user.getIpAddress());
 
         if (BeamGroup.CREATOR_ID == id){
-            //TODO: send a message to creator to give control
-            //TODO: make the gui switch from leader view to client view
-            //TODO: ricordarsi di far iniziare subito al nuovo leader a mandare messaggi per alive, non appena ricevuto messaggio per passare controllo!
-
             sendExplicitAliveRequestMessage(user);
         } else {
             gui.refreshPresentation();
@@ -238,8 +234,6 @@ public class LocalController {
             networkController.startMulticastListener(groupToEnter.getGroupAddress());
             localModel.addBeamGroup(groupToEnter, assignedId);
             if (isPresentationStarted){
-                //TODO: mostrare schermata per fare scegliere da chi scaricare -->
-                // se quell'utente non ha ancora scaricato o non risponde in tempo (timer), mostrare tendina con errore e fare scegliere di nuovo
                 networkController.startUnicastImageListener();
                 localModel.startPresentation();
                 gui.createHiddenPresentation();
@@ -259,10 +253,9 @@ public class LocalController {
     }
 
     public void manageLeaveNotificationMessage(int id){
-        //TODO: gestire caso in cui lascia il leader corrente!
         localModel.removeFromBeamGroup(id);
-        System.out.println("Currently there are " + localModel.getCurrentGroupUsers().size() + " participants (Array)");
-        System.out.println("Currently there are " + localModel.getCurrentGroup().getParticipants().size() + "participants (HashMap)");
+        //System.out.println("Currently there are " + localModel.getCurrentGroupUsers().size() + " participants (Array)");
+        //System.out.println("Currently there are " + localModel.getCurrentGroup().getParticipants().size() + "participants (HashMap)");
         gui.refreshPresentation();
     }
 
@@ -281,7 +274,7 @@ public class LocalController {
     public void manageDownloadRequestMessage(String applicantIp){
         if (localModel.getSlides().size() == getLocalModel().getTotalNumberOfSlides()){ //I will answer to a request to send the slides only if I have all of them
             networkController.sendTotalNumberOfSlides(localModel.getTotalNumberOfSlides(), applicantIp, DEFAULT_UNICAST_PORT);
-            List<BufferedImage> images = localModel.getSlides(); //TODO: controllare se meglio iterare su hash map
+            List<BufferedImage> images = localModel.getSlides();
             for(BufferedImage image : images){
                 networkController.sendImage(image, applicantIp);
             }

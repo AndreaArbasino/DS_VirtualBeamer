@@ -26,7 +26,7 @@ public class LobbySelection {
         topPanel = new JPanel();
         bottomPanel = new JPanel();
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        addElementsForGraphTest(false);
+        //addElementsForGraphTest(false);
     }
 
     public void start(){
@@ -54,7 +54,7 @@ public class LobbySelection {
     }
 
     public void refresh(){
-        addElementsForGraphTest(true);
+        //addElementsForGraphTest(true);
         topPanel.removeAll();
         topPanel.revalidate();
         topPanel.repaint();
@@ -121,7 +121,7 @@ public class LobbySelection {
     }
 
     //TODO: remove what follows since only used for testing
-    private void addElementsForGraphTest(boolean isForRefresh){
+    /*private void addElementsForGraphTest(boolean isForRefresh){
         if (isForRefresh){
             localModel.addLobby("adad","230.100.80.0","Refresh_lobby1");
             localModel.addLobby("adad","231.100.83.2","Refresh_Nome_lobby_molto_Lungo");
@@ -130,5 +130,5 @@ public class LobbySelection {
             localModel.addLobby("adad","236.120.80.0","Nome_lobby_molto_Lungo");
             localModel.addLobby("adad","237.140.80.0","NomeLobbyCaso");
         }
-    }
+    }*/
 }
