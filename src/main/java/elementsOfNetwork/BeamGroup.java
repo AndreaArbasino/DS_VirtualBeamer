@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Math.max;
+
 public class BeamGroup implements Serializable {
 
     public static final int CREATOR_ID = 0; //the creator must have the SMALLEST id number
@@ -140,6 +142,7 @@ public class BeamGroup implements Serializable {
         }
 
         removeUsersWithSameIp(user);
+        nextIdAvailable = max(nextIdAvailable, id+1);
         participants.put(id, user);
     }
 

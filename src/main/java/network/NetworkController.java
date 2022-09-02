@@ -434,9 +434,8 @@ public class NetworkController {
         } else if (message instanceof CoordMessage){
             closeTimersForElection();
             startLeaderCrashTimer();
-            localController.manageCoordMessage(((CoordMessage) message).getNewLeaderId());
             System.out.println("I have received a coord message by " + messageToProcess.getSenderIp());
-
+            localController.manageCoordMessage(((CoordMessage) message).getNewLeaderId());
 
         } else if (message instanceof StillUpNotificationMessage){
             //TODO: serve per rispondere a CoordMessage: l'utente locale condivide user e id per essere aggiunto al beamgroup che il nuovo leader sta ricostruendo

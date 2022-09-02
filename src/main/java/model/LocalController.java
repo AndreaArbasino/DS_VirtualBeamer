@@ -287,6 +287,10 @@ public class LocalController {
 
     public void manageStillUpNotificationMessage(User participantAlreadyIn, int alreadyAssignedId){
         localModel.addUserToBeamGroup(participantAlreadyIn, alreadyAssignedId);
+        if (!electionRunning){
+            networkController.sendAddMemberMessage(participantAlreadyIn, alreadyAssignedId);
+        }
+        gui.refreshPresentation();
     }
 
     public void startElection(){
