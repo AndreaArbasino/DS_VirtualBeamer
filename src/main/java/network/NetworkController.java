@@ -485,7 +485,6 @@ public class NetworkController {
 
     public void sendAssignLeaderMessage(int newLeaderId){
         datagramSender.sendMessage(new AssignLeaderMessage(newLeaderId), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
-        multicastListener.setRunning(false);
         switchToOtherMulticastListener(localController.getLocalModel().getCurrentGroupAddress());
         closeSendAliveTimer();
         startLeaderCrashTimer();
