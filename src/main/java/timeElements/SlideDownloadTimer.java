@@ -9,7 +9,7 @@ public class SlideDownloadTimer {
 
     private Timer timer;
     private TimerTask timerTask;
-    private static final long PERIOD = 500; //TODO: VEDERE VALORE
+    private static final long PERIOD = 2000; //TODO: VEDERE VALORE
 
     public SlideDownloadTimer(NetworkController networkController) {
         timer = new Timer();
@@ -27,8 +27,12 @@ public class SlideDownloadTimer {
     }
 
     public void close(){
-        timer.cancel();
-        timerTask.cancel();
+        if(timer != null){
+            timer.cancel();
+            timer.purge();
+        } if (timerTask != null){
+            timerTask.cancel();
+        }
     }
 
     private class SlideDownloadTimerTask extends TimerTask{

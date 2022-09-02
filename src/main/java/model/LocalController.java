@@ -159,6 +159,11 @@ public class LocalController {
         gui.showErrorMessage("It was not possible to enter the specified lobby!");
     }
 
+    public void displayAgainDownloadPanel(){
+        gui.displayDownloadSelection();
+        gui.showErrorMessage("It was not possible to download slides from that user");
+    }
+
 
 
 

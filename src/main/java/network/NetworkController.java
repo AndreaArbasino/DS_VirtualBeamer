@@ -130,7 +130,9 @@ public class NetworkController {
     }
 
     public void manageSlideDownloadTimerFired(){
+        closeSlideDownloadTimer();
         //TODO:SCRIVERE METODO
+        localController.displayAgainDownloadPanel();
     }
 
     // _________________________JOIN_MESSAGE_TIMER_________________________
@@ -405,6 +407,7 @@ public class NetworkController {
             System.out.println("A message for requiring to download the slides was received");
 
         } else if (message instanceof TotalNumberOfSlidesMessage){
+            closeSlideDownloadTimer();
             localController.manageTotalNumberOfSlidesMessage(((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides());
             System.out.println("A message stating the total number of slides was received, there should be " + ((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides() + " slides");
 
@@ -510,6 +513,7 @@ public class NetworkController {
 
     public void sendDownloadRequestMessage(User user){
         datagramSender.sendMessage(new SlideDownloadRequestMessage(), user.getIpAddress(), DEFAULT_UNICAST_PORT);
+        startSlideDownloadTimer();
     }
 
     public void sendAssignLeaderMessage(int newLeaderId){
