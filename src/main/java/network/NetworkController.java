@@ -74,8 +74,12 @@ public class NetworkController {
 
     // _________________________LEADER_CRASH_TIMER_________________________
     public void startLeaderCrashTimer(){
-        leaderCrashTimer = new LeaderCrashTimer(this);
-        leaderCrashTimer.start();
+        if (leaderCrashTimer != null){
+            leaderCrashTimer.resetTimer();
+        } else {
+            leaderCrashTimer = new LeaderCrashTimer(this);
+            leaderCrashTimer.start();
+        }
     }
 
     public void resetLeaderCrashTimer(){
@@ -88,8 +92,9 @@ public class NetworkController {
         if(leaderCrashTimer != null){
             leaderCrashTimer.close();
             System.out.println("There was a leader crash timer and it was correctly closed");
+        } else {
+            System.out.println("You tried to close the timer for checking if leader crashed, but there was none active");
         }
-        System.out.println("You tried to close the timer for checking if leader crashed, but there was none active");
     }
 
     public void manageLeaderCrashTimerFired(){
@@ -387,7 +392,7 @@ public class NetworkController {
 
         } else if (message instanceof ExplicitAliveRequest){
             localController.manageExplicitAliveRequestMessage();
-            System.out.println("Someone is checking that you are still alive in order to pass you the control of the presentation");
+            System.out.println("Someone is checking that you are still alive in order to pass you the control of the presentation (at time " + java.time.LocalTime.now() + " )");
 
         } else if (message instanceof ExplicitAliveAck){
             localController.passLeadershipTo(localController.getLocalModel().getCurrentGroup().getParticipants().get(((ExplicitAliveAck) message).getId()));
