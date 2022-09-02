@@ -438,7 +438,7 @@ public class NetworkController {
 
         } else if (message instanceof CoordMessage){
             closeTimersForElection();
-            startLeaderCrashTimer();
+            resetLeaderCrashTimer();
             System.out.println("I have received a coord message by " + messageToProcess.getSenderIp());
             localController.manageCoordMessage(((CoordMessage) message).getNewLeaderId());
 
