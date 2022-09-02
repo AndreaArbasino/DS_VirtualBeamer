@@ -47,7 +47,7 @@ public class LocalModel {
 
     public List<BufferedImage> getSlides() {
         ArrayList<BufferedImage> listOfSlides = new ArrayList<>();
-        for (int i = INITIAL_SLIDE_INDEX; i <= slides.size(); i++){
+        for (int i = INITIAL_SLIDE_INDEX; i <= totalNumberOfSlides; i++){
             if (slides.containsKey(i)){
                 listOfSlides.add(slides.get(i));
             }

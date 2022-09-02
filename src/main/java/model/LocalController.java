@@ -279,9 +279,9 @@ public class LocalController {
     }
 
     public void manageDownloadRequestMessage(String applicantIp){
-        if (localModel.getSlides().size() == getLocalModel().getTotalNumberOfSlides()){
+        if (localModel.getSlides().size() == getLocalModel().getTotalNumberOfSlides()){ //I will answer to a request to send the slides only if I have all of them
             networkController.sendTotalNumberOfSlides(localModel.getTotalNumberOfSlides(), applicantIp, DEFAULT_UNICAST_PORT);
-            List<BufferedImage> images = localModel.getSlides();
+            List<BufferedImage> images = localModel.getSlides(); //TODO: controllare se meglio iterare su hash map
             for(BufferedImage image : images){
                 networkController.sendImage(image, applicantIp);
             }
