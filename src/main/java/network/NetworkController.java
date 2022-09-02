@@ -229,7 +229,8 @@ public class NetworkController {
     }
 
     public void manageExplicitAliveRequestTimerFired(){
-        //TODO:SCRIVERE METODO
+        //TODO:se fira il timer allora rimuovere qul partecipante dalla propria lista e mandare messaggio per farlo rimuovere dagli altri
+        // e fare display di messaggio di errore
     }
 
     // _________________________RANDOM_PERIOD_TIMER_________________________
