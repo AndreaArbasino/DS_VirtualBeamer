@@ -349,7 +349,9 @@ public class NetworkController {
         } else if (message instanceof ShareBeamGroupMessage){
             ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
-            startLeaderCrashTimer();
+            if (-1 != messageReceived.getId()){
+                startLeaderCrashTimer();
+            }
             System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted() + " at time: " + java.time.LocalTime.now());
 
         } else if (message instanceof AddMemberMessage){
@@ -517,14 +519,17 @@ public class NetworkController {
 
     public void sendAckMessage(String ipRecipient){
         datagramSender.sendMessage(new AckMessage(), ipRecipient, DEFAULT_UNICAST_PORT);
+        System.out.println("I sent an AckMessage");
     }
 
     public void sendCoordMessage(int newLeaderId){
         datagramSender.sendMessage(new CoordMessage(newLeaderId), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+        System.out.println("I sent a CoordMessage");
     }
 
     public void sendStillUpNotificationMessage(User user, int id){
         datagramSender.sendMessage(new StillUpNotificationMessage(user,id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
+        System.out.println("I sent a StillUpNotificationMessage");
     }
 
     public void resetImageSendingSessionNumber(){
