@@ -148,6 +148,18 @@ public class LocalController {
         }
     }
 
+    public void displayAgainLobbies(){
+        sendDiscoverGroup();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException err) {
+            throw new RuntimeException(err);
+        }
+        gui.createLobbySelection();
+        gui.showErrorMessage("It was not possible to enter the specified lobby!");
+    }
+
+
 
 
     public void manageReceivedImage(BufferedImage image, int position){

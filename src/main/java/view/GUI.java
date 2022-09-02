@@ -54,8 +54,17 @@ public class GUI {
             throw new RuntimeException(e);
         }
 
+        createLobbySelection();
+    }
+
+    public void createLobbySelection(){
         lobbySelection = new LobbySelection(localController);
         lobbySelection.start();
+    }
+
+    public void showErrorMessage(String message){
+        ErrorMessageDisplay display = new ErrorMessageDisplay(new JFrame());
+        display.displayErrorMessage(message);
     }
 
     /**

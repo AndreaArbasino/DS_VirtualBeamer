@@ -152,7 +152,9 @@ public class NetworkController {
     }
 
     public void manageJoinMessageTimerFired(){
-        //TODO:SCRIVERE METODO
+        closeJoinMessageTimer();
+        //TODO: riaprire schermata con le lobby e fare display di un messaggio per dire che non è stato possibile entrare
+        localController.displayAgainLobbies();
     }
 
     // _________________________CHECK_CREATOR_UP_TIMER_________________________
@@ -364,8 +366,10 @@ public class NetworkController {
             if (-1 != messageReceived.getId()){
                 //TODO: controllare che lo user locale sia dentro, altrimenti mandare al leader una notification still up message
                 startLeaderCrashTimer();
+            } else {
+                closeJoinMessageTimer();
+                System.out.println("I have correctly joined a group, presentation state: " + messageReceived.isPresentationStarted() + " at time: " + java.time.LocalTime.now());
             }
-            System.out.println("I have correctly joined a group, presentation state: " + messageReceived.isPresentationStarted() + " at time: " + java.time.LocalTime.now());
 
         } else if (message instanceof AddMemberMessage){
             localController.manageAddMemberMessage(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
@@ -468,6 +472,7 @@ public class NetworkController {
     //TODO: sistemare porta
     public void sendJoinMessage(Lobby lobby, String username){
         datagramSender.sendMessage(new JoinMessage(username), lobby.getIpOfLeader(), DEFAULT_UNICAST_PORT);
+        startJoinMessageTimer();
     }
 
     public void sendAddMemberMessage(User user, int id){
