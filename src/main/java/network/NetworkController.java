@@ -486,6 +486,7 @@ public class NetworkController {
     }
 
     public void sendTerminationMessage(){
+        multicastListener.setRunning(false); //this to make sure no other user could join while closing the current termination
         datagramSender.sendMessage(new TerminationMessage(), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
     }
 
