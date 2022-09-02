@@ -60,21 +60,6 @@ public class NetworkController {
         datagramSender.sendMessage((new DiscoverMessage()), DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT);
     }
 
-    /**
-     * Change the multicast message listener
-     * @param ipAddress new address of the multicast group
-     * @param port new port of the multicast group
-     * @param bytesToReceive maximum size of each message that can be received
-     */
-    //TODO: VEDERE SE CAMBIARE E FARE SEMPLICEMENTE LEAVE GROUP E JOIN GROUP;
-    public void changeMulticastFrom(String ipAddress, int port, int bytesToReceive){
-        multicastListener.setRunning(false);
-        multicastListener.close();
-        multicastListener = new MulticastListener(ipAddress, port, bytesToReceive, this);
-        multicastListenerThread = new Thread(multicastListener);
-        multicastListenerThread.start();
-    }
-
     // _________________________SEND_ALIVE_TIMER_________________________
     public void startSendAliveTimer(){
         sendAliveTimer = new SendAliveTimer(localController.getLocalModel().getCurrentGroupAddress(),
@@ -300,12 +285,6 @@ public class NetworkController {
 
 
     // _________________________SOCKET_METHODS_________________________
-    public void startDefaultMulticastListener(){
-        multicastListener = new MulticastListener(DEFAULT_DISCOVER_IP, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
-        multicastListenerThread = new Thread(multicastListener);
-        multicastListenerThread.start();
-    }
-
     public void startUnicastImageListener(){
         unicastImageListener = new UnicastImageListener(DEFAULT_IMAGE_PORT, DATAGRAM_DATA_SIZE, this);
         unicastImageListenerThread = new Thread(unicastImageListener);
@@ -324,9 +303,10 @@ public class NetworkController {
         multicastListenerThread.start();
     }
 
-    public void switchToOtherMulticastListener(){
+    public void switchToOtherMulticastListener(String multicastIp){
         multicastListener.setRunning(false);
-        startMulticastListener(DEFAULT_DISCOVER_IP);
+        multicastListener.close();
+        startMulticastListener(multicastIp);
     }
 
     // _________________________PROCESS_MESSAGES_________________________
@@ -364,7 +344,7 @@ public class NetworkController {
             if (-1 != messageReceived.getId()){
                 startLeaderCrashTimer();
             }
-            System.out.println("I have correctly a joined a group, presentation state: " + messageReceived.isPresentationStarted() + " at time: " + java.time.LocalTime.now());
+            System.out.println("I have correctly joined a group, presentation state: " + messageReceived.isPresentationStarted() + " at time: " + java.time.LocalTime.now());
 
         } else if (message instanceof AddMemberMessage){
             localController.manageAddMemberMessage(((AddMemberMessage) message).getUser(), ((AddMemberMessage) message).getId());
@@ -508,7 +488,7 @@ public class NetworkController {
     public void sendAssignLeaderMessage(int newLeaderId){
         datagramSender.sendMessage(new AssignLeaderMessage(newLeaderId), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
         multicastListener.setRunning(false);
-        startMulticastListener(localController.getLocalModel().getCurrentGroupAddress());
+        switchToOtherMulticastListener(localController.getLocalModel().getCurrentGroupAddress());
         closeSendAliveTimer();
         startLeaderCrashTimer();
     }

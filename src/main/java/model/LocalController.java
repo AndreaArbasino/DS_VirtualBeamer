@@ -46,7 +46,7 @@ public class LocalController {
 
         localModel.createLocalBeamGroup(localIp, groupName, newPresentationAddress);
         gui.chooseImages();
-        networkController.startDefaultMulticastListener();
+        networkController.startMulticastListener(DEFAULT_DISCOVER_IP);
         networkController.startSendAliveTimer();
     }
 
@@ -203,12 +203,12 @@ public class LocalController {
      * @param isPresentationStarted used for knowing if the leader is already showing the slides
      */
     public void manageShareBeamGroupMessage(BeamGroup groupToEnter, int assignedId, Boolean isPresentationStarted){
-        networkController.startMulticastListener(groupToEnter.getGroupAddress());
         if (assignedId == -1){ //this is not a possible id, it is used to indicate that it is received after an election
             electionRunning = false;
             localModel.updateBeamGroup(groupToEnter);
             gui.refreshPresentation();
         } else {
+            networkController.startMulticastListener(groupToEnter.getGroupAddress());
             localModel.addBeamGroup(groupToEnter, assignedId);
             if (isPresentationStarted){
                 //TODO: mostrare schermata per fare scegliere da chi scaricare -->
@@ -266,7 +266,7 @@ public class LocalController {
     public void manageAssignLeaderMessage(int newLeaderId){
         if (newLeaderId == localModel.getLocalId()){
             gui.switchToOtherView();
-            networkController.switchToOtherMulticastListener();
+            networkController.switchToOtherMulticastListener(DEFAULT_DISCOVER_IP);
         }
         localModel.setCurrentLeader(newLeaderId);
     }
@@ -368,7 +368,7 @@ public class LocalController {
         gui.switchToOtherView(); //the participants in the view will change while sending a message telling the leader that they are still up
 
         localModel.resetParticipantsInBeamGroup();
-        networkController.switchToOtherMulticastListener();
+        networkController.switchToOtherMulticastListener(DEFAULT_DISCOVER_IP);
         networkController.sendCoordMessage(newLeaderId);
 
         networkController.startResetGroupTimer();

@@ -94,7 +94,9 @@ public class MulticastListener implements Runnable{
      * Close the socket of the multicast receiver
      */
     public void close(){
-        socket.close();
+        if (!socket.isClosed()){
+            socket.close();
+        }
     }
 
     /**
