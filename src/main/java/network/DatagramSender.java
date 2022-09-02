@@ -29,7 +29,7 @@ public class DatagramSender {
      * @param message message to be sent
      * @param addressToSend IP address of the recipient
      */
-    public void sendMessage(Message message, String addressToSend, int port){
+    public synchronized void sendMessage(Message message, String addressToSend, int port){
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
