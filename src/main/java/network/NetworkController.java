@@ -382,7 +382,7 @@ public class NetworkController {
                     startSendAliveTimer();
                 } else {
                     startRandomPeriodTimer(MIN_RANDOM_TIME, MAX_RANDOM_TIME);
-                }
+                } 
             }
             System.out.println("Somebody left the group");
 
