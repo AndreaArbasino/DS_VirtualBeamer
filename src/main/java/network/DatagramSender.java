@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.concurrent.TimeUnit;
 
 import static utilities.StaticUtilities.*;
 
@@ -80,6 +81,11 @@ public class DatagramSender {
             try {
                 DatagramPacket datagramPacket = new DatagramPacket(data, data.length, InetAddress.getByName(recipientIp), port);
                 socket.send(datagramPacket);
+                try {
+                    TimeUnit.MILLISECONDS.sleep(10);
+                } catch (InterruptedException err) {
+                    throw new RuntimeException(err);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
