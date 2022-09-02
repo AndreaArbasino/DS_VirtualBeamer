@@ -62,13 +62,14 @@ public class NetworkController {
 
     // _________________________SEND_ALIVE_TIMER_________________________
     public void startSendAliveTimer(){
-        sendAliveTimer = new SendAliveTimer(localController.getLocalModel().getCurrentGroupAddress(),
-                datagramSender.getSocket());
+        sendAliveTimer = new SendAliveTimer(localController.getLocalModel().getCurrentGroupAddress(), datagramSender.getSocket());
         sendAliveTimer.start();
+        System.out.println("Send alive timer was correctly created");
     }
 
     public void closeSendAliveTimer(){
         sendAliveTimer.stop();
+        System.out.println("Send alive timer was correctly closed");
     }
 
     // _________________________LEADER_CRASH_TIMER_________________________
@@ -86,7 +87,9 @@ public class NetworkController {
     public void closeLeaderCrashTimer(){
         if(leaderCrashTimer != null){
             leaderCrashTimer.close();
+            System.out.println("There was a leader crash timer and it was correctly closed");
         }
+        System.out.println("You tried to close the timer for checking if leader crashed, but there was none active");
     }
 
     public void manageLeaderCrashTimerFired(){
