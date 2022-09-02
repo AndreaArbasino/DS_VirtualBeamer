@@ -337,10 +337,11 @@ public class NetworkController {
             //System.out.println("I have received an ALIVE message  at time:" + java.time.LocalTime.now());
 
         } else  if (message instanceof AssignLeaderMessage){
-            resetLeaderCrashTimer();
+            closeLeaderCrashTimer();
             if (localController.getLocalModel().getLocalId() == ((AssignLeaderMessage) message).getNewLeaderId()){
-                closeLeaderCrashTimer();
                 startSendAliveTimer();
+            } else {
+                startLeaderCrashTimer();
             }
             localController.manageAssignLeaderMessage(((AssignLeaderMessage) message).getNewLeaderId());
             System.out.println("A message for changing the leader was received. Now the user with ID equals to " + ((AssignLeaderMessage) message).getNewLeaderId() + " is the leader");
