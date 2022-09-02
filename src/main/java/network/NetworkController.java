@@ -333,6 +333,7 @@ public class NetworkController {
             //System.out.println("I have received an ALIVE message  at time:" + java.time.LocalTime.now());
 
         } else  if (message instanceof AssignLeaderMessage){
+            resetLeaderCrashTimer();
             if (localController.getLocalModel().getLocalId() == ((AssignLeaderMessage) message).getNewLeaderId()){
                 closeLeaderCrashTimer();
                 startSendAliveTimer();
@@ -356,6 +357,7 @@ public class NetworkController {
             ShareBeamGroupMessage messageReceived = (ShareBeamGroupMessage) message;
             localController.manageShareBeamGroupMessage(messageReceived.getBeamGroup(), messageReceived.getId(), messageReceived.isPresentationStarted());
             if (-1 != messageReceived.getId()){
+                //TODO: controllare che lo user locale sia dentro, altrimenti mandare al leader una notification still up message
                 startLeaderCrashTimer();
             }
             System.out.println("I have correctly joined a group, presentation state: " + messageReceived.isPresentationStarted() + " at time: " + java.time.LocalTime.now());
@@ -399,11 +401,11 @@ public class NetworkController {
             System.out.println("The person you required to check, is still alive and answered, now it can become the leader");
 
         } else if (message instanceof CheckCreatorUpMessage){
-            //TODO: FERMARE
             closeLeaderCrashTimer();
+            System.out.println("I was the creator, I didn't noticed the leader was down, but I was notified and now I am the new leader");
             localController.manageCheckCreatorUpMessage();
             startSendAliveTimer();
-            System.out.println("I was the creator, I didn't noticed the leader was down, but I was notified and now I am the new leader");
+
 
         } else if (message instanceof ElectMessage){
             closeLeaderCrashTimer();
