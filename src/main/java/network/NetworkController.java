@@ -181,8 +181,10 @@ public class NetworkController {
 
     public void manageCheckCreatorUpTimerFired(){
         closeCheckCreatorUpTimer();
-        localController.startElection();
-        startElectMessageTimer();
+        if (!localController.isElectionRunning()){
+            localController.startElection();
+            startElectMessageTimer();
+        }
     }
 
     // _________________________CHECK_ELECT_MESSAGE_TIMER_________________________
@@ -257,8 +259,11 @@ public class NetworkController {
             sendCheckCreatorUpMessage();
             startCheckCreatorUpTimer();
         } else {
-            localController.startElection();
-            startElectMessageTimer();
+            System.out.println("Random period passed, but I already know the creator is no more in the group");
+            if (!localController.isElectionRunning()){
+                localController.startElection();
+                startElectMessageTimer();
+            }
         }
     }
 
