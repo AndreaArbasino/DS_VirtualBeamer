@@ -176,6 +176,7 @@ public class NetworkController {
     public void manageCheckCreatorUpTimerFired(){
         System.out.println("Check creator up timer fired at time " + java.time.LocalTime.now());
         closeCheckCreatorUpTimer();
+        localController.checkIfPresentationStarted();
         if (!localController.isElectionRunning()){
             localController.startElection();
         }
@@ -374,6 +375,7 @@ public class NetworkController {
             if (((LeaveNotificationMessage) message).getId() == localController.getLocalModel().getCurrentGroup().getLeaderId()){
                 //not necessary to be done explicitly, we could wait but will require more time and more messages
                 closeLeaderCrashTimer();
+                localController.checkIfPresentationStarted();
                 System.out.println("The current leader left the group");
                 if (localController.getLocalModel().getLocalId() == BeamGroup.CREATOR_ID){
                     localController.setElectionRunning(true);
@@ -382,7 +384,7 @@ public class NetworkController {
                     startSendAliveTimer();
                 } else {
                     startRandomPeriodTimer(MIN_RANDOM_TIME, MAX_RANDOM_TIME);
-                } 
+                }
             }
             System.out.println("Somebody left the group");
 

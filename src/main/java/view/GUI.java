@@ -75,6 +75,15 @@ public class GUI {
         File[] selectedFile = fc.getSelectedFiles();
         frame.setVisible(false);
 
+        if ((null == selectedFile) || (selectedFile.length <=0)){
+            JOptionPane.showMessageDialog(
+                    new JFrame(),
+                    "To correctly start a presentation, please, select some images.\nThe presentation you tried to open is now closed, please retry again!",
+                    "presentation not started!",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+
         localModel.setTotalNumberOfSlides(selectedFile.length);
         for (File file : selectedFile) {
             try {
@@ -141,5 +150,14 @@ public class GUI {
     public void displayDownloadSelection(){
         DownloadSelection downloadSelection = new DownloadSelection(localController);
         downloadSelection.start();
+    }
+
+    public void showTerminatingInfoBox(String textToBeWritten, String title){
+        JOptionPane.showMessageDialog(
+                new JFrame(),
+                textToBeWritten,
+                title,
+                JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0);
     }
 }

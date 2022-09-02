@@ -142,6 +142,12 @@ public class LocalController {
         this.electionRunning = election;
     }
 
+    public void checkIfPresentationStarted(){
+        if (!localModel.isPresentationStarted()){
+            gui.showTerminatingInfoBox("The presentation was terminated before any image was shared", "PRESENTATION CLOSED");
+        }
+    }
+
 
 
     public void manageReceivedImage(BufferedImage image, int position){
