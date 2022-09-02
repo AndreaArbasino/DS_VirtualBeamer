@@ -55,19 +55,20 @@ public class UnicastListener implements Runnable {
         try {
             socket.receive(receivedPacket);
 
-            printPacket(receivedPacket);
+            if (isRunning){
+                printPacket(receivedPacket);
 
-            Message messageReceived;
-            byteArrayInputStream = new ByteArrayInputStream(buf);
-            objectInputStream = new ObjectInputStream(new BufferedInputStream(byteArrayInputStream));
-            messageReceived = (Message) objectInputStream.readObject();
+                Message messageReceived;
+                byteArrayInputStream = new ByteArrayInputStream(buf);
+                objectInputStream = new ObjectInputStream(new BufferedInputStream(byteArrayInputStream));
+                messageReceived = (Message) objectInputStream.readObject();
 
-            MessageToProcess messageToProcess = new MessageToProcess(messageReceived,
-                    receivedPacket.getAddress().getHostAddress(),
-                    receivedPacket.getPort() );
+                MessageToProcess messageToProcess = new MessageToProcess(messageReceived,
+                        receivedPacket.getAddress().getHostAddress(),
+                        receivedPacket.getPort() );
 
-            networkController.processMessage(messageToProcess);
-            //}
+                networkController.processMessage(messageToProcess);
+            }
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
