@@ -324,6 +324,14 @@ public class NetworkController {
             resetLeaderCrashTimer();
             //System.out.println("I have received an ALIVE message  at time:" + java.time.LocalTime.now());
 
+        } else  if (message instanceof AssignLeaderMessage){
+            if (localController.getLocalModel().getLocalId() == ((AssignLeaderMessage) message).getNewLeaderId()){
+                closeLeaderCrashTimer();
+                startSendAliveTimer();
+            }
+            localController.manageAssignLeaderMessage(((AssignLeaderMessage) message).getNewLeaderId());
+            System.out.println("A message for changing the leader was received. Now the user with ID equals to " + ((AssignLeaderMessage) message).getNewLeaderId() + " is the leader");
+
         } else if (message instanceof DiscoverMessage){
             localController.manageDiscoverMessage(messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
             System.out.println("I have sent a DISCOVER message");
@@ -373,14 +381,6 @@ public class NetworkController {
         } else if (message instanceof TotalNumberOfSlidesMessage){
             localController.manageTotalNumberOfSlidesMessage(((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides());
             System.out.println("A message stating the total number of slides was received, there should be " + ((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides() + " slides");
-
-        } else if (message instanceof AssignLeaderMessage){
-            if (localController.getLocalModel().getLocalId() == ((AssignLeaderMessage) message).getNewLeaderId()){
-                closeLeaderCrashTimer();
-                startSendAliveTimer();
-            }
-            localController.manageAssignLeaderMessage(((AssignLeaderMessage) message).getNewLeaderId());
-            System.out.println("A message for changing the leader was received. Now the user with ID equals to " + ((AssignLeaderMessage) message).getNewLeaderId() + " is the leader");
 
         } else if (message instanceof ExplicitAliveRequest){
             localController.manageExplicitAliveRequestMessage();
