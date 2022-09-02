@@ -10,7 +10,7 @@ public class LeaderCrashTimer {
     private Timer timer;
     private TimerTask timerTask;
 
-    private static final long BASE_PERIOD =  3000;
+    private static final long BASE_PERIOD =  1500;
     private final NetworkController networkController;
 
     public LeaderCrashTimer(NetworkController networkController) {
