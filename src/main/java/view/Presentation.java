@@ -1,6 +1,8 @@
 package view;
 
 import model.LocalController;
+import timeElements.LeaderCrashTimer;
+import timeElements.SlidesReadyTimer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +23,7 @@ public class Presentation {
     private final JLabel slideLabel;
     private ImageIcon currentSlide;
     private final LocalController controller;
+    private SlidesReadyTimer timerForSlides;
 
     public Presentation(LocalController controller) {
         this.controller = controller;
@@ -141,19 +144,23 @@ public class Presentation {
     }
 
     public void changeSlide(){
-        while (!controller.slidesReady()){
-            try {
-                TimeUnit.MILLISECONDS.sleep(200);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        if (controller.slidesReady()){
+            if (timerForSlides != null){
+                timerForSlides.close();
+            }
+            currentSlide = new ImageIcon(controller.getCurrentSlide());
+            slideLabel.setIcon(currentSlide);
+            slideLabel.setText("");
+            slideLabel.repaint();
+            mainFrame.pack();
+        } else {
+            if (timerForSlides != null){
+                timerForSlides.resetTimer();
+            } else {
+                timerForSlides = new SlidesReadyTimer(this);
+                timerForSlides.start();
             }
         }
-
-        currentSlide = new ImageIcon(controller.getCurrentSlide());
-        slideLabel.setIcon(currentSlide);
-        slideLabel.setText("");
-        slideLabel.repaint();
-        mainFrame.pack();
     }
 
     private class StartButtonListener implements ActionListener{
