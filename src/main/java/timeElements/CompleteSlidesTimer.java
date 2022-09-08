@@ -9,7 +9,7 @@ public class CompleteSlidesTimer {
 
     private Timer timer;
     private TimerTask timerTask;
-    private static final long PERIOD = 4000;
+    private static final long PERIOD = 10000;
     private final NetworkController networkController;
 
     public CompleteSlidesTimer(NetworkController networkController) {

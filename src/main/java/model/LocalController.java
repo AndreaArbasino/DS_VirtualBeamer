@@ -161,7 +161,12 @@ public class LocalController {
 
     public void displayAgainDownloadPanel(){
         gui.displayDownloadSelection();
-        gui.showErrorMessage("It was not possible to download slides from that user");
+        if (localModel.getTotalNumberOfSlides() == LocalModel.NO_SLIDE){
+            gui.showErrorMessage("It was not possible to download slides from that user");
+        } else {
+            gui.showErrorMessage("Some slides were lost, please select from whom to download them");
+        }
+
     }
 
     public void terminatePresentation(){
