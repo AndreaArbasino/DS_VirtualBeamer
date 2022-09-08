@@ -5,6 +5,7 @@ import elementsOfNetwork.Lobby;
 import elementsOfNetwork.User;
 import messages.*;
 import model.LocalController;
+import model.LocalModel;
 import timeElements.*;
 
 import java.awt.image.BufferedImage;
@@ -126,9 +127,11 @@ public class NetworkController {
     }
 
     public void manageSlideDownloadTimerFired(){
-        System.out.println("SlideDownloadTimer fired at time: " + java.time.LocalTime.now());
-        closeSlideDownloadTimer();
-        localController.displayAgainDownloadPanel();
+        if (localController.getLocalModel().getTotalNumberOfSlides() == LocalModel.NO_SLIDE){
+            System.out.println("SlideDownloadTimer fired at time: " + java.time.LocalTime.now());
+            closeSlideDownloadTimer();
+            localController.displayAgainDownloadPanel();
+        }
     }
 
     // _________________________JOIN_MESSAGE_TIMER_________________________

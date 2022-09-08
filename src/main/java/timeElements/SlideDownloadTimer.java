@@ -32,13 +32,13 @@ public class SlideDownloadTimer {
     }
 
     public void close(){
-        if (timerTask != null){
-            timerTask.cancel();
-        }
-
         if(timer != null){
             timer.cancel();
             timer.purge();
+        }
+
+        if (timerTask != null){
+            timerTask.cancel();
         }
     }
 
