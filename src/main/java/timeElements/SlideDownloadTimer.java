@@ -9,7 +9,7 @@ public class SlideDownloadTimer {
 
     private Timer timer;
     private TimerTask timerTask;
-    private static final long PERIOD = 1500;
+    private static final long PERIOD = 2000;
 
     public SlideDownloadTimer(NetworkController networkController) {
         timer = new Timer();

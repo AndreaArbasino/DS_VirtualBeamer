@@ -19,7 +19,7 @@ public class SendAliveTimer extends Timer {
     private Timer timer;
     private TimerTask timerTask;
 
-    private static long DEFAULT_PERIOD = 400;
+    private static long DEFAULT_PERIOD = 500;
 
     public SendAliveTimer(String groupIp, DatagramSocket socket) {
         timer = new Timer();
