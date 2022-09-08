@@ -82,7 +82,7 @@ public class DatagramSender {
                 DatagramPacket datagramPacket = new DatagramPacket(data, data.length, InetAddress.getByName(recipientIp), port);
                 socket.send(datagramPacket);
                 try {
-                    TimeUnit.MILLISECONDS.sleep(7);
+                    TimeUnit.MILLISECONDS.sleep(10);
                 } catch (InterruptedException err) {
                     throw new RuntimeException(err);
                 }
