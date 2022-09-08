@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.Math.max;
 
@@ -15,7 +16,7 @@ public class BeamGroup implements Serializable {
     private final User creator;
     private final String groupAddress;
     private final String name;
-    private HashMap<Integer, User> participants;
+    private ConcurrentHashMap<Integer, User> participants;
 
     private Boolean creatorStillIn;
     private int leaderId;
@@ -27,7 +28,7 @@ public class BeamGroup implements Serializable {
     public BeamGroup(User creator, String groupName, String groupAddress) {
         this.name = groupName;
         this.groupAddress = groupAddress;
-        this.participants = new HashMap<>();
+        this.participants = new ConcurrentHashMap<>();
         this.participants.put(BeamGroup.CREATOR_ID, creator);
         this.creator = new User(creator.getUsername(), creator.getIpAddress());
 
@@ -45,14 +46,14 @@ public class BeamGroup implements Serializable {
         this.creatorStillIn = originalGroup.isCreatorStillIn();
         this.creator = originalGroup.getCreator();
         this.leaderId = originalGroup.getLeaderId();
-        this.participants = new HashMap<>(originalGroup.getParticipants());
+        this.participants = new ConcurrentHashMap<>(originalGroup.getParticipants());
         this.nextIdAvailable = originalGroup.getNextIdAvailable();
     }
 
 
 
-    public HashMap<Integer, User> getParticipants() {
-        return new HashMap<>(participants);
+    public ConcurrentHashMap<Integer, User> getParticipants() {
+        return new ConcurrentHashMap<>(participants);
     }
 
     public List<User> getUsers(){

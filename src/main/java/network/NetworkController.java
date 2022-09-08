@@ -346,7 +346,7 @@ public class NetworkController {
 
         } else if (message instanceof DiscoverMessage){
             localController.manageDiscoverMessage(messageToProcess.getSenderIp(), messageToProcess.getSenderPort());
-            System.out.println("I have sent a DISCOVER message");
+            System.out.println("I have received a DISCOVER message");
 
         } else if (message instanceof InfoGroupMessage) {
             localController.manageInfoGroupMessage((InfoGroupMessage) message);
