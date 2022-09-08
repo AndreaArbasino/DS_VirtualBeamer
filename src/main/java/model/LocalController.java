@@ -164,6 +164,11 @@ public class LocalController {
         gui.showErrorMessage("It was not possible to download slides from that user");
     }
 
+    public void terminatePresentation(){
+        gui.showErrorMessage("The leader crashed and you have not got the slides!\nThe presentation is terminated!");
+        System.exit(0);
+    }
+
 
 
 

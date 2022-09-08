@@ -101,6 +101,8 @@ public class NetworkController {
             localController.setElectionRunning(true);
             localController.sendCoordMessage();
             startSendAliveTimer();
+        } else if((!localController.slidesReady()) && (localController.getLocalModel().getCurrentGroup().getParticipants().size() < 3)){
+            localController.terminatePresentation();
         } else { //if the local user is not the creator, it will wait a random time and then contact the creator
             startRandomPeriodTimer(MIN_RANDOM_TIME, MAX_RANDOM_TIME);
         }
