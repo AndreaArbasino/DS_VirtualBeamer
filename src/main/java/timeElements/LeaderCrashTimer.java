@@ -34,7 +34,9 @@ public class LeaderCrashTimer {
         if(timer != null){
             timer.cancel();
             timer.purge();
-        } if (timerTask != null){
+        }
+
+        if (timerTask != null){
             timerTask.cancel();
         }
     }

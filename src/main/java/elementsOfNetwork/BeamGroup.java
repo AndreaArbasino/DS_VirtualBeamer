@@ -104,6 +104,7 @@ public class BeamGroup implements Serializable {
         if(participant.equals(creator)){
             participants.put(BeamGroup.CREATOR_ID, new User(participant.getUsername(), participant.getIpAddress()));
             creatorStillIn = true;
+            removeUsersWithSameIp(participant);
             return BeamGroup.CREATOR_ID;
         }
 

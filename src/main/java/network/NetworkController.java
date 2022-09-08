@@ -121,10 +121,12 @@ public class NetworkController {
     public void closeSlideDownloadTimer(){
         if(slideDownloadTimer != null){
             slideDownloadTimer.close();
+            System.out.println("SlideDownloadTimer correctly closed at time: " + java.time.LocalTime.now());
         }
     }
 
     public void manageSlideDownloadTimerFired(){
+        System.out.println("SlideDownloadTimer fired at time: " + java.time.LocalTime.now());
         closeSlideDownloadTimer();
         localController.displayAgainDownloadPanel();
     }

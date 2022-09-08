@@ -10,13 +10,18 @@ public class SlideDownloadTimer {
     private Timer timer;
     private TimerTask timerTask;
     private static final long PERIOD = 2000;
+    private final NetworkController networkController;
 
     public SlideDownloadTimer(NetworkController networkController) {
-        timer = new Timer();
-        timerTask = new SlideDownloadTimerTask(networkController);
+        this.networkController = networkController;
+        System.out.println("SlideDownloadTimer created at time: " + java.time.LocalTime.now());
+
     }
 
     public void start(){
+        System.out.println("SlideDownloadTimer started a time: " + java.time.LocalTime.now());
+        timer = new Timer();
+        timerTask = new SlideDownloadTimerTask(networkController);
         timer.scheduleAtFixedRate(timerTask, PERIOD, PERIOD);
     }
 
@@ -27,11 +32,13 @@ public class SlideDownloadTimer {
     }
 
     public void close(){
+        if (timerTask != null){
+            timerTask.cancel();
+        }
+
         if(timer != null){
             timer.cancel();
             timer.purge();
-        } if (timerTask != null){
-            timerTask.cancel();
         }
     }
 
