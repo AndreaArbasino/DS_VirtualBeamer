@@ -103,12 +103,12 @@ public class BeamGroup implements Serializable {
     public int addParticipant (User participant){
         if(participant.equals(creator)){
             participants.put(BeamGroup.CREATOR_ID, new User(participant.getUsername(), participant.getIpAddress()));
-            //leaderId = BeamGroup.CREATOR_ID;
             creatorStillIn = true;
             return BeamGroup.CREATOR_ID;
         }
 
-        if (participants.containsValue(participant)){
+        if (!participants.isEmpty()){
+            System.out.println("A user came back before an election");
             for (Map.Entry<Integer, User> entry : participants.entrySet()) {
                 if (entry.getValue().equals(participant)) {
                     return entry.getKey();
