@@ -108,9 +108,9 @@ public class BeamGroup implements Serializable {
         }
 
         if (!participants.isEmpty()){
-            System.out.println("A user came back before an election");
             for (Map.Entry<Integer, User> entry : participants.entrySet()) {
                 if (entry.getValue().equals(participant)) {
+                    System.out.println("A user came back before an election");
                     return entry.getKey();
                 }
             }
