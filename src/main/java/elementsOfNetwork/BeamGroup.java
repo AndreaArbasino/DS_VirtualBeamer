@@ -107,10 +107,10 @@ public class BeamGroup implements Serializable {
             return BeamGroup.CREATOR_ID;
         }
 
-        if (!participants.isEmpty()){
+        if (participants.containsValue(participant)){
             for (Map.Entry<Integer, User> entry : participants.entrySet()) {
                 if (entry.getValue().equals(participant)) {
-                    System.out.println("A user came back before an election");
+                    System.out.println("A user that crashed came back before an election");
                     return entry.getKey();
                 }
             }
