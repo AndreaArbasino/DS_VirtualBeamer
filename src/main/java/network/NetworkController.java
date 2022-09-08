@@ -36,7 +36,7 @@ public class NetworkController {
     private JoinMessageTimer joinMessageTimer;
     private CheckCreatorUpTimer checkCreatorUpTimer;
     private ElectMessageTimer electMessageTimer;
-    private ExplicitAliveRequestTimer explicitAliveRequestTimer;
+    private CompleteSlidesTimer completeSlidesTimer;
     private RandomPeriodTimer randomPeriodTimer;
     private ResetGroupTimer resetGroupTimer;
 
@@ -122,14 +122,14 @@ public class NetworkController {
     public void closeSlideDownloadTimer(){
         if(slideDownloadTimer != null){
             slideDownloadTimer.close();
-            System.out.println("SlideDownloadTimer correctly closed at time: " + java.time.LocalTime.now());
+            //System.out.println("SlideDownloadTimer correctly closed at time: " + java.time.LocalTime.now());
         }
     }
 
     public void manageSlideDownloadTimerFired(){
+        closeSlideDownloadTimer();
         if (localController.getLocalModel().getTotalNumberOfSlides() == LocalModel.NO_SLIDE){
-            System.out.println("SlideDownloadTimer fired at time: " + java.time.LocalTime.now());
-            closeSlideDownloadTimer();
+            //System.out.println("SlideDownloadTimer fired at time: " + java.time.LocalTime.now());
             localController.displayAgainDownloadPanel();
         }
     }
@@ -215,27 +215,29 @@ public class NetworkController {
         startSendAliveTimer();
     }
 
-    // _________________________EXPLICIT_ALIVE_REQUEST_TIMER_________________________
-    public void startExplicitAliveRequestTimer(){
-        explicitAliveRequestTimer = new ExplicitAliveRequestTimer(this);
-        explicitAliveRequestTimer.start();
+    // _________________________COMPLETE_SLIDES_TIMER_________________________
+    public void startCompleteSlidesTimer(){
+        completeSlidesTimer = new CompleteSlidesTimer(this);
+        completeSlidesTimer.start();
     }
 
-    public void resetExplicitAliveRequestTimer(){
-        if(explicitAliveRequestTimer != null){
-            explicitAliveRequestTimer.resetTimer();
+    public void resetCompleteSlidesTimer(){
+        if(completeSlidesTimer != null){
+            completeSlidesTimer.resetTimer();
         }
     }
 
-    public void closeExplicitAliveRequestTimer(){
-        if(explicitAliveRequestTimer != null){
-            explicitAliveRequestTimer.close();
+    public void closeCompleteSlidesTimer(){
+        if(completeSlidesTimer != null){
+            completeSlidesTimer.close();
         }
     }
 
-    public void manageExplicitAliveRequestTimerFired(){
-        //TODO:se fira il timer allora rimuovere qul partecipante dalla propria lista e mandare messaggio per farlo rimuovere dagli altri
-        // e fare display di messaggio di errore
+    public void manageCompleteSlidesTimerFired(){
+        closeCompleteSlidesTimer();
+        if (!localController.slidesReady()){
+            localController.displayAgainDownloadPanel();
+        }
     }
 
     // _________________________RANDOM_PERIOD_TIMER_________________________
@@ -410,6 +412,7 @@ public class NetworkController {
 
         } else if (message instanceof TotalNumberOfSlidesMessage){
             closeSlideDownloadTimer();
+            startCompleteSlidesTimer();
             localController.manageTotalNumberOfSlidesMessage(((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides());
             System.out.println("A message stating the total number of slides was received, there should be " + ((TotalNumberOfSlidesMessage) message).getTotalNumberOfSlides() + " slides");
 

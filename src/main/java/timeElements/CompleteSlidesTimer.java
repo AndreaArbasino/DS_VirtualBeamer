@@ -5,23 +5,20 @@ import network.NetworkController;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SlideDownloadTimer {
+public class CompleteSlidesTimer {
 
     private Timer timer;
     private TimerTask timerTask;
-    private static final long PERIOD = 2000;
+    private static final long PERIOD = 4000;
     private final NetworkController networkController;
 
-    public SlideDownloadTimer(NetworkController networkController) {
+    public CompleteSlidesTimer(NetworkController networkController) {
         this.networkController = networkController;
-        //System.out.println("SlideDownloadTimer created at time: " + java.time.LocalTime.now());
-
     }
 
     public void start(){
-        //System.out.println("SlideDownloadTimer started a time: " + java.time.LocalTime.now());
         timer = new Timer();
-        timerTask = new SlideDownloadTimerTask(networkController);
+        timerTask = new CompleteSlidesTimerTask(networkController);
         timer.scheduleAtFixedRate(timerTask, PERIOD, PERIOD);
     }
 
@@ -42,16 +39,16 @@ public class SlideDownloadTimer {
         }
     }
 
-    private class SlideDownloadTimerTask extends TimerTask{
+    private class CompleteSlidesTimerTask extends TimerTask{
         private NetworkController networkController;
 
-        public SlideDownloadTimerTask(NetworkController networkController) {
+        public CompleteSlidesTimerTask(NetworkController networkController) {
             this.networkController = networkController;
         }
 
         @Override
         public void run() {
-            networkController.manageSlideDownloadTimerFired();
+            networkController.manageCompleteSlidesTimerFired();
         }
     }
 
