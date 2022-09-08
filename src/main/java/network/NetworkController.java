@@ -101,8 +101,6 @@ public class NetworkController {
             localController.setElectionRunning(true);
             localController.sendCoordMessage();
             startSendAliveTimer();
-        } else if((!localController.slidesReady()) && (localController.getLocalModel().getCurrentGroup().getParticipants().size() < 3)){
-            localController.terminatePresentation();
         } else { //if the local user is not the creator, it will wait a random time and then contact the creator
             startRandomPeriodTimer(MIN_RANDOM_TIME, MAX_RANDOM_TIME);
         }
@@ -237,6 +235,9 @@ public class NetworkController {
 
     // _________________________RANDOM_PERIOD_TIMER_________________________
     public void startRandomPeriodTimer(long min, long max){
+        if((!localController.slidesReady()) && (localController.getLocalModel().getCurrentGroup().getParticipants().size() < 3)){
+            localController.terminatePresentation();
+        }
         randomPeriodTimer = new RandomPeriodTimer(this, min, max);
         randomPeriodTimer.start();
     }

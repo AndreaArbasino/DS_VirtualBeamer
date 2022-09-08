@@ -23,9 +23,9 @@ public class UnicastListener implements Runnable {
             socket = new DatagramSocket(port, InetAddress.getLocalHost());
             this.sizeToReceive = sizeToReceive;
             this.networkController = networkController;
-        } catch (
-                SocketException | UnknownHostException e) {
-            throw new RuntimeException(e);
+        } catch (SocketException | UnknownHostException e) {
+            System.out.println("We are sorry but there is already another instance running\nThere could be only one instance running at a time!");
+            System.exit(0);
         }
     }
 
