@@ -254,6 +254,8 @@ public class NetworkController {
             datagramSender.sendMessage(new ShareBeamGroupMessage(localController.getLocalModel().getCurrentGroup(), -1, true), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
             localController.refreshPresentation();
         } else {
+            closeSlideDownloadTimer();
+            closeCompleteSlidesTimer();
             sendTerminationMessage();
             localController.terminatePresentation();
         }

@@ -102,9 +102,9 @@ public class BeamGroup implements Serializable {
     //used for adding a participant and assigning an id (performed by leaders) --> it returns the id of the user added
     public int addParticipant (User participant){
         if(participant.equals(creator)){
+            removeUsersWithSameIp(participant);
             participants.put(BeamGroup.CREATOR_ID, new User(participant.getUsername(), participant.getIpAddress()));
             creatorStillIn = true;
-            removeUsersWithSameIp(participant);
             return BeamGroup.CREATOR_ID;
         }
 
