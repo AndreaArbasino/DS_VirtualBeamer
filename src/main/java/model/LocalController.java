@@ -21,6 +21,7 @@ public class LocalController {
     private final LocalModel localModel;
     private final GUI gui;
     private boolean electionRunning;
+    private boolean allSlidesOwnedByAtLeastOne;
 
 
     public LocalController (String username, GUI gui){
@@ -65,8 +66,8 @@ public class LocalController {
     }
 
     public boolean slidesReady(){
-        System.out.println("SLIDES THAT WILL BE RECEIVED " + localModel.getTotalNumberOfSlides());
-        System.out.println("SLIDES IN LOCAL " + localModel.getSlides().size());
+        //System.out.println("SLIDES THAT WILL BE RECEIVED " + localModel.getTotalNumberOfSlides());
+        //System.out.println("SLIDES IN LOCAL " + localModel.getSlides().size());
         return localModel.getTotalNumberOfSlides() == localModel.getSlides().size();
     }
 
@@ -170,8 +171,12 @@ public class LocalController {
     }
 
     public void terminatePresentation(){
-        gui.showErrorMessage("The leader crashed and you have not got the slides!\nThe presentation is terminated!");
+        gui.showErrorMessage("The leader crashed and nobody have not got the slides!\nThe presentation is terminated!");
         System.exit(0);
+    }
+
+    public boolean areSlidesOwnedByAtLeastOne(){
+        return allSlidesOwnedByAtLeastOne;
     }
 
 
@@ -314,7 +319,11 @@ public class LocalController {
         sendStillUpNotificationMessage();
     }
 
-    public void manageStillUpNotificationMessage(User participantAlreadyIn, int alreadyAssignedId){
+    public void manageStillUpNotificationMessage(User participantAlreadyIn, int alreadyAssignedId, boolean allSlidesDownloaded){
+        if (allSlidesDownloaded && !allSlidesOwnedByAtLeastOne){
+            allSlidesOwnedByAtLeastOne = true;
+        }
+
         localModel.addUserToBeamGroup(participantAlreadyIn, alreadyAssignedId);
         if (!electionRunning){
             networkController.sendAddMemberMessage(participantAlreadyIn, alreadyAssignedId);
@@ -389,6 +398,7 @@ public class LocalController {
 
     public void sendCoordMessage(){
         System.out.println("I am sending the coord message");
+        allSlidesOwnedByAtLeastOne = (localModel.getTotalNumberOfSlides() == localModel.getSlides().size());
         networkController.closeTimersForElection();
 
         int newLeaderId = localModel.getLocalId();

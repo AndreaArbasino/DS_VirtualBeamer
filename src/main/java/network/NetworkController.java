@@ -18,16 +18,8 @@ import static utilities.StaticUtilities.*;
 public class NetworkController {
     private final LocalController localController;
     private MulticastListener multicastListener;
-    private MulticastImageListener multicastImageListener;
-    private UnicastListener unicastListener;
-    private UnicastImageListener unicastImageListener;
-    private DatagramSender datagramSender;
-
-    // _____________________________THREAD_____________________________
-    private Thread multicastListenerThread;
-    private Thread multicastImageListenerThread;
-    private Thread unicastListenerThread;
-    private Thread unicastImageListenerThread;
+    private final UnicastListener unicastListener;
+    private final DatagramSender datagramSender;
 
     // _____________________________TIMER_____________________________
     private SendAliveTimer sendAliveTimer;
@@ -48,7 +40,7 @@ public class NetworkController {
         unicastListener = new UnicastListener(DEFAULT_RECEIVED_BYTES, DEFAULT_UNICAST_PORT, this);
         datagramSender = new DatagramSender(unicastListener.getSocket());
 
-        unicastListenerThread = new Thread(unicastListener);
+        Thread unicastListenerThread = new Thread(unicastListener);
         unicastListenerThread.start();
     }
 
@@ -113,12 +105,6 @@ public class NetworkController {
         slideDownloadTimer.start();
     }
 
-    public void resetSlideDownloadTimer(){
-        if(slideDownloadTimer != null){
-            slideDownloadTimer.resetTimer();
-        }
-    }
-
     public void closeSlideDownloadTimer(){
         if(slideDownloadTimer != null){
             slideDownloadTimer.close();
@@ -140,12 +126,6 @@ public class NetworkController {
         joinMessageTimer.start();
     }
 
-    public void resetJoinMessageTimer(){
-        if(joinMessageTimer != null){
-            joinMessageTimer.resetTimer();
-        }
-    }
-
     public void closeJoinMessageTimer(){
         if(joinMessageTimer != null){
             joinMessageTimer.close();
@@ -161,12 +141,6 @@ public class NetworkController {
     public void startCheckCreatorUpTimer(){
         checkCreatorUpTimer = new CheckCreatorUpTimer(this);
         checkCreatorUpTimer.start();
-    }
-
-    public void resetCheckCreatorUpTimer(){
-        if(checkCreatorUpTimer != null){
-            checkCreatorUpTimer.resetTimer();
-        }
     }
 
     public void closeCheckCreatorUpTimer(){
@@ -195,12 +169,6 @@ public class NetworkController {
         }
     }
 
-    public void resetElectMessageTimer(){
-        if(electMessageTimer != null){
-            electMessageTimer.resetTimer();
-        }
-    }
-
     public void closeElectMessageTimer(){
         System.out.println("Elect timer closed");
         if(electMessageTimer != null){
@@ -219,12 +187,6 @@ public class NetworkController {
     public void startCompleteSlidesTimer(){
         completeSlidesTimer = new CompleteSlidesTimer(this);
         completeSlidesTimer.start();
-    }
-
-    public void resetCompleteSlidesTimer(){
-        if(completeSlidesTimer != null){
-            completeSlidesTimer.resetTimer();
-        }
     }
 
     public void closeCompleteSlidesTimer(){
@@ -247,12 +209,6 @@ public class NetworkController {
         }
         randomPeriodTimer = new RandomPeriodTimer(this, min, max);
         randomPeriodTimer.start();
-    }
-
-    public void resetRandomPeriodTimer(){
-        if(randomPeriodTimer != null){
-            randomPeriodTimer.resetTimer();
-        }
     }
 
     public void closeRandomPeriodTimer(){
@@ -284,12 +240,6 @@ public class NetworkController {
         resetGroupTimer.start();
     }
 
-    public void resetResetGroupTimer(){
-        if(resetGroupTimer != null){
-            resetGroupTimer.resetTimer();
-        }
-    }
-
     public void closeResetGroupTimer(){
         if(resetGroupTimer != null){
             resetGroupTimer.close();
@@ -299,27 +249,35 @@ public class NetworkController {
     public void manageResetGroupTimerFired(){
         closeResetGroupTimer();
         System.out.println("Reset group timer fired at time " + java.time.LocalTime.now());
-        datagramSender.sendMessage(new ShareBeamGroupMessage(localController.getLocalModel().getCurrentGroup(), -1, true), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
-        localController.refreshPresentation();
+
+        if (localController.areSlidesOwnedByAtLeastOne()){
+            datagramSender.sendMessage(new ShareBeamGroupMessage(localController.getLocalModel().getCurrentGroup(), -1, true), localController.getLocalModel().getCurrentGroupAddress(), DEFAULT_MULTICAST_PORT);
+            localController.refreshPresentation();
+        } else {
+            sendTerminationMessage();
+            localController.terminatePresentation();
+        }
+
     }
 
 
     // _________________________SOCKET_METHODS_________________________
     public void startUnicastImageListener(){
-        unicastImageListener = new UnicastImageListener(DEFAULT_IMAGE_PORT, DATAGRAM_DATA_SIZE, this);
-        unicastImageListenerThread = new Thread(unicastImageListener);
+        UnicastImageListener unicastImageListener = new UnicastImageListener(DEFAULT_IMAGE_PORT, DATAGRAM_DATA_SIZE, this);
+        Thread unicastImageListenerThread = new Thread(unicastImageListener);
         unicastImageListenerThread.start();
     }
 
     public void startMulticastImageListener(String multicastIp){
-        multicastImageListener = new MulticastImageListener(multicastIp, DEFAULT_IMAGE_PORT, DATAGRAM_DATA_SIZE, this);
-        multicastImageListenerThread = new Thread(multicastImageListener);
+        MulticastImageListener multicastImageListener = new MulticastImageListener(multicastIp, DEFAULT_IMAGE_PORT, DATAGRAM_DATA_SIZE, this);
+        Thread multicastImageListenerThread = new Thread(multicastImageListener);
         multicastImageListenerThread.start();
     }
 
     public void startMulticastListener(String multicastIp){
         multicastListener = new MulticastListener(multicastIp, DEFAULT_MULTICAST_PORT, DEFAULT_RECEIVED_BYTES, this);
-        multicastListenerThread = new Thread(multicastListener);
+        // _____________________________THREAD_____________________________
+        Thread multicastListenerThread = new Thread(multicastListener);
         multicastListenerThread.start();
     }
 
@@ -455,7 +413,7 @@ public class NetworkController {
             localController.manageCoordMessage(((CoordMessage) message).getNewLeaderId());
 
         } else if (message instanceof StillUpNotificationMessage){
-            localController.manageStillUpNotificationMessage(((StillUpNotificationMessage) message).getUser(), ((StillUpNotificationMessage) message).getId());
+            localController.manageStillUpNotificationMessage(((StillUpNotificationMessage) message).getUser(), ((StillUpNotificationMessage) message).getId(), ((StillUpNotificationMessage) message).getAllSlidesOwned());
             System.out.println("I have received still up notification message");
 
         }
@@ -464,7 +422,6 @@ public class NetworkController {
 
     // _________________________MESSAGE_SENDERS_________________________
     public void sendInfoMessage (String recipientAddress, int senderPort, Lobby lobby){
-        //crea messaggio UDP e lo manda
         datagramSender.sendMessage(new InfoGroupMessage(lobby.getIpOfLeader(), lobby.getIpOfMulticast(), lobby.getNameOfLobby()),
                                     recipientAddress,
                                     senderPort);
@@ -554,7 +511,7 @@ public class NetworkController {
     }
 
     public void sendStillUpNotificationMessage(User user, int id){
-        datagramSender.sendMessage(new StillUpNotificationMessage(user,id), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
+        datagramSender.sendMessage(new StillUpNotificationMessage(user, id, localController.slidesReady()), localController.getLocalModel().getLeader().getIpAddress(), DEFAULT_UNICAST_PORT);
         System.out.println("I sent a StillUpNotificationMessage");
     }
 
