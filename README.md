@@ -25,6 +25,6 @@ Suggestions for the GUI:
 In general, do not spend much time in implementing the GUI. 
 
 
-### Impelementation details
+### Implementation details
 * It is adopted a UDP connection to enable fast data transfer over the network.
 * An adaption of the distributed bully election algorithm has been implemented for the leader election process in case of leader crash.
